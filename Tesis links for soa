@@ -18,7 +18,57 @@ https://www.semanticscholar.org/paper/Music-information-retrieval%E2%80%94The-im
 https://www.semanticscholar.org/paper/Cross-Modal-Music-Retrieval-and-Applications%3A-An-of-M%C3%BCller-Arzt/8af67ce40d1a9c88c6d645e3fbc6ccc6d6090bc3
 
 ### Music Genre Classification
+ 
+https://www.projectpro.io/article/music-genre-classification-project-python-code/566
+https://dev.to/mage_ai/music-genre-classification-2jmc
+https://colab.research.google.com/drive/1OZMGguq2ckVVr2EDXXP1-OsHQXOALgUg?usp=sharing
+https://www.clairvoyant.ai/blog/music-genre-classification-using-cnn
+https://www.hindawi.com/journals/mpe/2022/9668018/	(PDF downloaded already)
+https://data-flair.training/blogs/python-project-music-genre-classification/
+https://paperswithcode.com/paper/music-genre-classification-with-paralleling
+https://paperswithcode.com/paper/convolutional-neural-network-achieves-human
+https://paperswithcode.com/paper/bottom-up-broadcast-neural-network-for-music
+https://paperswithcode.com/paper/texture-selection-for-automatic-music-genre
+https://paperswithcode.com/paper/lyrics-based-music-genre-classification-using
+https://paperswithcode.com/paper/multi-label-music-genre-classification-from
+https://paperswithcode.com/paper/music-genre-classification-using-masked
+https://paperswithcode.com/paper/machine-learning-for-music-genre-multifaceted
+
+# Repos  (https://github.com/topics/music-genre-classification)
+https://github.com/ybayle/awesome-deep-learning-music
+https://github.com/mlachmish/MusicGenreClassification
+https://github.com/ruohoruotsi/LSTM-Music-Genre-Classification
+https://github.com/Hguimaraes/gtzan.keras
+https://github.com/jsalbert/Music-Genre-Classification-with-Deep-Learning
+https://github.com/ashishpatel26/Best-Audio-Classification-Resources-with-Deep-learning
+https://github.com/alikaratana/Music-Genre-Classification
+https://github.com/meetps/crnn-music-genre-classification
+https://github.com/CVxTz/music_genre_classification
+......
+......
+......
+
+# Semantic Scholar
+https://www.semanticscholar.org/paper/Music-genre-classification-based-on-auditory-image%2C-Cai-Zhang/66989c917fbf2f839b72320eb0f527938eb8c749
+https://www.semanticscholar.org/paper/Robustness-of-musical-features-on-deep-learning-for-Singh-Biswas/c217e74935dbbcac1fbae26639373c3659c5d0d0
+https://www.semanticscholar.org/paper/1D-CNN-Architectures-for-Music-Genre-Classification-Allamy-Koerich/37e9f340df110eb437c9cb4a7968e188e99c95e8
+https://www.semanticscholar.org/paper/DBTMPE%3A-Deep-Bidirectional-Transformers-Based-for-Qiu-Li/ddbd6bfb0294cf03ae8c764a4c65e66e0ce71243
+https://www.semanticscholar.org/paper/Deep-Learning-Based-Music-Genre-Classification-AthulyaK-Sindhu/6c75612b9a03428807086a21da19bc8f8668735f
+https://www.semanticscholar.org/paper/Comparative-Analysis-of-Three-Improved-Deep-for-Rafi-Noman/feecd484cf44b47086594ef904b07bc6bd86ea33
+https://www.semanticscholar.org/paper/Music-Genre-Classification-using-Deep-Learning-Fathima/801dff7cd0af0945ed750b019cf582d4c90a11b4
+https://www.semanticscholar.org/paper/3D-DCDAE%3A-Unsupervised-Music-Latent-Representations-Qiu-Li/5c89d043607bba76f3cb674821fc54afe7a79281
+https://www.semanticscholar.org/paper/Music-Genre-Classification-Using-1D-Convolution-Falola-Akinola/6eb3c9c704bef91e53fd3ce09881c2b2743cc005
+https://www.semanticscholar.org/paper/Combined-Transfer-and-Active-Learning-for-High-Chen-Steven/3630e7f5ec6298e05c8ff2a425d09212ed53931c
+https://www.semanticscholar.org/paper/Language-Representation-Models-for-Music-Genre-Akalp-Cigdem/615ead33365eec381f883e8412255ce2a0106f56
+https://www.semanticscholar.org/paper/Music-Genre-Classification%3A-A-Review-of-and-Ndou-Ajoodha/67c763d289e0636c9326c3328c10c61a78287feb
+https://www.semanticscholar.org/paper/Vision-Transformer-for-Music-Genre-Classification-Khasgiwala-Tailor/0dbaf3e30ebea2701b37dc9492b4e2182d0adc64
+https://www.semanticscholar.org/paper/A-Novel-Music-Genre-Classification-Using-Neural-Puppala-Muvva/168aac4bd63f7e639392b2937e0e7fb92e4cd113
+https://www.semanticscholar.org/paper/Music-Genre-Classification%3A-A-Comparative-Study-and-Lau-Ajoodha/7a53581a3ca69101a3c3b84d296a4a792a54231f
+https://www.semanticscholar.org/paper/Music-genre-classification-and-music-recommendation-Elbir-Aydin/d48e79d91833ffc9fdb34b4398eae3b694e0936b
 
 
 
 
+
+### 
+https://huggingface.co/tasks/audio-classification
