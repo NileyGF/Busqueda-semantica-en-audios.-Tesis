@@ -65,10 +65,37 @@ https://www.semanticscholar.org/paper/Vision-Transformer-for-Music-Genre-Classif
 https://www.semanticscholar.org/paper/A-Novel-Music-Genre-Classification-Using-Neural-Puppala-Muvva/168aac4bd63f7e639392b2937e0e7fb92e4cd113
 https://www.semanticscholar.org/paper/Music-Genre-Classification%3A-A-Comparative-Study-and-Lau-Ajoodha/7a53581a3ca69101a3c3b84d296a4a792a54231f
 https://www.semanticscholar.org/paper/Music-genre-classification-and-music-recommendation-Elbir-Aydin/d48e79d91833ffc9fdb34b4398eae3b694e0936b
+https://www.semanticscholar.org/paper/e272ce9dd8c7adec73817135d053f5819d968082
+https://www.semanticscholar.org/paper/2d274145be01169ab329252524cb9314f5f469c1
+https://www.semanticscholar.org/paper/3e2326608cf4a1a31d5147b661ce7eec4c8cfe66
+https://www.semanticscholar.org/paper/4d20a0703fc1503465e93b8a068425d7f9d7c29a
+https://www.semanticscholar.org/paper/495ecb5b160e28733661e71cc7e4993f9360f902
+https://www.semanticscholar.org/paper/3c173e4a06baabe8ff5fc6df266bd1956ba92f73
+https://www.semanticscholar.org/paper/ffcdc67c4ab342932bda320aa0217da88476e3de
+https://www.semanticscholar.org/paper/14bee8d8b88a45ebaaa8d969b3ff2f01ff4844fb
+https://www.semanticscholar.org/paper/ecc2bd4d338ee26d6fc4c51af0f4cf9df0b1cc6c
+https://www.semanticscholar.org/paper/7ac40017d1977f772f3baf68950ecbf191521d9f
 
 
 
 
+### Huggingface Audio Classification (https://huggingface.co/tasks/audio-classification)
+https://youtu.be/KWwzcmG98Ds
+	Language Detection
+	Trasformers
+	SpeechBrain
+	https://superbbenchmark.org
+Language Identification
+Emotion Recognition
+Pretrained models for audio classification: Wav2Vec2, HuBERT
+https://github.com/huggingface/transformers/tree/main/examples/pytorch/audio-classification
+https://colab.research.google.com/github/huggingface/notebooks/blob/master/examples/audio_classification.ipynb
+https://huggingface.co/spaces/akhaliq/Speechbrain-audio-classification
 
-### 
-https://huggingface.co/tasks/audio-classification
+
+### Language Detection (Language Identification)
+
+### Emotion Recognition
+
+### Frequency?
+
