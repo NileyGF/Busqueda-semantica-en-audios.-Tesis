@@ -1,0 +1,92 @@
+### Music auto-tagging
+
+### Music style/genre classification
+essentia:
+	# Discogs-Effnet (400 styles from the Discogs taxonomy)
+		https://essentia.upf.edu/models.html#discogs-effnet
+		Dataset: in-house (MTG).
+		Outputs: music style predictions and embeddings.
+		Models: discogs-effnet-bs64
+	# MTG-Jamendo genre classification (87 classes):
+		https://essentia.upf.edu/models.html#mtg-jamendo-genre
+		Dataset: MTG-Jamendo Dataset (genre subset).
+		Output: genre predictions.
+
+### Instruments classification
+essentia:
+	# MTG-Jamendo instrument classification (40 classes)
+		https://essentia.upf.edu/models.html#mtg-jamendo-instrument
+		Dataset: MTG-Jamendo Dataset (instrument subset).
+		Output: instrument class predictions.
+
+### Danceability
+essentia:
+	https://essentia.upf.edu/models.html#danceability
+	Dataset: in-house (MTG).
+	Output: danceability predictions.
+	
+	https://essentia.upf.edu/models.html#id385
+
+### Voice/Instrumental (Classification of music by presence or absence of voice)
+essentia:
+	https://essentia.upf.edu/models.html#voice-instrumental
+	(2 classes):  instrumental, voice
+	Dataset: in-house (MTG).
+	Output: voice / instrumental predictions.
+	
+	https://essentia.upf.edu/models.html#id397
+
+### Gender (Classification of music by singing voice gender)
+essentia:
+	https://essentia.upf.edu/models.html#gender
+	(2 classes):  female, male
+	Dataset: in-house (MTG).
+	Output: singing voice gender predictions.
+	
+	https://essentia.upf.edu/models.html#id409
+
+### Mood 
+essentia:
+	# MTG-Jamendo moodtheme (mood/theme classification 56 classes)
+		https://essentia.upf.edu/models.html#mtg-jamendo-moodtheme
+		Dataset: MTG-Jamendo Dataset (moodtheme subset).
+		Output: mood/theme predictions.
+		
+	# Moods MIREX:
+		https://essentia.upf.edu/models.html#moods-mirex
+		5 mood clusters
+		Dataset: MIREX Audio Mood Classification Dataset.
+		Output: mood predictions.
+		
+	# Mood Acoustic:
+		https://essentia.upf.edu/models.html#mood-acoustic
+		(2 classes):  acoustic, non_acoustic
+		Dataset: in-house (MTG).
+		
+	# Mood Aggressive:
+		https://essentia.upf.edu/models.html#mood-aggressive
+		(2 classes):  aggressive, non_aggressive
+		Dataset: in-house (MTG).
+		
+	# Mood Electronic
+		https://essentia.upf.edu/models.html#mood-electronic
+		...
+	# Mood Happy
+		https://essentia.upf.edu/models.html#mood-happy
+		...
+	# Mood Party
+		https://essentia.upf.edu/models.html#mood-party
+		...
+	# Mood Relaxed
+		https://essentia.upf.edu/models.html#mood-relaxed
+		...
+	# Mood Sad
+		https://essentia.upf.edu/models.html#mood-sad
+		...
+
+
+	
+	
+	
+	
+	
