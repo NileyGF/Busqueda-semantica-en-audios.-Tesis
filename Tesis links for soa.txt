@@ -4,6 +4,24 @@ https://musicinformationretrieval.com
 https://www.sciencedirect.com/topics/computer-science/music-information-retrieval
 https://www.igi-global.com/dictionary/music-information-retrieval/19767
 
+## Semantic Music Information Retrieval
+https://www.semanticscholar.org/paper/Chapter-13-Adaptive-Indexing-for-Semantic-Music-Leung/c158329080de01264ecb7d7752086df3ae158fa9
+https://www.semanticscholar.org/paper/Semantic-Music-Information-Retrieval-Using-Indexing-Leung-Chan/4be6764f5c5e068cdc6aa7d7e6984ddab9db5a63
+https://www.semanticscholar.org/paper/Adaptive-Indexing-for-Semantic-Music-Information-Leung-Liu/42d785b7389407343b7fc3981a3fae79aafd2329
+https://www.semanticscholar.org/paper/Linking-signal-and-semantic-representations-of-for-Buccoli/2bdcf7ea1802f51e99ba77bb44f057fa907703e5
+https://www.semanticscholar.org/paper/Semantic-Information-Retrieval-using-String-in-Kaur-Aggarwal/cb6857f28e81ea0a017c689522433601e04271b6
+https://www.semanticscholar.org/paper/Query-reformulation-approach-using-domain-specific-Kaur-Aggarwal/77610985dfa93050c932b5281de54d337df0142b
+https://www.semanticscholar.org/paper/Research-on-music-information-retrieval-algorithm-Yuan/cd019c45d96820872e38ff62f3b00441cf4ba19b
+https://www.semanticscholar.org/paper/Deep-Learning-Neural-Networks-for-Music-Information-Singh-Jha/ec2de349daf46dce3699656a5faf35e8f386c041
+https://www.semanticscholar.org/paper/Music-Information-Retrieval-and-Classification-Deep-Jain-Yadav/8eb3ac69faefacb1f0748960362797fe531081fb
+https://www.semanticscholar.org/paper/Research-on-Architecture-for-Long-tailed-Genre-with-Sun/008969ab4c4a509d7863b33fe7fe351793d11639
+https://www.semanticscholar.org/paper/SSVMR%3A-Saliency-based-Self-training-for-Video-Music-Cheng-Zhu/2e5928ab18b444582286f3345e8bdfe6de5fe436
+https://www.semanticscholar.org/paper/Music-Genre-Classification-with-Transformer-Zhuang-Chen/402ada0e55c56032e120c7110eaa12e03ceb079c
+https://www.semanticscholar.org/paper/IRENA%3A-Information-Retrieval-Engine-based-on-Arampatzis-Tsoris/3fdcaf958b7d184c4d84d07a76236b29b1e934fd
+https://www.semanticscholar.org/paper/Multilingual-Music-Genre-Embeddings-for-Effective-Epure-Salha-Galvan/bd672207eac4584c6af5ed3497ca6de4b016a1fb
+
+
+
 A survey on symbolic data-based music genre classification. Débora C. Corrêa, Francisco Ap. Rodrigues. 2016
 
 https://www.semanticscholar.org/paper/Codified-audio-language-modeling-learns-useful-for-Castellon-Donahue/58350665d7880fa1c85f6889b3a44cc96fa67d56
