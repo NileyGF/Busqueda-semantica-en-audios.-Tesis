@@ -1,0 +1,23 @@
+"Categories","Fields","Content-Based Audio Retrieval","Semantic based Image Retrieval","Semantic Image Retrieval: An Ontology Based Approach Umar Manzoor1","Unsupervised Learning Hash for Content-Based Audio Retrieval Using Deep Neural Networks","Introducing Auxiliary Text Query-modifier to Content-based Audio Retrieval","Audio Retrieval with Natural Language Queries: A Benchmark Study","Content-Based Representations of Audio Using Siamese Neural Networks","Audio Captioning Transformer","An Encoder-Decoder Based Audio Captioning System with Transfer and Reinforcement Learning","Audio-based Near-Duplicate Video Retrieval with Audio Similarity Learning"
+,"date",2021,Apr. 2017,2015,2019,Jul. 2022,Dec. 2021,Oct. 2017,Jul. 2021,Aug. 2021,2020
+,"authors","Meinard Müller","Miss. Ritika Hirwane","U. Manzoor, Mohammed A. Balubaid, B. Zafar, Hafsa Umar, M. S. Khan ","Petcharat Panyapanuwat, Suwatchai Kamonsantiroj, Luepol Pipanmaekaporn","Daiki Takeuchi, Yasunori Ohishi, Daisuke Niizumi, N. Harada, K. Kashino ","A. S. Koepke, Andreea-Maria Oncescu, João F. Henriques, Zeynep Akata, Samuel Albanie","Pranay Manocha, Rohan Badlani, Anurag Kumar, Ankit Shah, Benjamin Elizalde, B. Raj ","Xinhao Mei, Xubo Liu, Qiushi Huang, Mark D. Plumbley, Wenwu Wang ","Xinhao Mei, Qiushi Huang, Xubo Liu, Gengyun Chen, Jingqian Wu, Yusong Wu, Jinzheng Zhao, Shengchen Li, Tom Ko, H. Tang, Xingkun Shao, MarkD . Plumbley, Wenwu Wang ","Pavlos Avgoustinakis, Giorgos Kordopatis-Zilos, S. Papadopoulos, A. Symeonidis, Y. Kompatsiaris"
+,"link or so","https://api.semanticscholar.org/CorpusID:59196425?utm_source=wikipedia","  ","https://api.semanticscholar.org/CorpusID:14048699?utm_source=wikipedia","https://api.semanticscholar.org/CorpusID:115206096?utm_source=wikipedia","  ","https://www.semanticscholar.org/reader/53e0b2a9c4ed7d9966a291b70be65c0393aa8cad","https://www.semanticscholar.org/reader/7a3d103b38607e0dcfb3d4c372d03af585c4a51d","https://www.semanticscholar.org/reader/e0af65125a1cd886551a403a3229eaee6243f941","https://www.semanticscholar.org/reader/dd153c3a3c5445f773e0c0e4291907291b11f4a6","https://www.semanticscholar.org/reader/025ed64cd3c3feb67acf8273c4da870438d946e8"
+,"Ontology",,,"x",,,,,,,
+,"semantic gap",,,,,,,,,,
+,"text queries",,,"x",,"x","x",,,,
+,"audio queries",,,,,"x","x",,,,
+,"Content based retrieval ","x",,,,"x",,,,,
+"metrics","pecision ",,,,,,,,,,
+,"recall",,,,,,,,,,
+"Music Representation","Sheet Music",,,,,,,,,,
+,"MIDI",,,,,,,,,,
+,"MusicXML",,,,,,,,,,
+,"audio representations",,,,,,,,,,
+"Datasets","MagnaTagATune",,,,,,,,,,
+,"FMA",,,,,,,,,,
+,"Audio Set",,,,,,,,,,
+,"MTG-Jamendo",,,,,,,,,,
+,"SoundDescs",,,,,,"x",,,,
+,"AudioCaps",,,,,,"x",,,,
+,"Clotho",,,,,,"x",,,,
+"Architectures","Multi-modal Transformer",,,,,,"x",,,,
