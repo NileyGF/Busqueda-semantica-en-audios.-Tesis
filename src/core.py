@@ -2,6 +2,9 @@
 class Song:
     def __init__(self, file_path:str) -> None:
         self.song_file = file_path
+    
+    def get_path(self) -> str:
+        return self.song_file
 
 class FeaturesExtractor:
     """ Common features extractor of music to stablish a single protocol for all the models that can join the system """

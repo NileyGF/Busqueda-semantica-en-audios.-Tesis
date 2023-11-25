@@ -1,0 +1,59 @@
+%===================================================================================
+% Chapter: Introduction
+%===================================================================================
+\chapter*{Introducción}\label{chapter:introduction}
+\addcontentsline{toc}{chapter}{Introducción}
+%===================================================================================
+
+Los sistemas de recuperación de información (SRI) consisten en tecnologías y métodos diseñados para 
+la búsqueda, almacenamiento, recuperación y organización de información. Estos sistemas son esenciales en la 
+gestión de grandes cantidades de datos en diversos entornos, como bibliotecas digitales, bases de datos en 
+línea y motores de búsqueda en la web.\\ %% I don't like it very much but it is a work in progress version.
+Durante las últimas décadas la tecnología computacional se ha desarrollado al punto de 
+estar presente, de una manera u otra, en casi todos los procesos cotidianos de los seres humanos.
+La velocidad a la que se generan grandes volúmenes de datos en la actualidad supera las capacidades 
+computacionales para procesarlos.\\
+Una característica fundamental de estos volúmenes de datos es la gran variedad que presentan. Además 
+alrededor del 80$\%$ corresponden a datos no estructurados. Y precisamente, la recuperación de información 
+se define como encontrar resultados de naturaleza no estructurada que satisga una necesidad de información 
+dentro de una gran colección de datos\cite{manning2008introductiontoIR}.\\
+La recuperación de información utilizando computadoras comienza en la década de 1950, y desde entonces se 
+han desarrollado grandes ideas en el campo como: realizar un ranking de los documentos, representación 
+vectorial de los documentos y las consultas, agrupamiento de documentos similares, asociación de términos 
+con similitudes semánticas, la idea de la frecuencia inversa en documentos y los modelos de semántica latente.\\
+Las aplicaciones de búsqueda y el campo de la recuperación de información continúan cambiandoa medida que la computación evoluciona.
+
+
+
+% El Problema de Enrutamiento de Vehículos (en lo adelante, VRP por sus siglas en inglés) fue introducido por primera vez en 1959 en el artículo de George Dantzing y John Ramser \cite{dantzig@vrp}. En este, se hacía referencia a un problema real: la entrega de combustible a las gasolineras. En los años que sucedieron a esta primera aproximación matemática, se han encontrado numerosos enfoques de solución a este problema, tanto con métodos exactos como con heurísticas.
+
+% El objetivo de los VRP es resolver la distribución de mercancías entre un conjunto de almacenes y de clientes mediante la utilización de una flota de vehículos. En la formulación más sencilla, conocida como problema de enrutamiento de vehículos con restricciones de capacidad (CVRP por sus siglas en inglés), se trata de encontrar un conjunto de rutas, cada una realizada por un solo vehículo que comienza y termina en un almacén, de manera que se satisfaga la demanda de todos los clientes, se cumplan las restricciones impuestas a la solución y se minimice el costo global de la transportación \cite{toth@vrp}.
+
+% La aplicación del Problema de Enrutamiento de Vehículos a numerosas situaciones del mundo real ha demostrado que el uso de procedimientos computarizados para la planificación de la distribución de mercancías logra reducir sustancialmente el costo de la transportación \cite{rasku@automated, toth@vrp}. El impacto en el sistema económico global que producen estos ahorros es innegable debido a la ubicuidad del problema de transportación de mercancías en todas las etapas de producción en los sistemas de distribución.
+
+% Los modelos matemáticos que describen las características de cada uno de estos problemas pueden ser un factor crítico en el rendimiento de las soluciones propuestas cuando se resuelven mediante métodos exactos. Sin embargo, los primeros modelos surgidos para describirlos han sido enriquecidos con características y restricciones que cubren un mayor número de situaciones que las descripciones iniciales de los VRP, convirtiendo el proceso de construcción de los modelos en una tarea complicada, con mayor consumo de tiempo y propensa a errores humanos.
+
+% Las dificultades planteadas anteriormente serían resueltas si se contara con una herramienta que asista al usuario en la creación de modelos matemáticos, dadas las características y restricciones de un VRP. Un componente esencial de dicho sistema sería la verificación de la correctitud de un modelo para un VRP dado.
+
+% Hasta donde se ha podido comprobar en las búsquedas realizadas, no se reporta en la literatura ninguna herramienta que verifique automáticamente si un modelo para un VRP específico está correcto o no. La mayoría de los trabajos que tratan sobre los problemas de enrutamiento de vehículos están enfocados en las soluciones y métodos de solución de los mismos, en lugar de sus modelaciones. Los modelos son generados manualmente o mediante un proceso de prueba y error llevado a cabo por humanos. De la literatura consultada, la investigación realizada por Lazaros Tatalopoulos \cite{tatalopoulos@thesis} es la que más similitudes guarda con este trabajo, pues implementa una herramienta para la modelación de diferentes VRP, permitiéndole al usuario la selección de las características que se adaptan a su problema para ofrecer como salida el modelo correspondiente. Además, el modelo resultante se encuentra predefinido en la herramienta, mientras que el sistema que se propone en este trabajo puede extenderse para validar cualquier variante del VRP.
+
+% El objetivo de este trabajo es implementar una herramienta para determinar si un modelo dado para una variante específica del VRP es correcta o no. Para ello se diseñará un mecanismo de validación basado en unidades de prueba. Los objetivos específicos planteados para dar cumplimiento al objetivo general son:
+
+% \begin{itemize}
+% 	\item Caracterizar las distintas versiones de VRP más conocidas, así como los modelos propuestos para los mismos.
+% 	\item Proponer un mecanismo para describir las características iniciales de un problema de VRP.
+% 	\item Estudiar el uso de unidades de pruebas para detectar errores y fallas en modelos propuestos.
+% 	\item Diseñar un mecanismo que permita generar unidades de prueba para comprobar si un modelo refleja correctamente todas las características del VRP descrito.
+% 	\item Diseñar un sistema de generación de soluciones factibles e infactibles que respondan a las características del problema.
+% \end{itemize}
+
+% Las unidades de prueba son un mecanismo utilizado en ingeniería de software para asegurar que un fragmento de código se comporta de la manera deseada. La idea es implementar un método o función que llame a otro método y que compruebe posteriormente su funcionamiento a partir de los resultados que ofrece o los estados que modifica. En la literatura existen numerosas técnicas para elaborar un sistema de unidades de prueba correcto. En este trabajo se usarán algunas de estas técnicas para comprobar la correctitud de un modelo matemático en lugar de un fragmento de código.
+
+% El uso de la estrategia de unidades de pruebas en este trabajo permite asegurar la verificación de un grupo representativo de situaciones mediante la generación de soluciones que describan cada una de las características del problema, ya sea porque las satisfacen o porque incumplen un subconjunto de ellas.
+
+% Para determinar la correctitud de un modelo se crea un conjunto de soluciones y problemas donde, para cada par solución-problema se conoce si la solución es factible o no para el problema generado. Al crear soluciones infactibles se especifican las características que deben incumplir. A partir de las soluciones creadas se obtienen las variables y parámetros del modelo que describen esas mismas soluciones. Al mismo tiempo, para cada restricción del modelo se crean funciones que reciben como entrada las variables del modelo y verifican si la solución satisface esa restricción o no.
+
+% Con las soluciones y funciones generadas, se verifica si el modelo parece estar correcto porque las condiciones impuestas a cada solución fueron cumplidas en todas las pruebas, o está definitivamente incorrecto porque una solución factible no cumplió al menos una restricción o una infactible satisfizo todas las restricciones.
+
+% Este documento está estructurado en cuatro capítulos. En el capítulo \ref{chap:preliminaries} se define el marco teórico del trabajo, que abarcará los problemas de enrutamiento de vehículos, los modelos de optimización matemática, las unidades de prueba y el lenguaje Common Lisp. En el capítulo \ref{chap:system} se presenta el funcionamiento general del sistema, mientras que en el capítulo \ref{chap:implementation} se describen los detalles de implementación y los recursos para extender el sistema. En el capítulo \ref{chap:results} se muestra la validación de un modelo para el CVRP. Finalmente, se muestran las conclusiones y, como parte de ellas, las recomendaciones del trabajo.
+
