@@ -4,24 +4,68 @@
 \chapter*{Introducción}\label{chapter:introduction}
 \addcontentsline{toc}{chapter}{Introducción}
 %===================================================================================
+El extenso y constante crecimiento de contenido generado en la red en los años recientes, ha 
+introducido una apremiante necesidad de buscar en bases de datos cada vez más grandes de multimedia.
+Sorprendentemente, mientras existen motores de búsqueda para diversos contenidos como páginas webs, 
+imágenes y videos, la música no es accesible de la misma forma.\\ %% TODO rephrase
 
 Los sistemas de recuperación de información (SRI) consisten en tecnologías y métodos diseñados para 
 la búsqueda, almacenamiento, recuperación y organización de información. Estos sistemas son esenciales en la 
 gestión de grandes cantidades de datos en diversos entornos, como bibliotecas digitales, bases de datos en 
-línea y motores de búsqueda en la web.\\ %% I don't like it very much but it is a work in progress version.
+línea y motores de búsqueda en la web.\\ %% TODO I don't like it very much but it is a work in progress version.
 Durante las últimas décadas la tecnología computacional se ha desarrollado al punto de 
 estar presente, de una manera u otra, en casi todos los procesos cotidianos de los seres humanos.
 La velocidad a la que se generan grandes volúmenes de datos en la actualidad supera las capacidades 
 computacionales para procesarlos.\\
 Una característica fundamental de estos volúmenes de datos es la gran variedad que presentan. Además 
 alrededor del 80$\%$ corresponden a datos no estructurados. Y precisamente, la recuperación de información 
-se define como encontrar resultados de naturaleza no estructurada que satisga una necesidad de información 
+se define como; encontrar resultados de naturaleza no estructurada que satisfaga una necesidad de información 
 dentro de una gran colección de datos\cite{manning2008introductiontoIR}.\\
-La recuperación de información utilizando computadoras comienza en la década de 1950, y desde entonces se 
-han desarrollado grandes ideas en el campo como: realizar un ranking de los documentos, representación 
+Los orígenes de los sistemas de recuperación de información se encuentran intrínsecamente ligados a la expansión de la 
+informática y la necesidad de gestionar grandes volúmenes de datos. A medida que la informática evolucionó desde sus 
+inicios, el almacenamiento y la recuperación de información se convirtieron en áreas de interés cada vez mayor. 
+Surge así la necesidad de desarrollar métodos y sistemas que permitieran a los usuarios acceder de manera 
+eficiente a la creciente cantidad de información almacenada.\\ %% TODO Also needs reworking and rephrasing
+La recuperación de información utilizando computadoras comienza en la década de 1950, y desde entonces se han 
+desarrollado grandes ideas en el campo como: realizar un ranking de los documentos, representación 
 vectorial de los documentos y las consultas, agrupamiento de documentos similares, asociación de términos 
 con similitudes semánticas, la idea de la frecuencia inversa en documentos y los modelos de semántica latente.\\
-Las aplicaciones de búsqueda y el campo de la recuperación de información continúan cambiandoa medida que la computación evoluciona.
+% El campo de la recuperación de información continúa cambiando a medida que la computación evoluciona.
+
+En menos de diez años el campo de las redes neuronales ha avanzado a pasos gigantes, principalmente gracias al 
+aumento del poder computacional que fue introducido con las GPU. Entre los sectores que se han visto beneficiados por 
+esta revolución está la recuperación de información. \\ %% TODO linkeara mejor este párrafo y el siguiente y profundizar en el siguiente
+Los modelos de embeddings, como Word2Vec, GloVe y los más recientes, basados en transformers, como BERT y GPT, %% TODO cite all the embeddings models
+han demostrado una capacidad excepcional para capturar significado semántico y relación contextual entre palabras 
+y frases. Al aplicar estos embeddings a la representación de documentos y consultas, se ha logrado una mejora 
+significativa en la precisión y la relevancia de los resultados de recuperación de información.\\ %% TODO está afirmación debería llevar una cita
+%% Breve presentación de la problemática
+A pesar de que los SRI se han centrado usualmente en recuperar información con forma textual, se ha evidenciado 
+la necesidad de adaptar el entorno para recuperar datos de todo tipo (como imágenes, videos, audios). Muchos de 
+los acercamientos a resolver ese tipo de problema han sido a través de una representación de datos de tipo multimedia 
+como un texto, utilizando los metadatos. \\%% TODO limitaciones de la recuperación utilizand metadatos fijos, o mejor; llevarlo a los problemas de la recuperación tradicional
+%% TODO Ahora hablar de que en los últimos años se ha trabajado en recuperación semántica en imágenes (tengo unas cuantas citas para eso).
+%% TODO Sin embargo en la música solo hay pocos trabajos en los últimos 10 años. 
+%% TODO going foward, presentar Music Information Retrieval como campo y hablar de los content-based retrieval (otra canción o query-by-humming)
+%% TODO + sectores poco estudiados => introducir query-by-text retrieval
+%% TODO Por qué es importante query-by-text en música, y hablar de que intentaremos hacerlo mejor que solo usar metadatos fijos (entonces las opciones son hacer un embedding del audio directo, o hacer que los metadatos no sean fijos)
+Permitir a los usuarios buscar música utilizando oraciones en lenguaje natural introduce una capa adicional de 
+complejidad, ya que requiere el puente entre la semántica del lenguaje y la representación de la música en sí misma.
+%% Actualidad, novedad científica e importancia teórica y práctica
+Uno de los desafíos clave, en la integración de NLP y análisis de audios, se encuentra en la representación 
+efectiva de la música en función de las consultas textuales. La naturaleza subjetiva de la música y la 
+diversidad en la forma en que los usuarios describen la música pueden dificultar la captura precisa de la intención del usuario. \\
+La integración de NLP con sistemas de recuperación de información musical tiene el potencial de mejorar 
+la experiencia del usuario al buscar música de manera más natural y accesible.\\ 
+%%  Diseño teórico:
+%% - problema ciéntifico
+%% - objeto de estudio
+%% - objetivo general
+%% - objetivos espeíficos para cumplir el objetivo general
+%% - campo de acción
+%% - pregunta ciéntifica
+%% - estructura del trabajo
+
 
 
 
