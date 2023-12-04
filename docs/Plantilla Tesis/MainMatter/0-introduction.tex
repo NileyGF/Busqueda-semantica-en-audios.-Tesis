@@ -4,100 +4,63 @@
 \chapter*{Introducción}\label{chapter:introduction}
 \addcontentsline{toc}{chapter}{Introducción}
 %===================================================================================
-El extenso y constante crecimiento de contenido generado en la red en los años recientes, ha 
-introducido una apremiante necesidad de buscar en bases de datos cada vez más grandes de multimedia.
-Sorprendentemente, mientras existen motores de búsqueda para diversos contenidos como páginas webs, 
-imágenes y videos, la música no es accesible de la misma forma.\\ %% TODO rephrase
+El auge de la tecnología digital, en los últimos años, ha llevado a una explosión en la cantidad de contenido multimedia accesible en línea. Incluyendo texto (libros, páginas web, ...), imágenes, videos y música; la red se ha convertido en un repositorio de información con un crecimiento vertiginoso. La necesidad de buscar en bases de datos cada vez más grandes ha impulsado importantes avances en el campo de la búsqueda y recuperación de información. Existen motores de búsqueda para diversos contenidos como páginas webs, imágenes y videos; sin embargo la música no es accesible de la misma forma. En este contexto, la presente tesis se propone explorar nuevas técnicas y enfoques para la búsqueda y recuperación de música en grandes bases de datos, con el objetivo de mejorar la accesibilidad de este recurso. \\
 
-Los sistemas de recuperación de información (SRI) consisten en tecnologías y métodos diseñados para 
-la búsqueda, almacenamiento, recuperación y organización de información. Estos sistemas son esenciales en la 
-gestión de grandes cantidades de datos en diversos entornos, como bibliotecas digitales, bases de datos en 
-línea y motores de búsqueda en la web.\\ %% TODO I don't like it very much but it is a work in progress version.
-Durante las últimas décadas la tecnología computacional se ha desarrollado al punto de 
-estar presente, de una manera u otra, en casi todos los procesos cotidianos de los seres humanos.
-La velocidad a la que se generan grandes volúmenes de datos en la actualidad supera las capacidades 
-computacionales para procesarlos.\\
-Una característica fundamental de estos volúmenes de datos es la gran variedad que presentan. Además 
-alrededor del 80$\%$ corresponden a datos no estructurados. Y precisamente, la recuperación de información 
-se define como; encontrar resultados de naturaleza no estructurada que satisfaga una necesidad de información 
-dentro de una gran colección de datos\cite{manning2008introductiontoIR}.\\
-Los orígenes de los sistemas de recuperación de información se encuentran intrínsecamente ligados a la expansión de la 
-informática y la necesidad de gestionar grandes volúmenes de datos. A medida que la informática evolucionó desde sus 
-inicios, el almacenamiento y la recuperación de información se convirtieron en áreas de interés cada vez mayor. 
-Surge así la necesidad de desarrollar métodos y sistemas que permitieran a los usuarios acceder de manera 
-eficiente a la creciente cantidad de información almacenada.\\ %% TODO Also needs reworking and rephrasing
-La recuperación de información utilizando computadoras comienza en la década de 1950, y desde entonces se han 
-desarrollado grandes ideas en el campo como: realizar un ranking de los documentos, representación 
-vectorial de los documentos y las consultas, agrupamiento de documentos similares, asociación de términos 
-con similitudes semánticas, la idea de la frecuencia inversa en documentos y los modelos de semántica latente.\\
-% El campo de la recuperación de información continúa cambiando a medida que la computación evoluciona.
+%% Contexto histórico/social
+Durante las últimas décadas la tecnología computacional se ha desarrollado al punto de estar presente, de una manera u otra, en casi todos los procesos cotidianos de los seres humanos. La velocidad a la que se generan grandes volúmenes de datos, en la actualidad, desafían las capacidades de procesamiento computacional.\\
+Una característica fundamental de estos volúmenes de datos es la gran variedad que presentan, siendo alrededor del 80$\%$ de naturaleza no estructurada. Y precisamente, la recuperación de información se define como; encontrar resultados de naturaleza no estructurada que satisfaga una necesidad de información dentro de una gran colección de datos \cite{manning2008introductiontoIR}.\\
+Los sistemas de recuperación de información (SRI) consisten en tecnologías y métodos diseñados para la búsqueda, almacenamiento, recuperación y organización de información. Estos sistemas son esenciales en la gestión de grandes cantidades de datos en diversos entornos, como bibliotecas digitales, bases de datos en línea y motores de búsqueda en la web.\\ 
+La recuperación de información utilizando computadoras  se remonta a la década de 1950, y desde entonces se han desarrollado grandes ideas en el campo. Entre estas ideas se encuentran la creación de rankings de documentos, la representación vectorial de documentos y consultas, el agrupamiento de documentos similares, la asociación de términos con similitudes semánticas, la introducción de la frecuencia inversa en documentos y los modelos de semántica latente.\\
 
-En menos de diez años el campo de las redes neuronales ha avanzado a pasos gigantes, principalmente gracias al 
-aumento del poder computacional que fue introducido con las GPU. Entre los sectores que se han visto beneficiados por 
-esta revolución está la recuperación de información. \\ %% TODO linkeara mejor este párrafo y el siguiente y profundizar en el siguiente
-Los modelos de embeddings, como Word2Vec, GloVe y los más recientes, basados en transformers, como BERT y GPT, %% TODO cite all the embeddings models
-han demostrado una capacidad excepcional para capturar significado semántico y relación contextual entre palabras 
-y frases. Al aplicar estos embeddings a la representación de documentos y consultas, se ha logrado una mejora 
-significativa en la precisión y la relevancia de los resultados de recuperación de información.\\ %% TODO está afirmación debería llevar una cita
+Uno de los avances recientes en la recuperación de información es el uso de redes neuronales. Este es un campo que ha avanzado a pasos agigantados en la última década, en gran parte gracias al aumento del poder computacional introducido con las GPU. Los modelos de lenguaje, como Word2Vec \cite{Mikolov2013EfficientEO}, GloVe \cite{Pennington2014GloVeGV} y los más recientes, basados en transformers, como BERT \cite{Devlin2019BERTPO} y GPT \cite{Radford2018ImprovingLU}, han demostrado una capacidad excepcional para capturar el significado semántico y la relación contextual entre palabras y frases. Estos modelos, operan con representaciones de \textit{embeddings} a partir de diferentes enfoques cada uno.\\
+Los embeddings son representaciones, en un espacio de relativamente baja dimensionalidad, de tokens como frases, párrafos o documentos, a partir de un espacio vectorial de alta dimensionalidad, donde cada dimensión corresponde a una característica o atributo del lenguaje aprendido. Al aplicar estos \textit{embeddings} a la representación de documentos y consultas, se ha logrado una mejora significativa en la precisión y la relevancia de los resultados de recuperación de información.\\ %% TODO está afirmación debería llevar una cita %% https://towardsdatascience.com/document-embedding-techniques-fed3e7a6a25d
+
+%% Justificación o motivación del problema científico
 %% Breve presentación de la problemática
-A pesar de que los SRI se han centrado usualmente en recuperar información con forma textual, se ha evidenciado 
-la necesidad de adaptar el entorno para recuperar datos de todo tipo (como imágenes, videos, audios). Muchos de 
-los acercamientos a resolver ese tipo de problema han sido a través de una representación de datos de tipo multimedia 
-como un texto, utilizando los metadatos. \\%% TODO limitaciones de la recuperación utilizand metadatos fijos, o mejor; llevarlo a los problemas de la recuperación tradicional
-%% TODO Ahora hablar de que en los últimos años se ha trabajado en recuperación semántica en imágenes (tengo unas cuantas citas para eso).
-%% TODO Sin embargo en la música solo hay pocos trabajos en los últimos 10 años. 
-%% TODO going foward, presentar Music Information Retrieval como campo y hablar de los content-based retrieval (otra canción o query-by-humming)
-%% TODO + sectores poco estudiados => introducir query-by-text retrieval
-%% TODO Por qué es importante query-by-text en música, y hablar de que intentaremos hacerlo mejor que solo usar metadatos fijos (entonces las opciones son hacer un embedding del audio directo, o hacer que los metadatos no sean fijos)
-Permitir a los usuarios buscar música utilizando oraciones en lenguaje natural introduce una capa adicional de 
-complejidad, ya que requiere el puente entre la semántica del lenguaje y la representación de la música en sí misma.
+A pesar de que los SRI se han centrado principalmente en la recuperación de información con forma textual, se ha reconocido la necesidad de adaptar el entorno para manejar todo tipo de datos(como imágenes, videos, audios). La recuperación de información en datos no textuales presenta desafíos únicos, como la necesidad de comprender el contenido visual o auditivo de los datos. En el caso de imágenes, por ejemplo, la búsqueda puede basarse en características visuales como el color, la textura o la forma. En el caso de videos y audios, la búsqueda puede basarse en características como el tono, el ritmo o el contenido verbal. En los últimos años, ha habido avances significativos en la recuperación de información en datos no textuales, impulsados por el desarrollo de algoritmos de \textit{deep learning} y el aumento de la capacidad computacional. Estos avances han permitido el desarrollo de sistemas más precisos y eficientes para la recuperación de imágenes, videos y audios.\\
+
+Una herramienta utilizada comúnmente para recuperar información multimedia es representar los datos como texto, empleando metadatos. Estos metadatos sirven para describir y normalizar la representación de la información digital, lo que a su vez facilita su posterior búsqueda y recuperación. A pesar de sus beneficios, el uso de metadatos fijos conlleva limitaciones significativas como la imposibilidad de adaptarse a cambios en la información y la falta de precisión en la descripción de la información, así como la restricción a una cantidad limitada de información descriptiva. En este sentido, los metadatos fijos pueden resultar insuficientes para abarcar la complejidad inherente a la información multimedia, lo que a su vez puede dificultar su precisa recuperación. \\
+La creación de metadatos suele requerir un enfoque manual, o en su defecto, la utilización de modelos de inteligencia artificial. Sin embargo, estos modelos, al depender de los datos con los que fueron entrenados, sufren dificultades para generalizar adecuadamente para contextos específicos. Además, la naturaleza dinámica de la información multimedia puede llevar a que los metadatos fijos se vuelvan obsoletos con el tiempo, lo que impacta negativamente la precisión y exhaustividad en la recuperación de información. \\
+
+Dadas las limitaciones que presenta la recuperación utilizando metadatos, se han estudiado otras alternativas. Un ejemplo es la consulta por tarareo (\textit{query-by-humming}) o la consulta por ejemplo (\textit{query-by-example}), en la que la consulta se representa mediante una grabación de audio y el sistema recupera la canción correcta (la más similar). La recuperación basada en contenido consiste en buscar audio que coincida con una consulta de audio. Dado un audio de ejemplo, se devuelven los audios más similares en la base de datos. Sin embargo, satisfacer los requisitos para introducir un audio puede resultar difícil para los usuarios. Por otro lado, las consultas detalladas en lenguaje natural con forma libre, constituyen una interfaz familiar ampliamente utilizada en los motores de búsqueda actuales, lo que permite solicitar música con información semántica.\\
+
+Permitir a los usuarios buscar música utilizando oraciones en lenguaje natural introduce una capa adicional de complejidad, ya que requiere el puente entre la semántica del lenguaje y la representación de la música en sí misma.\\
 %% Actualidad, novedad científica e importancia teórica y práctica
-Uno de los desafíos clave, en la integración de NLP y análisis de audios, se encuentra en la representación 
-efectiva de la música en función de las consultas textuales. La naturaleza subjetiva de la música y la 
-diversidad en la forma en que los usuarios describen la música pueden dificultar la captura precisa de la intención del usuario. \\
-La integración de NLP con sistemas de recuperación de información musical tiene el potencial de mejorar 
-la experiencia del usuario al buscar música de manera más natural y accesible.\\ 
+Uno de los desafíos clave, en la integración del lenguaje natural y análisis de audios en los SRI, se encuentra en la representación efectiva de la música en función de las consultas textuales. Hasta donde se ha podido comprobar, este problema no ha sido abordado utilizando las emergentes capacidades semánticas y contextuales de los grandes modelos de lenguajes (LLM por sus siglas en inglés). Tampoco se ha observado una estrategia de caracterización de la música empleando modelos pre-entrenados de inteligencia artificial, como una alternativa a entrenar modelos de \textit{music captioning} que son la forma más directa de representar música como texto. Depender de un único modelo trae desventajas en cuanto a que las características que se pueden extraer, están limitadas a las que aparecen en los datos de entrenamiento; esas desventajas son acentuadas por el conocido problema que hay con la indisponibilidad de \textit{datasets} de tamaño adecuado y con amplio rango de modalidades \cite{Simonetta2019MultimodalMI}. \\ 
+
 %%  Diseño teórico:
 %% - problema ciéntifico
+No existe un sistema que permita organizar y recuperar música de una gran base de datos; utilizando consultas en lenguaje natural y con componentes semánticos, que sea escalable respecto a las características que se conocen de la música. \\
+
 %% - objeto de estudio
+%Supongo que son los sitemas de recuperación de música utilizando ML.
 %% - objetivo general
-%% - objetivos espeíficos para cumplir el objetivo general
+El objetivo de esta investigación es el diseño e implementación de un software que permita realizar consultas semánticas sobre una base de datos de música y el sistema de recuperación que cumpla con esos requerimientos.\\
+
+%% - objetivos específicos para cumplir el objetivo general
+ Los objetivos específicos planteados para dar cumplimiento al objetivo general son:
+ 
+\begin{itemize}
+    \item Realizar una página web utilizando django \textit{framework} que permita escribir consultas y reproducir la música que sea resultado de la consulta.
+    \item Crear un \textit{framework} que permita extraer características de una canción y que sea extensible respecto a los modelos de extracción de características.
+    \item Crear un software que utilizando grandes modelos de lenguaje convierta los características extraídas, en un texto coherente y sin alucinaciones. 
+    \item Crear un SRI con un modelo similar al modelo vectorial, pero utilizando como vectores los \textit{embeddings} de las consultas y textos (empleando BERT).
+\end{itemize}\\
+
 %% - campo de acción
+
 %% - pregunta ciéntifica
+A través del documento se abordarán las siguientes preguntas con la intención de resolver el problema planteado:
+
+\begin{itemize}
+    \item ¿Un \textit{framework} escalable conformado por modelos de \textit{Music Information Retrieval}(MIR) de clasificación de música es, al menos, igual de efectivo al extraer características de música, que los modelos existentes de \textit{auto-tagging} o \textit{captioning}?
+    \item ¿Es posible convertir una estructura de datos con las características de una canción en un texto descriptivo, similar al resultante de hacer captioning, pero utilizando LLM?
+    \item ¿Qué problemas puede traer la propensión a alucinar de dichos LLM para esta tarea?
+    \item ¿Un SRI utilizando \textit{embeddings} es más efectivo en cuánto a similitud semántica que empleando vectores de bolsa de palabras? % semántica latente no es factible por el enomre costo computacional que tiene, que empeora con el tamaño del corpus, y bueno, queremos analizar grandes bases de datos. 
+\end{itemize}\\
 %% - estructura del trabajo
 
 
 
 
-% El Problema de Enrutamiento de Vehículos (en lo adelante, VRP por sus siglas en inglés) fue introducido por primera vez en 1959 en el artículo de George Dantzing y John Ramser \cite{dantzig@vrp}. En este, se hacía referencia a un problema real: la entrega de combustible a las gasolineras. En los años que sucedieron a esta primera aproximación matemática, se han encontrado numerosos enfoques de solución a este problema, tanto con métodos exactos como con heurísticas.
-
-% El objetivo de los VRP es resolver la distribución de mercancías entre un conjunto de almacenes y de clientes mediante la utilización de una flota de vehículos. En la formulación más sencilla, conocida como problema de enrutamiento de vehículos con restricciones de capacidad (CVRP por sus siglas en inglés), se trata de encontrar un conjunto de rutas, cada una realizada por un solo vehículo que comienza y termina en un almacén, de manera que se satisfaga la demanda de todos los clientes, se cumplan las restricciones impuestas a la solución y se minimice el costo global de la transportación \cite{toth@vrp}.
-
-% La aplicación del Problema de Enrutamiento de Vehículos a numerosas situaciones del mundo real ha demostrado que el uso de procedimientos computarizados para la planificación de la distribución de mercancías logra reducir sustancialmente el costo de la transportación \cite{rasku@automated, toth@vrp}. El impacto en el sistema económico global que producen estos ahorros es innegable debido a la ubicuidad del problema de transportación de mercancías en todas las etapas de producción en los sistemas de distribución.
-
-% Los modelos matemáticos que describen las características de cada uno de estos problemas pueden ser un factor crítico en el rendimiento de las soluciones propuestas cuando se resuelven mediante métodos exactos. Sin embargo, los primeros modelos surgidos para describirlos han sido enriquecidos con características y restricciones que cubren un mayor número de situaciones que las descripciones iniciales de los VRP, convirtiendo el proceso de construcción de los modelos en una tarea complicada, con mayor consumo de tiempo y propensa a errores humanos.
-
-% Las dificultades planteadas anteriormente serían resueltas si se contara con una herramienta que asista al usuario en la creación de modelos matemáticos, dadas las características y restricciones de un VRP. Un componente esencial de dicho sistema sería la verificación de la correctitud de un modelo para un VRP dado.
-
-% Hasta donde se ha podido comprobar en las búsquedas realizadas, no se reporta en la literatura ninguna herramienta que verifique automáticamente si un modelo para un VRP específico está correcto o no. La mayoría de los trabajos que tratan sobre los problemas de enrutamiento de vehículos están enfocados en las soluciones y métodos de solución de los mismos, en lugar de sus modelaciones. Los modelos son generados manualmente o mediante un proceso de prueba y error llevado a cabo por humanos. De la literatura consultada, la investigación realizada por Lazaros Tatalopoulos \cite{tatalopoulos@thesis} es la que más similitudes guarda con este trabajo, pues implementa una herramienta para la modelación de diferentes VRP, permitiéndole al usuario la selección de las características que se adaptan a su problema para ofrecer como salida el modelo correspondiente. Además, el modelo resultante se encuentra predefinido en la herramienta, mientras que el sistema que se propone en este trabajo puede extenderse para validar cualquier variante del VRP.
-
-% El objetivo de este trabajo es implementar una herramienta para determinar si un modelo dado para una variante específica del VRP es correcta o no. Para ello se diseñará un mecanismo de validación basado en unidades de prueba. Los objetivos específicos planteados para dar cumplimiento al objetivo general son:
-
-% \begin{itemize}
-% 	\item Caracterizar las distintas versiones de VRP más conocidas, así como los modelos propuestos para los mismos.
-% 	\item Proponer un mecanismo para describir las características iniciales de un problema de VRP.
-% 	\item Estudiar el uso de unidades de pruebas para detectar errores y fallas en modelos propuestos.
-% 	\item Diseñar un mecanismo que permita generar unidades de prueba para comprobar si un modelo refleja correctamente todas las características del VRP descrito.
-% 	\item Diseñar un sistema de generación de soluciones factibles e infactibles que respondan a las características del problema.
-% \end{itemize}
-
-% Las unidades de prueba son un mecanismo utilizado en ingeniería de software para asegurar que un fragmento de código se comporta de la manera deseada. La idea es implementar un método o función que llame a otro método y que compruebe posteriormente su funcionamiento a partir de los resultados que ofrece o los estados que modifica. En la literatura existen numerosas técnicas para elaborar un sistema de unidades de prueba correcto. En este trabajo se usarán algunas de estas técnicas para comprobar la correctitud de un modelo matemático en lugar de un fragmento de código.
-
-% El uso de la estrategia de unidades de pruebas en este trabajo permite asegurar la verificación de un grupo representativo de situaciones mediante la generación de soluciones que describan cada una de las características del problema, ya sea porque las satisfacen o porque incumplen un subconjunto de ellas.
-
-% Para determinar la correctitud de un modelo se crea un conjunto de soluciones y problemas donde, para cada par solución-problema se conoce si la solución es factible o no para el problema generado. Al crear soluciones infactibles se especifican las características que deben incumplir. A partir de las soluciones creadas se obtienen las variables y parámetros del modelo que describen esas mismas soluciones. Al mismo tiempo, para cada restricción del modelo se crean funciones que reciben como entrada las variables del modelo y verifican si la solución satisface esa restricción o no.
-
-% Con las soluciones y funciones generadas, se verifica si el modelo parece estar correcto porque las condiciones impuestas a cada solución fueron cumplidas en todas las pruebas, o está definitivamente incorrecto porque una solución factible no cumplió al menos una restricción o una infactible satisfizo todas las restricciones.
-
-% Este documento está estructurado en cuatro capítulos. En el capítulo \ref{chap:preliminaries} se define el marco teórico del trabajo, que abarcará los problemas de enrutamiento de vehículos, los modelos de optimización matemática, las unidades de prueba y el lenguaje Common Lisp. En el capítulo \ref{chap:system} se presenta el funcionamiento general del sistema, mientras que en el capítulo \ref{chap:implementation} se describen los detalles de implementación y los recursos para extender el sistema. En el capítulo \ref{chap:results} se muestra la validación de un modelo para el CVRP. Finalmente, se muestran las conclusiones y, como parte de ellas, las recomendaciones del trabajo.
 

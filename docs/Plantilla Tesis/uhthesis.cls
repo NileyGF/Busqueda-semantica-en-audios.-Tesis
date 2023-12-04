@@ -154,7 +154,7 @@
     \vskip 2cm
     \includegraphics[width=3cm]{\@logo} \\
     \vfill
-    \textbf{\LARGE  Tesis de diploma de la carrera Ciencia de la Computación} \\
+    {\LARGE  Tesis de diploma de la carrera Ciencia de la Computación} \\
     \vskip 0.5cm
     {\LARGE \textbf{\@title}} \\
     \vskip 2cm
