@@ -104,3 +104,28 @@ de la música de una manera más natural y enriquecedora.
 #la búsqueda, almacenamiento, recuperación y organización de información. Estos sistemas son esenciales en la 
 #gestión de grandes cantidades de datos en diversos entornos, como bibliotecas digitales, bases de datos en 
 #línea, motores de búsqueda en la web y sistemas de gestión documental en empresas.
+
+Posibles lineas de apertura:
+
+    1. En la actualidad, la disponibilidad de vasta, y fácilmente accesible, creciente cantidad de 
+    información musical ...
+
+    2. El extenso y constante crecimiento de contenido generado en la red en los años recientes, ha 
+    introducido una apremiante necesidad de buscar en bases de datos cada vez más grandes de multimedia.
+    Sorprendentemente, mientras existen motores de búsqueda para diversos contenidos como páginas webs, 
+    imágenes y videos, la música no es accesible de la misma forma.
+
+    3. La demanda por sistemas eficientes de recuperación de música ha ido en aumento, según 
+    librerías masivas de música se tornan de fácil acceso.
+
+NLP x Music:
+
+    - Como una de las interfaces más intuitivas para los humanos (como ha sido ratificado con el auge de los LLM), 
+    el lenguaje natural tiene el potencial de mediar en muchas tareas que involucren interacción humano-computadora.
+
+    - A lo largo de los años se han propuesto muchos acercamientos para la búsqueda y recuperación de música a 
+    través de variedad de interfaces. 
+    Fuera de simple búsqueda utilizando metadatos, los sistemas de recuperación 
+    de música en la actualidad permiter hacer consultas mediante letras de la canción, fragmentos de audio, 
+    videos, tarareos, entre otros. A pesar de que todos esos tipos de consultas tienen su propio mérito, no soportan 
+    una de las formas más populares de hacer búsquedas a día de hoy: texto libre (frases en lenguaje natural)

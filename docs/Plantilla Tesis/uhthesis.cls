@@ -148,21 +148,23 @@
 \def\maketitle{%
   \thispagestyle{empty}%
   \begin{center}
-    {\large Universidad de La Habana} \\ \@faculty \\ 
-    \vskip 0.25cm
-    \includegraphics[width=1.75cm]{\@logo} \\
+    {\LARGE \textbf{\@faculty}} \\ 
+    \vskip 0.5cm
+    {\LARGE \textbf{\large Universidad de La Habana}} \\ 
+    \vskip 2cm
+    \includegraphics[width=3cm]{\@logo} \\
     \vfill
+    \textbf{\LARGE  Tesis de diploma de la carrera Ciencia de la Computación} \\
+    \vskip 0.5cm
     {\LARGE \textbf{\@title}} \\
     \vskip 2cm
-    {\Large Autora: \textbf{\@author}} \\
+    {\Large Autor: \textbf{\@author}} \\
     \vskip 0.5cm
-    {\Large Tutores: \textbf{\@advisor}} \\
+    {\Large Tutor: \textbf{\@advisor}} \\
     \vfill
-    {\large Trabajo de Diploma \\presentado en opción al título de \\ \@degree} \\
-    \vskip 0.25cm
-    \includegraphics[width=2.5cm]{Graphics/qrcode-tesis}
-    \vskip 0.25cm
-    \@date
+    {\Large La Habana} \\
+    \vfill
+    {\Large \textbf{\@date}}
   \end{center}
 }
 

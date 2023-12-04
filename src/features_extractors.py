@@ -292,7 +292,7 @@ class VoiceGender_DiscogsClass(FeaturesExtractor):
         return predictions
   
 
-specific_features = {
+SPECIFIC_FEATURES = {
     Discogs400_GenreClass.__str__(): Discogs400_GenreClass,
     MTG_Jamendo_GenreClass.__str__(): MTG_Jamendo_GenreClass,
     Danceability_DiscogsClass.__str__(): Danceability_DiscogsClass,
