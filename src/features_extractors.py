@@ -1,8 +1,8 @@
 # import essentia 
 # import librosa
-from essentia.standard import MonoLoader, TensorflowPredictEffnetDiscogs, TensorflowPredict2D
+# from essentia.standard import MonoLoader, TensorflowPredictEffnetDiscogs, TensorflowPredict2D
 
-from src.core import Song, FeaturesExtractor
+from core import Song, FeaturesExtractor
 
 
 class BaseGenreClass(FeaturesExtractor):

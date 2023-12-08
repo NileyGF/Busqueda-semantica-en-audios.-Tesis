@@ -1,11 +1,7 @@
 from features_extractors import SPECIFIC_FEATURES
-from core import Song, FeaturesExtractor
-import pandas as pd
+from core import Song, FeaturesExtractor, musiccaps_preprocess
 import os
 
-current_file_path = os.path.abspath(__file__)
-directory_path = os.path.dirname(current_file_path)
-musiccaps_csv_all_path =  os.path.join(directory_path, "musiccaps-public.csv")
 
 """ First part of the pipeline : 
 Feature extraction of a music
@@ -26,7 +22,10 @@ def extract_features(music_path:str) -> dict :
 
 def extract_features_all_dataset():
     """ Go through the dataset to extract the features.  """
+    musiccaps_preprocess()
 
+
+extract_features_all_dataset()
 """ Second part of the pipeline : 
 Convert the features information from tags (metadata), to a sentence, caption like.
 Temporarily it will be approached using GPT2 model (huggingface API) for complete sentences.
