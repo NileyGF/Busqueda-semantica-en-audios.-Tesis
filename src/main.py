@@ -1,6 +1,7 @@
 from features_extractors import SPECIFIC_FEATURES
-from core import Song, FeaturesExtractor, musiccaps_preprocess
+from core import Song, FeaturesExtractor, musiccaps_preprocess, directory_path, downloaded_songs_names
 import os
+import pandas as pd
 
 
 """ First part of the pipeline : 
@@ -18,14 +19,46 @@ def extract_features(music_path:str) -> dict :
             features[feat] = extractor.extract_feature(music=song)
         except Exception as err:
             print("Error while extracting features: ", err)
+            features[feat] = None
     return features
 
 def extract_features_all_dataset():
     """ Go through the dataset to extract the features.  """
-    musiccaps_preprocess()
+    try: 
+        dataset_path = os.path.join(directory_path,'musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
+        musiccaps_df = pd.read_csv(dataset_path)
+    except:
+        musiccaps_preprocess()
+        dataset_path = os.path.join(directory_path,'musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
+        musiccaps_df = pd.read_csv(dataset_path)
+    songs_dict = downloaded_songs_names()
 
+    features_dict = {'ytid':[]}
+    for feat in SPECIFIC_FEATURES:
+        features_dict[feat] = []
 
+    for song in musiccaps_df.itertuples():
+        print(songs_dict[song.ytid])
+        features_dict['ytid'].append(song.ytid)
+        song_feat = extract_features(songs_dict[song.ytid])
+        for f in song_feat:
+            features_dict[f].append(song_feat[f])
+    
+    features_df = pd.DataFrame.from_dict(features_dict)
+
+    inner_merged = pd.merge(musiccaps_df, features_df)
+    # print(inner_merged.head())
+    # print()
+    # print(inner_merged.shape, musiccaps_df.shape, features_df.shape)
+
+    inner_merged.to_csv(os.path.join(directory_path,'musiccaps-subset-feat_index.csv')) # , header=False, index=False
+    inner_merged.to_csv(os.path.join(directory_path,'musiccaps-subset-feat.csv'), index=False) 
+    return inner_merged    
+        
 extract_features_all_dataset()
+processed_dataset_path = os.path.join(directory_path,'musiccaps-subset-feat.csv') # os.path.join(directory_path,'musiccaps-subset-feat_index.csv')
+
+
 """ Second part of the pipeline : 
 Convert the features information from tags (metadata), to a sentence, caption like.
 Temporarily it will be approached using GPT2 model (huggingface API) for complete sentences.

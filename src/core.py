@@ -1,5 +1,6 @@
 # Huggingface token : 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
 import pandas as pd
+from pathlib import Path
 import os
 
 current_file_path = os.path.abspath(__file__)
@@ -36,12 +37,26 @@ class FeaturesExtractor:
         return model(music.song_file, args, kwargs)
 
 def downloaded_songs_names():
-    current_file_path = os.path.abspath(__file__)
-    directory_path = os.path.dirname(current_file_path).parent.parent
-    music_folder = os.path.join(directory_path, 'music_examples')
-    song = os.path.join(music_folder,os.listdir(music_folder)[0])
-
-
+    downloaded_songs = {}
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    # print(BASE_DIR)
+    root = BASE_DIR.parent
+    # print(root)
+    music_folder = os.path.join(root,'download-musiccaps-dataset-main', 'music_data')
+    # print(music_folder)
+    files = os.listdir(music_folder)
+    for file in files:
+        # file = 'file_name + ext'        
+        full_path = os.path.join(music_folder, file)
+        name_only = os.path.splitext(file)[0]
+        if '.part' in file:
+            print("Skipping ",file)
+            continue
+        # print(name_only)
+        downloaded_songs[name_only] = full_path
+    # 3826 songs
+    # print(len(downloaded_songs), "songs")
+    return downloaded_songs
 
 def musiccaps_preprocess():    
     """             ytid  start_s  end_s ... author_id  is_balanced_subset  is_audioset_eval
@@ -65,9 +80,26 @@ def musiccaps_preprocess():
     
     columns_names = musiccaps_csv_all_df.columns.values # numpy.ndarray
     ## ['ytid' 'start_s' 'end_s' 'audioset_positive_labels' 'aspect_list' 'caption' 'author_id' 'is_balanced_subset' 'is_audioset_eval']
-    subset1 =  musiccaps_csv_all_df[["ytid", "start_s", "end_s","aspect_list", "caption"]]
+    subset1_by_cols = musiccaps_csv_all_df[["ytid", "start_s", "end_s","aspect_list", "caption"]]
+    downloaded_songs = downloaded_songs_names()
+
+    subset1_indexs = []
+    for song in downloaded_songs:
+        row = subset1_by_cols.loc[subset1_by_cols["ytid"] == song] # type: DataFrame
+        if len(row.index) == 1:
+            subset1_indexs.append(row.index[0])
+        else: 
+            print(row)
+            raise Exception(f"There are more than one song with the same name {song}")
     
-    
+    subset1 = subset1_by_cols[subset1_by_cols.index.isin(subset1_indexs)]    
+    subset1.to_csv(os.path.join(directory_path,'musiccaps-subset_index.csv')) # , header=False, index=False
+    subset1.to_csv(os.path.join(directory_path,'musiccaps-subset.csv'), index=False) 
+    # print(a_row.to_string())
+    # print(subset1_by_cols[subset1_by_cols.index.isin([200,0])])
+
+    return subset1
+
     
 
 
