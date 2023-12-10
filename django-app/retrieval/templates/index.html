@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+    {% comment %} <h2>Hello, World!</h2> {% endcomment %}
+<form style="text-align: center; margin: 20px;">
+    <input name="query" type="text" placeholder="Search Songs"> <button type="submit">Search</button>
+</form>
+
+{% for song in all_songs  %}
+    <p style="font-size:14px;margin:5px;color:{{color}}"><b> {{song.df_name}} </b></p>  
+    {{song.description}}. 	
+    <hr>
+{%endfor%}
+
+{% endblock page_content %}
