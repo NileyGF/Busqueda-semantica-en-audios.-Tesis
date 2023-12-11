@@ -55,8 +55,8 @@ def extract_features_all_dataset():
     inner_merged.to_csv(os.path.join(directory_path,'musiccaps-subset-feat.csv'), index=False) 
     return inner_merged    
         
-extract_features_all_dataset()
-processed_dataset_path = os.path.join(directory_path,'musiccaps-subset-feat.csv') # os.path.join(directory_path,'musiccaps-subset-feat_index.csv')
+# extract_features_all_dataset()
+# processed_dataset_path = os.path.join(directory_path,'musiccaps-subset-feat.csv') # os.path.join(directory_path,'musiccaps-subset-feat_index.csv')
 
 
 """ Second part of the pipeline : 
@@ -67,11 +67,33 @@ It is possible to do some fine-tunnig if it is decided to download the GPT model
 """
 
 """ Third part of the pipeline : 
-Information Retrieval System
+Information Retrieval System (Temporarily is ccosine similarity )
 Using BERT, extract embeddings for each song sentence and use that as the vectors used in the comparison with the query.
 The BERT model will need to be downloaded.
 Decide on an appropiate rank K as the max number of relevant results. (Only retrieve the top k most similars)
 """
+
+# CORPUS EMBEDDINGS
+# tok_data = nltk.sent_tokenize(description)
+# Transform sentences to embeddings 
+#   model = ... 'stsb-bert-base'
+#   model.encode(sentence_list)
+# Convert all sentence embeddings to a 2D pytorch tensor
+# Save sentence embeddings
+# with open('sentence_embeddings.pkl', 'wb') as f:
+#   pickle.dump(sentence_embeddings,f)
+
+# QUERY EMBEDDINGS
+# (optional) tok_query = nltk.sent_tokenize(query)
+# query_embedding = model.encode(tok_query)
+
+# After transforming queries to embeddings, we compare each sentence's embedding of each abstract's and body text's section of each 
+# article with each every query embedding, via function sentence_transformers.util.semantic_search, which innerly utilizes cosine 
+# similarity. -Basically, this function retrieves from us many sentences embeddings and a single query embedding and returns as topk 
+# best (closest by cosine similarity) sentence embeddings-.
+
+
+
 
 """ Fourth part of the pipeline : 
 Django web app to access and test the Information Retrieval System.

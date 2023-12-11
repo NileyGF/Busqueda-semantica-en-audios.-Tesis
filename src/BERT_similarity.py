@@ -9,15 +9,15 @@ def vectorize(sentence):
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     marked_text = "[CLS] " + sentence + " [SEP]"
 
-    #print(marked_text)
+    print(marked_text)
     tokenized_text = tokenizer.tokenize(marked_text)
-    #print(tokenized_text)
+    print(tokenized_text)
     segments_ids = [1] * len(tokenized_text)
-    #print(segments_ids)
+    print(segments_ids)
     segments_tensors = torch.tensor([segments_ids])
     indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
     tokens_tensor = torch.tensor([indexed_tokens])
-    #print(tokens_tensor)
+    print(tokens_tensor)
     model = BertModel.from_pretrained('bert-base-uncased')
     with torch.no_grad():
         encoded_layers, _ = model(tokens_tensor, segments_tensors)
@@ -50,8 +50,8 @@ def vectorize(sentence):
 def predict_similiarity(text1, text2):
     vec1 = vectorize(text1)
     vec2 = vectorize(text2)
-    #print(vec1.size)
-    #print(vec1.shape)
+    print(vec1.size)
+    print(vec1.shape)
     return cosine_similarity(vec1, vec2)
 
 def normalize(df, feature_names):
