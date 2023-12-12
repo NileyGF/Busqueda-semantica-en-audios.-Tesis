@@ -1,0 +1,66 @@
+\documentclass[11pt,oneside]{uhthesis}
+\usepackage{subfigure}
+% \usepackage[linesnumbered,lined,titlenumbered,ruled]{algorithm2e}
+\usepackage[ruled,vlined,lined,linesnumbered,algochapter]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsbsy}
+\usepackage{mathpazo}
+\usepackage{graphics}
+\usepackage{float}
+\usepackage{color}
+%\usepackage{breqn}
+\usepackage{listings}%
+\lstset{%
+	language=Lisp,%lenguaje
+	basicstyle=\bfseries\ttfamily,
+	keywordstyle=\color{blue},
+	commentstyle=\color{brown},
+	backgroundcolor=\color{gray!10},
+	showstringspaces=false
+}
+\input{word-comments.tex}
+
+%\floatstyle{ruled}
+%\restylefloat{table}
+
+\renewcommand{\tablename}{Tabla}
+%\dontprintsemicolon
+
+\title{Recuperación semántica de música utilizando grandes modelos de lenguaje y embeddings.}
+\author{Niley González Ferrales}
+\advisor{Dr. Yudivian Almeida}
+\degree{Licenciado en Ciencia de la Computación}
+\faculty{Facultad de Matemática y Computación}
+\date{2023}
+\logo{Graphics/uhlogo}
+\makenomenclature
+
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\diff}[1]{\ensuremath{\mathrm{d}#1}}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\include{FrontMatter/Dedication}
+\include{FrontMatter/Thanks}
+\include{FrontMatter/SupervisorOpinion}
+\include{FrontMatter/Abstract}
+\include{FrontMatter/Contents}
+
+\mainmatter
+	
+\include{MainMatter/0-introduction}
+\include{MainMatter/1-preliminaries}
+\include{MainMatter/2-system}
+\include{MainMatter/3-implementation}
+\include{MainMatter/4-results}
+\include{MainMatter/5-conclusions}
+
+\backmatter
+
+\include{BackMatter/Bibliography}
+
+\end{document}

@@ -1,0 +1,151 @@
+% \chapter{Validación del modelo por flujo de mercancías del CVRP}
+% \label{chap:results}
+
+% El CVRP es la variante más sencilla y estudiada de los VRP \cite{toth@vrp}. Para describirlo se han definido numerosos modelos mediante distintos tipos de formulaciones. En el capítulo \ref{chap:preliminaries} se mostraron dos de estos modelos: uno con flujo de vehículos de dos índices y otro con flujo de mercancías. En el libro de Toth y Vigo \cite{toth@vrp} se presenta un modelo por flujo de mercancía distinto al presentado en este trabajo. A continuación se muestra el modelo propuesto por Toth y Vigo:
+
+% $$
+% \min \sum_{(i, j) \in A} c_{ij} x_{ij}
+% $$
+% \begin{eqnarray}
+% s.a \displaystyle{\sum_{j \in V} (y_{ji} - y_{ij})} & = & 2 d_i \ \ \forall i \in V / \{0, n + 1\}\\
+% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{0j}} & = & d(V / \{0, n + 1\})\\
+% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{j0}} & = & KC - d(V / \{0, n + 1\})\\
+% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{n + 1 j}} & = & KC\\
+% y_{ij} + y_{ji} & = & Cx_{ij} \ \ \forall (i, j) \in A\\
+% \displaystyle{\sum_{j \in V} (x_{ij} + x_{ji})} & = & 2 \ \ \forall i \in V / \{0, n + 1\}\\
+% y_{ij} & \ge & 0 \ \ \forall (i, j) \in A\\
+% x_{ij} & \in & {0, 1} \ \ \forall (i, j) \in A
+% \end{eqnarray}
+
+% En este capítulo se realizará la validación de este modelo con el sistema implementado. En las secciones \ref{sec:systemInput} y \ref{sec:systemOutput} se presentan la entrada y la salida del sistema, respectivamente. Por último, en la sección \ref{sec:results} se describe la interpretación de estos resultados.
+
+% \section{Entradas del sistema}\label{sec:systemInput}
+% Para probar el sistema se realizaron varias ejecuciones con distintos valores de $k$. Las pruebas realizadas con el sistema para validar el modelo por flujo de mercancías del CVRP utilizaron valores de $k$ iguales a 1 y a 10.
+
+% La implementación del modelo en LMML se muestra en el código \ref{alg:cvrpLMML} de la página \pageref{alg:cvrpLMML}.
+
+% \begin{figure}[h!] 
+% \begin{lstlisting}[basicstyle=\bfseries\ttfamily\footnotesize]
+% (defparameter
+%     cvrp-model
+%     (problem "cvrp"
+%              (set V)
+%              (set I)
+%              (param c :domain {V V})
+%              (param d :domain {V})
+%              (param n)
+%              (param P)
+%              (param K)
+%              (param M)
+%              (binary-variable x :domain {V V})
+%              (variable        y :domain {V V})
+%              (minimize (sum (a in V)
+%                          (sum (b in V)
+%                              x[a b] * c[a b])))
+%              (s.t. (sum (b in V)
+%                        y[b a] - y[a b]) = 2 * d[a]
+%                    (forall a in I))
+%              (s.t. (sum (b in I) y[0 b]) = M)
+%              (s.t. (sum (b in I) y[b 0]) = K * P - M)
+%              (s.t. (sum (b in I) y[n + 1 b]) = K * P)
+%              (s.t. y[a b] + y[b a] = P * x[a b]
+%                    (forall a in V)
+%                    (forall b in V))
+%              (s.t. (sum (b in V)  x[a b] + x[b a]) = 2
+%                    (forall a in I))))
+% \end{lstlisting}
+% 	\caption{Definición del modelo por flujo de mercancías del CVRP en LMML.}  \label{alg:cvrpLMML}
+% \end{figure}
+
+% Otra de las entradas del sistema es la definición del problema mediante las características abstractas. Para el CVRP, las manera de definirlo se muestra en el código \ref{alg:cvrp2}.
+
+% \begin{figure}[h!] 
+% \begin{lstlisting}
+% (defclass cvrp (dont-overload-vehicles
+%                 begin-end-in-depot
+%                 visit-client-at-most-once
+%                 visit-client-at-least-once) ())
+% \end{lstlisting}
+% 	\caption{Definición del CVRP a partir de las características abstractas.}  \label{alg:cvrp2}
+% \end{figure}
+
+% Con los argumentos de la función {\tt evaluate-model} definidos, es posible pasar a la evaluación del sistema cuya salida se explica en la sección siguiente.
+
+% \section{Salida del sistema}\label{sec:systemOutput}
+% Con la salida del sistema es posible conocer qué pruebas resultaron exitosas y cuáles fallaron. Para las pruebas fallidas se muestran ejemplos de soluciones (factibles e infactibles en dependencia del requerimiento) donde las restricciones del modelo resultaron incorrectas.
+
+% Al validar el modelo presentado en la página \pageref{alg:cvrpLMML} con la función {\tt evaluate\\-model} el resultado para cada prueba en la que se generan soluciones infactibles es satisfactorio, pues al menos una restricción se incumple. Sin embargo, al evaluar soluciones factibles en las restricciones del modelo, la prueba falla.
+
+% Para cada una de las $k$ soluciones factibles generadas ($k = 1$ y $k = 10$), la restricción (4.5) falla. Uno de los ejemplos de solución devuelto por el sistema, que incumple dichas restricción, se muestra en la figura \ref{fig:wrongSolEj}.
+
+% \begin{figure}[h!]
+% 	\begin{minipage}{0.45\textwidth}
+% 		{\bf Problema}
+		
+% 		{\tt cantidad de clientes: 3\\capacidad: 18\\depósito: 0\\demandas: $\{6, 9, 3\}$}
+% 	\end{minipage}
+% 	\hfill
+% 	\begin{minipage}{0.45\textwidth}
+% 		{\bf Solución}
+		
+% 		{\tt rutas: $\{0, 3, 0\}$ y $\{0, 1, 2, 0\}$}
+% 	\end{minipage}
+% 	\caption{Problema y solución de ejemplo generada por el sistema que falla una de las pruebas.} \label{fig:wrongSolEj}
+% \end{figure}
+
+% Al observar la salida del sistema no es posible determinar por qué el modelo para el problema de CVRP está incorrecto. Por esta razón, a continuación se muestra el análisis realizado a esta restricción para determinar la razón del fallo y la mejor manera de corregirla.
+
+% \section{Análisis de los resultados}\label{sec:results}
+
+% Las variables del modelo correspondientes a la solución de la figura \ref{fig:wrongSolEj} se muestran en la figura \ref{fig:wrongVarEj}.
+
+% \begin{figure}[h!]
+% 	\centering
+% 	\begin{minipage}{0.45\textwidth}
+% 		$x$ = $\left(\begin{array}{ccccc}
+% 		0 & 1 & 0 & 1 & 0 \\
+% 		0 & 0 & 1 & 0 & 0 \\
+% 		0 & 0 & 0 & 0 & 1 \\
+% 		0 & 0 & 0 & 0 & 1 \\
+% 		0 & 0 & 0 & 0 & 0 \\
+% 		\end{array}\right)$
+% 	\end{minipage}
+% 	\hfill \begin{minipage}{0.45\textwidth}
+% 		$y$ = $\left(\begin{array}{ccccc}
+% 		0 & 15 & 0 & 3 & 0 \\
+% 		3 & 0 & 9 & 0 & 0 \\
+% 		0 & 9 & 0 & 0 & 0 \\
+% 		15 & 0 & 0 & 0 & 0 \\
+% 		0 & 0 & 18 & 18 & 0 \\
+% 		\end{array}\right)$
+% 	\end{minipage}
+% 	\label{fig:wrongVarEj}
+% \end{figure}
+
+% Para facilitar el análisis, se toman como ejemplo $i = 1$ y $j = 2$. Al expandir la restricción (4.5) para estos índices se obtiene la igualdad siguiente:
+
+% $$\begin{array}{rcl}
+% 	y_{12} + y_{21} & = & C x_{12}\\
+% 	9 + 9 & = & 18\\
+% 	18 & = & 18
+% \end{array}$$
+
+% Sin embargo, al invertir los índices, es decir, $i = 2$ y $j = 1$, no se cumple la igualdad:
+
+% $$\begin{array}{rcl}
+% y_{21} + y_{12} & \neq & C x_{21}\\
+% 9 + 9 & \neq & 0\\
+% 18 & \neq & 0
+% \end{array}$$
+
+% Por esta razón, la solución factible del ejemplo, al evaluarse en la restricción, obtiene un resultado negativo. La inversión de los índices, aunque no afecta la parte izquierda de la igualdad, sí afecta la parte derecha. Al representarse teóricamente el problema mediante un grafo dirigido, se cumple que $x_{ij} \neq x_{ji}$. La razón por la cual la restricción (4.5) falla radica en la asimetría del modelo teórico. Una solución posible para esta restricción es tener en cuenta en el miembro derecho los valores de $x_{ij}$ y de $x_{ji}$, en lugar de solo $x_{ij}$. La restricción correcta se muestra a continuación:
+
+% \begin{equation}\label{eq:rightCons}
+% 	y_{ij} + y_{ji} = C (x_{ij} + x_{ji}) \ \ \forall (i, j) \in A
+% \end{equation}
+
+% Con esta restricción se garantiza que si $x_{ij}$ y  $x_{ji}$ ambas valen 0, entonces las variables de flujo para esos índices deben ser nulas. Si exactamente una de las variables toma el valor 1, entonces se debe cumplir que la suma de las variables de flujo sea igual a la capacidad del vehículo. Por último, el caso en el que tanto  $x_{ij}$ como  $x_{ji}$ sean 1 no es posible, debido a que existen en el modelo otras restricciones que imponen la condición de visitar a cada cliente una única vez.
+
+% Al validar el nuevo modelo, donde la restricción (4.5) se sustituyó por la restricción correcta mostrada en la ecuación \ref{eq:rightCons}, el sistema devuelve un resultado satisfactorio. Con esta salida es posible decir que la transformación realizada a la restricción (4.5) parece arreglar el fallo del modelo original.
+
+% Como se aprecia mediante este ejemplo, el sistema implementado no solo funciona para validar un modelo, sino que provee las herramientas necesarias para realizar un análisis del fallo (si hay) y determinar las maneras de corregirlo.

@@ -1,134 +1,12 @@
-\documentclass[11pt,a4paper,oldfontcommands]{memoir}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{microtype}
-\usepackage[dvips]{graphicx}
-\usepackage{xcolor}
-\usepackage{times}
-\usepackage{multicol}
-
-\usepackage[
-breaklinks=true,colorlinks=true,
-linkcolor=blue,urlcolor=blue,citecolor=blue,% PDF VIEW
-%linkcolor=black,urlcolor=black,citecolor=black,% PRINT
-bookmarks=true,bookmarksopenlevel=2]{hyperref}
-
-\usepackage{natbib}
-\usepackage{titlesec}
-\usepackage{geometry}
-% PDF VIEW
-\geometry{total={210mm,297mm},
-left=25mm,right=25mm,%
-bindingoffset=0mm, top=25mm,bottom=25mm}
-% PRINT
-% \geometry{total={210mm,297mm},
-% left=20mm,right=20mm,
-% bindingoffset=10mm, top=25mm,bottom=25mm}
-
-\OnehalfSpacing
-%\linespread{1.3}
-
-%%% STYLE OF SECTIONS, SUBSECTIONS, AND SUBSUBSECTIONS
-\renewcommand{\thesection}{\Roman{section}}
-\titleformat{\section}[block]{\normalsize\bfseries}{\thesection.}{1em}{}
-\titlespacing*{\section}{0pt}{11pt plus 2pt minus 2pt}{11pt plus 2pt minus 2pt}
-\renewcommand{\thesubsection}{\Alph{subsection}}
-\titleformat{\subsection}{\normalsize\itshape}{\thesubsection.}{1em}{}
-\titlespacing*{\subsection}{0pt}{11pt plus 2pt minus 2pt}{11pt plus 2pt minus 2pt}
-
-% \setsecheadstyle{\Large\bfseries\sffamily\raggedright}
-% \setsubsecheadstyle{\large\bfseries\sffamily\raggedright}
-% \setsubsubsecheadstyle{\bfseries\sffamily\raggedright}
+Los sistemas de recuperación de música suelen utilizar pocos criterios de clasificación y usualmente a partir de metadatos. 
+Esto limita el tipo de búsquedas que se pueden realizar en ellos. Nuestra propuesta es construir un modelo de recuperación 
+de información que explote la mayor cantidad de información posible de una base de datos de música determinada; permitiendo 
+realizar búsquedas con mayor significación semántica. Dicho modelo estará compuesto, a su vez, por diversos modelos que 
+caractericen las canciones por uno o más criterios como pueden ser: el género, idioma, cantidad de cantantes, tema de la canción, 
+etc. El modelo de recuperación debe ser capaz de dado una consulta, comprobar que sea una pregunta válida del dominio y 
+en ese caso entender que características se desean, y buscar canciones que coincidan con ellas.
 
 
-%%% STYLE OF PAGES NUMBERING
-%\pagestyle{companion}\nouppercaseheads 
-%\pagestyle{headings}
-%\pagestyle{Ruled}
-\pagestyle{plain}
-\makepagestyle{plain}
-\makeevenfoot{plain}{\thepage}{}{}
-\makeoddfoot{plain}{}{}{\thepage}
-\makeevenhead{plain}{}{}{}
-\makeoddhead{plain}{}{}{}
-
-
-%\maxsecnumdepth{subsection} % chapters, sections, and subsections are numbered
-%\maxtocdepth{subsection} % chapters, sections, and subsections are in the Table of Contents
-
-
-%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-
-\begin{document}
-
-%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-%   TITLEPAGE
-%
-%   due to variety of titlepage schemes it is probably better to make titlepage manually
-%
-%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-\thispagestyle{empty}
-
-{%%%
-\sffamily
-\centering
-\Large
-
-~\vspace{\fill}
-
-{\huge 
-Búsqueda semántica en audios.
-}
-
-{\LARGE
-Plantilla temporal de tesis
-}
-
-\vspace{2.5cm}
-
-{\LARGE
-Niley González Ferrales
-}
-
-\vspace{3.5cm}
-
-% A thesis submitted in partial fulfillment for the\\
-% degree of Doctor of Philosophy\\[1em]
-% in the\\[1em]
-Facultad de Matemática y Computación\\
-Universidad de la Habana
-\vspace{3.5cm}
-
-Tutor: Dr. Yudivian Almeida
-
-\vspace{\fill}
-
-Noviembre 2023
-
-
-}%%%
-
-% \cleardoublepage
-%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-% 
-% \tableofcontents*
-
-\clearpage
-\begin{multicols}{2}
-Los sistemas de recuperación de música suelen utilizar pocos criterios de clasificación y usualmente a partir de metadatos. Esto limita el tipo de búsquedas que se pueden realizar en ellos. Nuestra propuesta es construir un modelo de recuperación de información que explote la mayor cantidad de información posible de una base de datos de música determinada; permitiendo realizar búsquedas con mayor significación semántica. Dicho modelo estará compuesto, a su vez, por diversos modelos que caractericen las canciones por uno o más criterios como pueden ser: el género, idioma, cantidad de cantantes, tema de la canción, etc. El modelo de recuperación debe ser capaz de dado una consulta, comprobar que sea una pregunta válida del dominio y en ese caso entender que características se desean, y buscar canciones que coincidan con ellas.
-\\[1em]
-Proponer un modelo de recuperación de información inteligente basado en la utilización de modelos de inteligencia artificial pre-entrenados así como modelos creados para problemas específicos. 
-\\[1em]
-Marzo –  Definición del marco de investigación – Escritura Introducción \\
-Abril-Mayo  Análisis de Estado del Arte – Escritura Estado del Arte \\
-Junio  –  Diseño de la Propuesta – Escritura Capítulo de Diseño \\
-%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%
-%\section{Resumen}
-
-
-\section{Introdución}
 Con el desarrollo acelerado de algoritmos de machine learning en los últimos 10 años, 
 muchos entornos han cambiado parcial o totalmente su forma de hacer las cosaas para incorporar
 esta vertiente de la inteligencia artificial que cada vez es más efectiva respecto a su costo. 
@@ -162,17 +40,8 @@ First lets introduce the information retrieval problem and \\
 % work addresses. The introduction contains your thesis statement and your contributions.
 % It also describes how the rest of your thesis will be organized. It normally, is not very
 % long, should be compelling and typically forms chapter one of your thesis.
-% 
 
-% where you give context for your research, introduce your research question, and outline your work.
 
-% Citation of Einstein paper~\cite{Einstein}.
-
-\subsection{First subsection}
-
-\subsection{Second subsection}
-
-\section{Revisión bibliográfica}
 The ‘literature review’ is the part of the thesis where there is
 extensive reference to related research and theory in your field; it is
 where connections are made between the source texts that you draw
@@ -193,7 +62,6 @@ been done in the field and what should be further investigated.
 \\
 
 
-
 \section{Metodología e implementación}
 This is the section of your thesis where you will present the methodological framework
 for your research. It discusses how you would do what you have already done, if you
@@ -208,6 +76,7 @@ Do not include implementation details.\\
 Do not include how you arrived at your solution.\\
 Do not mix evaluation and approach.(You will evaluate your approach, but that should be in a different section.)\\
 Do include a picture.\\
+
 
 \section{Resultados}
 In this section you will report the results of your work with reference to the methodology
@@ -226,15 +95,8 @@ document and may take more than one chapter to present
 \\
 
 After you have presented your approach, it is time to show why it is so great with an evaluation.
+
+
 \section{Conclusions, Summary and Future Work}
 critically evaluates your approach and evaluation. Most things we
 do in computer science are not perfect: There will be edge cases, limitations, or scenarios where other approaches are better. This section is your opportunity to acknowledge the weaknesses of your thesis and discuss why or why not they matter (and how they could be addressed by someone else extending your approach).\\
-
-
-\bibliographystyle{unsrt}
-% \bibliographystyle{plainnat}
-\bibliography{references}
-
-\end{multicols}
-\end{document}
-
