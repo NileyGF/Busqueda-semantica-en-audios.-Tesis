@@ -1,7 +1,9 @@
-from features_extractors import SPECIFIC_FEATURES
-from core import Song, FeaturesExtractor, musiccaps_preprocess, directory_path, downloaded_songs_names
+from src.features_extractors import SPECIFIC_FEATURES
+import src.embedding_retrieval as emb_ret
+from src.core import Song, FeaturesExtractor, musiccaps_preprocess, directory_path, downloaded_songs_names
 import os
 import pandas as pd
+import pickle
 
 
 """ First part of the pipeline : 
@@ -92,7 +94,25 @@ Decide on an appropiate rank K as the max number of relevant results. (Only retr
 # similarity. -Basically, this function retrieves from us many sentences embeddings and a single query embedding and returns as topk 
 # best (closest by cosine similarity) sentence embeddings-.
 
+def from_csv_to_embedd():
+    pass
 
+def relevant_descriptions_by_query(query:str, top_k='all'):
+    docs_embeddings_list = None
+    documents_list = None
+    try:
+        with open('sentence_embeddings.pkl', 'wb') as f:
+            docs_embeddings_list = pickle.load('corpus_bert_embeddings.bin')
+    except:
+        documents_list = []
+        docs_embeddings_list = emb_ret.extract_embeddings_for_docs_list(documents_list=documents_list, save=True, save_path='corpus_bert_embeddings.bin')
+
+    if docs_embeddings_list != None:
+        docs_idx_list = emb_ret.process_query(query=query, docs_embeddings_list=docs_embeddings_list, top_k=top_k)
+    else:
+        docs_idx_list = emb_ret.process_query(query=query, documents_list=documents_list, top_k=top_k)
+
+    return docs_idx_list
 
 
 """ Fourth part of the pipeline : 

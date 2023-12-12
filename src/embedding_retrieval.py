@@ -1,4 +1,4 @@
-import BERT_embedding
+import src.BERT_embedding as BERT_embedding
 import nltk
 import pickle
 import numpy as np
@@ -61,7 +61,7 @@ def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path=
             pickle.dump(embeddings_list,f)
     return embeddings_list
 
-extract_embeddings_for_docs_list(["The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services."])
+# extract_embeddings_for_docs_list(["The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services."])
 
 def process_query(query:str, docs_embeddings_list:list=None, documents_list:list=None, top_k="all"):
     if docs_embeddings_list == None and documents_list == None:

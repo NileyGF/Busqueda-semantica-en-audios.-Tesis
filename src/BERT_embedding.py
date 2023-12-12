@@ -113,7 +113,7 @@ def sentential_embeddings(tokenized_text):
 def calculate_distance(sentence_1,sentence_2):
     tokenized_text_1 = bert_tokenize(sentence_1)
     tokenized_text_2 = bert_tokenize(sentence_2)
-    sentence_1, vs_sum_cat1 = sentential_embeddings(tokenizer,tokenized_text_1)
+    sentence_1, vs_sum_cat1 = sentential_embeddings(tokenized_text_1)
     sentence_2, vs_sum_cat2 = sentential_embeddings(tokenizer,tokenized_text_2)
     return vector_similiarity(sentence_1, sentence_2)
     return cosine_distance(sentence_1, sentence_2)
