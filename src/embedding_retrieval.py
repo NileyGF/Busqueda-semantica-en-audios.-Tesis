@@ -58,7 +58,7 @@ def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path=
     if save:
         # Save sentence embeddings
         with open(save_path, 'wb') as f:
-            pickle.dump(embeddings_list,f)
+            pickle.dump(embeddings_list, f)
     return embeddings_list
 
 # extract_embeddings_for_docs_list(["The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services."])

@@ -2,8 +2,10 @@ from src.features_extractors import SPECIFIC_FEATURES
 import src.embedding_retrieval as emb_ret
 from src.core import Song, FeaturesExtractor, musiccaps_preprocess, directory_path, downloaded_songs_names
 import os
+from pathlib import Path
 import pandas as pd
 import pickle
+import time
 
 
 """ First part of the pipeline : 
@@ -27,11 +29,11 @@ def extract_features(music_path:str) -> dict :
 def extract_features_all_dataset():
     """ Go through the dataset to extract the features.  """
     try: 
-        dataset_path = os.path.join(directory_path,'musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
+        dataset_path = os.path.join(directory_path,'data','musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
         musiccaps_df = pd.read_csv(dataset_path)
     except:
         musiccaps_preprocess()
-        dataset_path = os.path.join(directory_path,'musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
+        dataset_path = os.path.join(directory_path,'data','musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
         musiccaps_df = pd.read_csv(dataset_path)
     songs_dict = downloaded_songs_names()
 
@@ -53,8 +55,8 @@ def extract_features_all_dataset():
     # print()
     # print(inner_merged.shape, musiccaps_df.shape, features_df.shape)
 
-    inner_merged.to_csv(os.path.join(directory_path,'musiccaps-subset-feat_index.csv')) # , header=False, index=False
-    inner_merged.to_csv(os.path.join(directory_path,'musiccaps-subset-feat.csv'), index=False) 
+    inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-feat_index.csv')) # , header=False, index=False
+    inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-feat.csv'), index=False) 
     return inner_merged    
         
 # extract_features_all_dataset()
@@ -67,6 +69,19 @@ Temporarily it will be approached using GPT2 model (huggingface API) for complet
 It is necessary to devise a prompt that maximizes the information fidelity. 
 It is possible to do some fine-tunnig if it is decided to download the GPT model instead of only using an API. 
 """
+def temp_descriptions():
+    dataset_path = os.path.join(directory_path,'data','musiccaps-subset_index.csv') # 'musiccaps-subset.csv'
+    df = pd.read_csv(dataset_path)
+    # print(df)
+    name_caption_df = df[["ytid", "caption"]]
+    # print(name_caption_df)/
+    descriptions_and_name = []
+    descriptions = []
+    for song in name_caption_df.itertuples():
+        descriptions_and_name.append((song.ytid, song.caption)) 
+        descriptions.append(song.caption)
+    return descriptions, descriptions_and_name
+
 
 """ Third part of the pipeline : 
 Information Retrieval System (Temporarily is ccosine similarity )
@@ -74,38 +89,26 @@ Using BERT, extract embeddings for each song sentence and use that as the vector
 The BERT model will need to be downloaded.
 Decide on an appropiate rank K as the max number of relevant results. (Only retrieve the top k most similars)
 """
+def save_embedd():
+    descriptions_list, descript_name_list = temp_descriptions() # TODO 
+    embeddings_path = os.path.join(directory_path,'data','temp_corpus_bert_embeddings.bin')
+    st = time.time()
+    emb_ret.extract_embeddings_for_docs_list(documents_list=descriptions_list, save=True, save_path=embeddings_path)
+    with open(embeddings_path, 'rb') as f:
+        docs_embeddings_list = pickle.load(f)
+    et = time.time()
+    print(f"Embeddings extractions for the corpus using BERT, took {round(et-st,4)} seconds.")
+    return embeddings_path, docs_embeddings_list
 
-# CORPUS EMBEDDINGS
-# tok_data = nltk.sent_tokenize(description)
-# Transform sentences to embeddings 
-#   model = ... 'stsb-bert-base'
-#   model.encode(sentence_list)
-# Convert all sentence embeddings to a 2D pytorch tensor
-# Save sentence embeddings
-# with open('sentence_embeddings.pkl', 'wb') as f:
-#   pickle.dump(sentence_embeddings,f)
-
-# QUERY EMBEDDINGS
-# (optional) tok_query = nltk.sent_tokenize(query)
-# query_embedding = model.encode(tok_query)
-
-# After transforming queries to embeddings, we compare each sentence's embedding of each abstract's and body text's section of each 
-# article with each every query embedding, via function sentence_transformers.util.semantic_search, which innerly utilizes cosine 
-# similarity. -Basically, this function retrieves from us many sentences embeddings and a single query embedding and returns as topk 
-# best (closest by cosine similarity) sentence embeddings-.
-
-def from_csv_to_embedd():
-    pass
-
-def relevant_descriptions_by_query(query:str, top_k='all'):
+def relevant_descriptions_by_query(query:str, top_k='all', embeddings_path='corpus_bert_embeddings.bin'):
     docs_embeddings_list = None
     documents_list = None
     try:
-        with open('sentence_embeddings.pkl', 'wb') as f:
-            docs_embeddings_list = pickle.load('corpus_bert_embeddings.bin')
+        with open(embeddings_path, 'rb') as f:
+            docs_embeddings_list = pickle.load(f)
     except:
-        documents_list = []
-        docs_embeddings_list = emb_ret.extract_embeddings_for_docs_list(documents_list=documents_list, save=True, save_path='corpus_bert_embeddings.bin')
+        documents_list = [] # TODO
+        docs_embeddings_list = emb_ret.extract_embeddings_for_docs_list(documents_list=documents_list, save=True, save_path=embeddings_path)
 
     if docs_embeddings_list != None:
         docs_idx_list = emb_ret.process_query(query=query, docs_embeddings_list=docs_embeddings_list, top_k=top_k)
@@ -125,5 +128,7 @@ Using Recall-K, Acurracy-K, F1 and so; evaluate the information retrieval. Using
 with different SRI approaches, like whether embeddings improve over only vectorial. Use as queries the original 
 captions from the dataset, and it should return at least the song, perhaps include similar songs as good results too.
 Search for metrics to evaluate the sentence generation from table. 
+
+Ablations:
 
 """

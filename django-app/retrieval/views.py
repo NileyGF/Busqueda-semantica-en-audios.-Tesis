@@ -5,6 +5,7 @@ from .models import Music
 import src.main as main
 
 def home(request):
+    main.save_embedd() # os.path.join(CORE_PARENT_DIR,'src','data','temp_corpus_bert_embeddings.bin')
     index = os.path.join(BASE_DIR,'retrieval','templates','index.html')
     all_songs = Music.objects.all()
     context = {'all_songs' : all_songs, 
@@ -29,10 +30,10 @@ def home(request):
         #     print(top_k)
         # print(query)
         context['top_k'] = top_k
-        # songs_idx = main.relevant_descriptions_by_query(query, top_k)
-        songs_idx = [1,0]
-        if top_k != 'all':
-            songs_idx = songs_idx[:top_k]
+        songs_idx = main.relevant_descriptions_by_query(query=query, top_k=top_k, embeddings_path=os.path.join(CORE_PARENT_DIR,'src','data','temp_corpus_bert_embeddings.bin'))
+        # songs_idx = [1,0]
+        # if top_k != 'all':
+        #     songs_idx = songs_idx[:top_k]
         songs_list = []
         for idx in songs_idx:
             s = Music.objects.filter(index=idx)[0]

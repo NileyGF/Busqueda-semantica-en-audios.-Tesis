@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 current_file_path = os.path.abspath(__file__)
-directory_path = os.path.dirname(current_file_path)
+directory_path = os.path.dirname(current_file_path) #  src
 musiccaps_csv_all_path =  os.path.join(directory_path, "musiccaps-public.csv")
 
 class Song:
@@ -93,8 +93,8 @@ def musiccaps_preprocess():
             raise Exception(f"There are more than one song with the same name {song}")
     
     subset1 = subset1_by_cols[subset1_by_cols.index.isin(subset1_indexs)]    
-    subset1.to_csv(os.path.join(directory_path,'musiccaps-subset_index.csv')) # , header=False, index=False
-    subset1.to_csv(os.path.join(directory_path,'musiccaps-subset.csv'), index=False) 
+    subset1.to_csv(os.path.join(directory_path,'data','musiccaps-subset_index.csv')) # , header=False, index=False
+    subset1.to_csv(os.path.join(directory_path,'data','musiccaps-subset.csv'), index=False) 
     # print(a_row.to_string())
     # print(subset1_by_cols[subset1_by_cols.index.isin([200,0])])
 
