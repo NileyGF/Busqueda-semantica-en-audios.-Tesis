@@ -21,6 +21,9 @@ class FeaturesExtractor:
     def __init__(self) -> None:
         pass
     
+    def feature_description(feature):
+        raise NotImplementedError()
+
     def classes_list(self) -> list:
         return self.classes
     
