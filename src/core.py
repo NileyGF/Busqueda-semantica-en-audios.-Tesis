@@ -16,8 +16,13 @@ class Song:
 
 class FeaturesExtractor:
     """ Common features extractor of music to stablish a single protocol for all the models that can join the system """
+    classes = []
+
     def __init__(self) -> None:
         pass
+    
+    def classes_list(self) -> list:
+        return self.classes
     
     def extract_feature(self, music:Song, model, *args, **kwargs):
         """ Generic extract feature function, where the model only require the music file path.
@@ -36,7 +41,10 @@ class FeaturesExtractor:
         # TODO learn how to properly pass args and kwargs to  model
         return model(music.song_file, args, kwargs)
 
-def downloaded_songs_names():
+    # def relevant_only(self, predictions:dict, max_results:int=1):
+    #     pass
+
+def downloaded_songs_name_path():
     downloaded_songs = {}
     BASE_DIR = Path(__file__).resolve().parent.parent
     # print(BASE_DIR)
@@ -81,7 +89,7 @@ def musiccaps_preprocess():
     columns_names = musiccaps_csv_all_df.columns.values # numpy.ndarray
     ## ['ytid' 'start_s' 'end_s' 'audioset_positive_labels' 'aspect_list' 'caption' 'author_id' 'is_balanced_subset' 'is_audioset_eval']
     subset1_by_cols = musiccaps_csv_all_df[["ytid", "start_s", "end_s","aspect_list", "caption"]]
-    downloaded_songs = downloaded_songs_names()
+    downloaded_songs = downloaded_songs_name_path()
 
     subset1_indexs = []
     for song in downloaded_songs:

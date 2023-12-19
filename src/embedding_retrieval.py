@@ -47,12 +47,15 @@ def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path=
     for i, text in enumerate(documents_list):
         # sent = nltk.sent_tokenize(text) # str list
         # print(sent)
+        print(i, text)
         tokenized = BERT_embedding.bert_tokenize(text=text)
+        print("tokens = ",len(tokenized))
         if len(tokenized) > 512:
             print(f"The BERT tokens, for the text number {i}, length is longer than the specified maximum sequence length . {len(tokenized)} > 512. ")
             print(text)
             raise Exception()
         embedding, _ = BERT_embedding.sentential_embeddings(tokenized_text=tokenized)
+        print("embedding length =",len(embedding)) # 768
         embeddings_list.append(embedding)
 
     if save:

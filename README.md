@@ -14,3 +14,7 @@ env\bin\Activate.ps1
 conda activate ess
 
 python3 -m src.test.py
+
+cd django-app
+
+python3 manage.py runserver
