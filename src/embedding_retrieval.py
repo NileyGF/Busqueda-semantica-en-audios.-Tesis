@@ -13,7 +13,7 @@ def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
     doc_likehood = {}
     
     for k in range(len(documents_vectors_list)):
-        cosine_sim = BERT_embedding.vector_similiarity(query_vector, documents_vectors_list[k])
+        cosine_sim = BERT_embedding.np_cosine_similarity(query_vector, documents_vectors_list[k])
         # cosine_sim = BERT_embedding.cosine_distance(query_vector, documents_vectors_list[k])
 
         doc_likehood[k] = cosine_sim # TODO k represents the index of the document in the django app
@@ -23,7 +23,7 @@ def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
     # Return the top_k docs with non-0-relevance
      
     i = 0
-    while list(ranked_docs.values())[i] > 1e-8:
+    while i < len(list(ranked_docs.values())) and list(ranked_docs.values())[i] > 1e-8:
         i += 1
         # if top_k != "all" and i >= top_k: 
         #     break
@@ -41,7 +41,7 @@ def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
     
     return index_list
 
-def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path='corpus_bert_embeddings.bin'):
+def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path='corpus_bert_embeddings.bin', append=False):
     embeddings_list = []
     number_of_docs = len(documents_list)
     for i, text in enumerate(documents_list):
@@ -59,6 +59,13 @@ def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path=
         embeddings_list.append(embedding)
 
     if save:
+        if append:
+            with open(save_path, 'rb') as f:
+                old = pickle.load(f)
+            append_embeddings_list = old + embeddings_list
+            with open(save_path, 'wb') as f:
+                pickle.dump(append_embeddings_list, f)
+            return embeddings_list, append_embeddings_list
         # Save sentence embeddings
         with open(save_path, 'wb') as f:
             pickle.dump(embeddings_list, f)

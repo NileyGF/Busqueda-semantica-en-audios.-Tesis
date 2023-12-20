@@ -3,9 +3,11 @@ import src.embedding_retrieval as emb_ret
 from src.core import Song, FeaturesExtractor, musiccaps_preprocess, directory_path, downloaded_songs_name_path
 import os
 from pathlib import Path
+from ast import literal_eval
 import pandas as pd
 import pickle
 import time
+import nltk
 
 
 """ First part of the pipeline : 
@@ -208,6 +210,38 @@ Using BERT, extract embeddings for each song sentence and use that as the vector
 The BERT model will need to be downloaded.
 Decide on an appropiate rank K as the max number of relevant results. (Only retrieve the top k most similars)
 """
+def get_queries2(tags_list:list) -> list:
+    queries = []
+    for s in tags_list:
+        song_tags = literal_eval(s)
+        query = ""
+        for t in song_tags:
+            query += t + ', '
+        queries.append(query)
+    
+    return queries
+
+def save_queries2_embedd():
+    try: 
+        descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
+    except Exception as er:
+        print(er)
+        get_descriptions_from_feat(SPECIFIC_FEATURES)
+        descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
+    queries_list = descriptions_df["aspect_list"].values.tolist()
+    embeddings_path = os.path.join(directory_path,'data','embeddings','queries2_bert_embeddings.bin')
+
+    st = time.time()
+    print('starting:',st)
+    
+    queries_list = get_queries2(queries_list)
+    emb_ret.extract_embeddings_for_docs_list(documents_list=queries_list, save=True, save_path=embeddings_path)
+    with open(embeddings_path, 'rb') as f:
+        queries_embeddings_list = pickle.load(f)
+    et = time.time()
+    print(f"Embeddings extractions for the queries 2 using BERT, took {round(et-st,4)} seconds.") # 3855.854 seconds 
+    return embeddings_path, queries_embeddings_list
+
 def save_descript_embedd():
     try: 
         descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
@@ -217,7 +251,7 @@ def save_descript_embedd():
         descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
     
     descriptions_list = descriptions_df["description"].values.tolist()
-    embeddings_path = os.path.join(directory_path,'data','corpus_bert_embeddings.bin')
+    embeddings_path = os.path.join(directory_path,'data','embeddings','corpus_bert_embeddings.bin')
     
     st = time.time()
     print('starting:',st)
@@ -225,9 +259,49 @@ def save_descript_embedd():
     emb_ret.extract_embeddings_for_docs_list(documents_list=descriptions_list, save=True, save_path=embeddings_path)
     with open(embeddings_path, 'rb') as f:
         docs_embeddings_list = pickle.load(f)
+
+    embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
+    embedd_corpus_relation = [(i,i) for i in range(len(docs_embeddings_list))]
+    with open(embedd_corpus_relation_path, 'wb') as f:
+        pickle.dump(embedd_corpus_relation, f)
+
     et = time.time()
     print(f"Embeddings extractions for the corpus using BERT, took {round(et-st,4)} seconds.") # 5097.6766 seconds
-    return embeddings_path, docs_embeddings_list
+    return embeddings_path, docs_embeddings_list, embedd_corpus_relation
+
+def extended_descript_embedd():
+    descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
+    descriptions_list = descriptions_df["description"].values.tolist()
+    embeddings_path = os.path.join(directory_path,'data','embeddings','corpus_bert_embeddings.bin')
+    embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
+    with open(embeddings_path, 'rb') as f:
+        embeddings_list = pickle.load(f)
+    with open(embedd_corpus_relation_path, 'rb') as f:
+        embedd_corpus_relation = pickle.load(f)
+    st = time.time()
+    print('starting:',st)
+    last = len(embedd_corpus_relation)
+    for s in range(len(descriptions_list)):
+        sentences = nltk.sent_tokenize(descriptions_list[s])
+        for i, text in enumerate(sentences):
+            tokenized = emb_ret.BERT_embedding.bert_tokenize(text=text)
+            if len(tokenized) > 512:
+                print(f"The BERT tokens, for the text number {i}, length is longer than the specified maximum sequence length . {len(tokenized)} > 512. ")
+                print(text)
+                raise Exception()
+            embedding, _ = emb_ret.BERT_embedding.sentential_embeddings(tokenized_text=tokenized)
+            embeddings_list.append(embedding)
+            embedd_corpus_relation.append((last,s))
+            last += 1
+    extended_embeddings_path = os.path.join(directory_path,'data','embeddings','corpus_bert_embeddings.bin')
+    with open(extended_embeddings_path, 'wb') as f:
+        pickle.dump(embeddings_list,f)
+    with open(embedd_corpus_relation_path, 'wb') as f:
+        pickle.dump(embedd_corpus_relation,f) 
+    et = time.time()
+    print(f"Embeddings extractions for the corpus using BERT, took {round(et-st,4)} seconds.") # 5097.6766 seconds
+    return extended_embeddings_path, embeddings_list, embedd_corpus_relation
+
 
 def save_queries_embedd():
     try: 
@@ -237,7 +311,7 @@ def save_queries_embedd():
         get_descriptions_from_feat(SPECIFIC_FEATURES)
         descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
     queries_list = descriptions_df["caption"].values.tolist()
-    embeddings_path = os.path.join(directory_path,'data','queries_bert_embeddings.bin')
+    embeddings_path = os.path.join(directory_path,'data','embeddings','queries_bert_embeddings.bin')
 
     st = time.time()
     print('starting:',st)
@@ -246,7 +320,7 @@ def save_queries_embedd():
     with open(embeddings_path, 'rb') as f:
         queries_embeddings_list = pickle.load(f)
     et = time.time()
-    print(f"Embeddings extractions for the queries using BERT, took {round(et-st,4)} seconds.") # 
+    print(f"Embeddings extractions for the queries using BERT, took {round(et-st,4)} seconds.") # 3855.854 seconds 
     return embeddings_path, queries_embeddings_list
 
 def relevant_descriptions_by_query(query:str, top_k='all', embeddings_path='corpus_bert_embeddings.bin'):
@@ -266,9 +340,15 @@ def relevant_descriptions_by_query(query:str, top_k='all', embeddings_path='corp
 
     return docs_idx_list
 
+# save_queries2_embedd()
+extended_descript_embedd()
+# embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
+# embedd_corpus_relation = [(i,i) for i in range(3802)]
+# with open(embedd_corpus_relation_path, 'wb') as f:
+#     pickle.dump(embedd_corpus_relation, f)
 
+# TODO reslationship corpus id or song name and embeddings corresponding to it
 
-save_queries_embedd()
 """ Fourth part of the pipeline : 
 Django web app to access and test the Information Retrieval System.
 """
@@ -286,7 +366,7 @@ Ablations:
 def most_similars_to_query(query:list, embeddings_list:list, min_sim=0.85):
     rel = []
     for k in range(len(embeddings_list)):
-        cosine_sim = emb_ret.BERT_embedding.vector_similiarity(query, embeddings_list[k])
+        cosine_sim = emb_ret.BERT_embedding.np_cosine_similarity(query, embeddings_list[k])
         # cosine_sim = BERT_embedding.cosine_distance(query_vector, documents_vectors_list[k])
         rel.append((k,cosine_sim))
 
@@ -301,7 +381,7 @@ def relevance_judgments() -> list:
     """ for every query/caption find the other captions with similarity > 0.9; to set those songs as relevant.
     Returns a list R, where R[i] = List[Tuples[song_idx, similarity]]
     """
-    queries_embeddings_path = os.path.join(directory_path,'data','queries_bert_embeddings.bin')
+    queries_embeddings_path = os.path.join(directory_path,'data','embeddings','queries_bert_embeddings.bin')
     with open(queries_embeddings_path, 'rb') as f:
         queries_embeddings_list = pickle.load(f) 
     relevance = []
@@ -309,14 +389,16 @@ def relevance_judgments() -> list:
     st = time.time()
     print('starting:',st)
     for caption in queries_embeddings_list:
-        relevance.append(most_similars_to_query(caption,queries_embeddings_list,0.9))
+        similars = most_similars_to_query(caption,queries_embeddings_list,0.95)
+        relevance.append(similars)
+        # print(len(similars))
 
-
-    with open(queries_embeddings_path, 'wb') as f:
+    relevance_path = os.path.join(directory_path,'data','queries_songs_relevance.bin')
+    with open(relevance_path, 'wb') as f:
         pickle.dump(relevance,f)
     et = time.time()
-    print(f"Embeddings extractions for the queries using BERT, took {round(et-st,4)} seconds.") # 
+    print(f"Relevance queries-songs calculation, took {round(et-st,4)} seconds.") # 370.1901 seconds 
     
     return relevance
 
-
+# relevance_judgments()
