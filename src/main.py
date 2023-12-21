@@ -239,7 +239,7 @@ def save_queries2_embedd():
     with open(embeddings_path, 'rb') as f:
         queries_embeddings_list = pickle.load(f)
     et = time.time()
-    print(f"Embeddings extractions for the queries 2 using BERT, took {round(et-st,4)} seconds.") # 3855.854 seconds 
+    print(f"Embeddings extractions for the queries 2 using BERT, took {round(et-st,4)} seconds.") # 5292.654 seconds 
     return embeddings_path, queries_embeddings_list
 
 def save_descript_embedd():
@@ -283,6 +283,7 @@ def extended_descript_embedd():
     last = len(embedd_corpus_relation)
     for s in range(len(descriptions_list)):
         sentences = nltk.sent_tokenize(descriptions_list[s])
+        print(s)
         for i, text in enumerate(sentences):
             tokenized = emb_ret.BERT_embedding.bert_tokenize(text=text)
             if len(tokenized) > 512:
@@ -299,7 +300,7 @@ def extended_descript_embedd():
     with open(embedd_corpus_relation_path, 'wb') as f:
         pickle.dump(embedd_corpus_relation,f) 
     et = time.time()
-    print(f"Embeddings extractions for the corpus using BERT, took {round(et-st,4)} seconds.") # 5097.6766 seconds
+    print(f"Embeddings extractions for the corpus using BERT, took {round(et-st,4)} seconds.") # 52863.9011 seconds
     return extended_embeddings_path, embeddings_list, embedd_corpus_relation
 
 
@@ -342,12 +343,6 @@ def relevant_descriptions_by_query(query:str, top_k='all', embeddings_path='corp
 
 # save_queries2_embedd()
 extended_descript_embedd()
-# embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
-# embedd_corpus_relation = [(i,i) for i in range(3802)]
-# with open(embedd_corpus_relation_path, 'wb') as f:
-#     pickle.dump(embedd_corpus_relation, f)
-
-# TODO reslationship corpus id or song name and embeddings corresponding to it
 
 """ Fourth part of the pipeline : 
 Django web app to access and test the Information Retrieval System.
