@@ -1,0 +1,7 @@
+rows,R@1,R@5,R@10,R@50,mAP
+captions_descriptions,0.001,0.005,0.009,0.036,
+captions_descriptions_extend,,,,,
+tags_descriptions,,,,,
+tags_descriptions_extend,,,,,
+MuLan,,,,,0.09
+SoundDescs,31.1,60.6,70.8,86.0,

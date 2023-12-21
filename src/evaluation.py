@@ -23,6 +23,18 @@ def hits(qrels: list, retrieved: list, top_k:int = 0):
     # print(intersect)
     return len(intersect)
 
+def hit_rate(qrels: list, retrieved: list, top_k:int = 0):
+    """ Number of retrieved relevant songs. Returns how many elements of qrels are in retrieved, using numpy 
+        qrels:       list of relevant songs
+        retrieved:   list of retrieved songs
+        top_k:       if top_k > 0, only the top_k retrieved songs are considered
+    """
+    k = top_k if top_k > 0 else len(retrieved)
+    considered = retrieved[:k]
+    intersect = np.intersect1d(qrels, considered)
+    # print(intersect)
+    return 1 if len(intersect) > 0 else 0
+
 def precision(qrels: list, retrieved: list, top_k:int = 0):
     """ Proportion of the retrieved songs that are relevant. 
         qrels:       list of relevant songs
@@ -42,7 +54,7 @@ def precision(qrels: list, retrieved: list, top_k:int = 0):
     retrieved_relevants = hits(qrels, retrieved, k)
     return retrieved_relevants  / k
 
-def recall(qrels: list, retrieved: list, top_k:int):
+def recall(qrels: list, retrieved: list, top_k:int = 0):
     """ Ratio between the retrieved songs that are relevant and the total number of relevant songs. 
         qrels:       list of relevant songs
         retrieved:   list of retrieved songs
@@ -62,59 +74,85 @@ def recall(qrels: list, retrieved: list, top_k:int):
     retrieved_relevants = hits(qrels, retrieved, k)
     return retrieved_relevants / len(qrels)
 
-def f_metric(qrels: list, retrieved: list, beta = 1):
-    """ Weighted harmonic mean of Precision and Recall. 
+def average_precision(qrels: list, retrieved: list):
+    """ Average Precision is the average of the Precision scores computed after each relevant song is retrieved. 
         qrels:       list of relevant songs
         retrieved:   list of retrieved songs
-        F = ((1+beta^2) * P * R ) / ( beta^2 * P + R )
-        beta: weight
-        P: precision
-        R: recall
-    """    
-    if beta <= 0: return None
-    precision_s = precision(qrels, retrieved)
-    recall_s = recall(qrels, retrieved)
-    if precision_s == 0 or recall_s == 0: return 0
-    return ((1 + beta ** 2) * precision_s * recall_s) / ((beta ** 2) * precision_s + recall_s)
-
-def precision_ranked(qrels: list, retrieved: list, top_k:int):
-    """ Proportion of the retrieved songs that are relevant. 
-        qrels:       list of relevant songs
-        retrieved:   list of retrieved songs
-        R-Precision = r/R
-        r: number of relevant songs among the top-R retrieved
-        R: total number of relevant songs
-        R-Precision is equal to recall at the R-th position
+        top_k:       if top_k > 0 only the top_k retrieved songs are considered
+        
+        Average Precision = sum^n_k (P@k * r_k) / R
+        r_k:    is 1 if retrieved[k] is relevant, 0 otherwise
+        R:      number of relevant songs
+        n:      number of retrieved songs
     """
-    # R = min(len(qrels), len(retrieved))
-    hits_on_top_R = hits(qrels, retrieved[:top_k])
-    if len(qrels) == 0: return 0
-    return hits_on_top_R / len(qrels)
+    # https://vitalflux.com/mean-average-precision-map-for-information-retrieval-systems/
+    ap = []
+    for k in range(len(retrieved)):
+        if retrieved[k] in qrels:
+            pk = precision(qrels, retrieved, k+1)
+            # print("pk: ", pk, "rel: ", rel)
+            ap.append(pk)
+            # print(ap)
+    return np.sum(ap) / len(ap)
+# print(average_precision([0,1,3,4,6,9],[0,1,2,3,4,5,6,7,8,9]))
 
-def fallout(qrels: list, retrieved: list, total_docs: int):
-    """ Proportion of non-relevant songs retrieved,
-        out of all non-relevant songs available 
-        fallout = nr/nn
-        nr: number of non-relevant songs retrieved
-        nn: total of non-relevant songs
-    """
-    non_hits = len(retrieved) - hits(qrels, retrieved)
-    non_rel_docs = total_docs - len(qrels)
-    if non_hits == 0 or non_rel_docs == 0: return 0
-    return non_hits / non_rel_docs
+def mean_average_precision(average_precision:list):
+    
+    return np.mean(average_precision)
+    return np.sum(average_precision) / len(average_precision)
+
 
 def plot(X:list, Y:list, avg: float, name:str, fig: int, Xlabel = 'queries', Ylabel=''):
     # path = os.path.join(os.path.dirname(__file__), 'evaluation')
     # path = os.path.join(path, name)
     plt.figure(fig)
-    plt.scatter(X, Y )
+    plt.scatter(X, Y)
     plt.xlabel(Xlabel)
     plt.ylabel(Ylabel)
     plt.title('Average '+name+': '+str(round(avg,4)))
+    plt.ylim([-0.1, 1.1])
     # plt.savefig(path, format='png')
     plt.show()
-    
-def evaluate_full_dataset(corpus_embedd:str, queries_embedd:str, relevance:str, F_beta: float, top_k:int):
+
+def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str, top_k:int ):
+    with open(corpus_embedd, 'rb') as f:
+        corpus_embeddings_list = pickle.load(f)
+    with open(queries_embedd, 'rb') as f:
+        queries_embeddings_list = pickle.load(f) 
+    with open(relevance, 'rb') as f:
+        relevance_sim_list = pickle.load(f) 
+    relevance_list = []
+    for l in relevance_sim_list:
+        l1 = [i for i,j in l]
+        relevance_list.append(l1)
+
+    st = time.time()
+    metrics_d = {m:[] for m in metrics}
+    for q in range(len(queries_embeddings_list)):
+        retrieved = emb_ret.evaluate_query(query_vector=queries_embeddings_list[q], documents_vectors_list=corpus_embeddings_list, top_k='all')
+        qrels = relevance_list[q]
+        # if q not in retrieved:
+        #     raise Exception("How can this be??")
+        print(q)
+        if 'precision' in metrics:
+            metrics_d['precision'].append(precision(qrels, retrieved, top_k))
+        elif 'R@1' in metrics:
+            metrics_d['R@1'].append(recall(qrels, retrieved, 1))
+        elif 'R@5' in metrics:
+            metrics_d['R@5'].append(recall(qrels, retrieved, 5))
+        elif 'R@10' in metrics:
+            metrics_d['R@10'].append(recall(qrels, retrieved, 10))
+        elif 'R@50' in metrics:
+            metrics_d['R@50'].append(recall(qrels, retrieved, 50))
+        elif 'recall' in metrics:
+            metrics_d['recall'].append(recall(qrels, retrieved, top_k))
+        elif 'average_precision' in metrics:
+            metrics_d['average_precision'].append(average_precision(qrels, retrieved))
+    et = time.time()
+    print(f"Evaluation took {round(et-st,4)} seconds.") #  seconds
+    return metrics_d
+
+def __evaluate(corpus_embedd:str, queries_embedd:str, relevance:str):
     with open(corpus_embedd, 'rb') as f:
         corpus_embeddings_list = pickle.load(f)
     with open(queries_embedd, 'rb') as f:
@@ -173,45 +211,120 @@ def evaluate_full_dataset(corpus_embedd:str, queries_embedd:str, relevance:str, 
 
     et = time.time()
     print(f"Evaluation took {round(et-st,4)} seconds.") # 2959.9543 seconds
+
+def full_evaluate(restart=True):
+    evals_df_path = os.path.join(directory_path,'data','evaluations.csv')
+    idxs = ["captions_descriptions", "captions_descriptions_extend", "tags_descriptions", 
+            "tags_descriptions_extend", "MuLan", "SoundDescs"]
+    embedd_directory = os.path.join(directory_path,'data','embeddings')
+    embeddings_files = {"captions_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin')), 
+                        "captions_descriptions_extend":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'),), 
+                        "tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin')), 
+                        "tags_descriptions_extend":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'),)
+                        }
+    cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP']
+    if restart:
+        # options_metrics_dict = {"captions_descriptions":[],
+        #                         "captions_descriptions_extend":[],
+        #                         "tags_descriptions":[],
+        #                         "tags_descriptions_extend":[],
+        #                         "MuLan":[None,None,None,None,0.09],
+        #                         "SoundDescs":[31.1,60.6,70.8,86,None],
+        #                         }
+        # cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP']
+        options_metrics_dict = {'rows':idxs,
+                                'R@1':[None,None,None,None,None,31.1], 
+                                'R@5':[None,None,None,None,None,60.6], 
+                                'R@10':[None,None,None,None,None,70.8], 
+                                'R@50':[None,None,None,None,None,86], 
+                                'mAP':[None,None,None,None,0.09,None]}
+        evals_df = pd.DataFrame.from_dict(options_metrics_dict)
+        # evals_df.index = idxs
+        evals_df.to_csv(evals_df_path, index=False)
+        # print(evals_df)
+    else:
+        evals_df = pd.read_csv(evals_df_path)
+        # print(evals_df)
+        options_metrics_dict = evals_df.to_dict(orient='list') # ,index=False
+        # print(options_metrics_dict)
     
+    for idx, row in evals_df.iterrows():
+        """
+        row['rows'] = query/corpus pair
+        row['R@1'], row['R@5'], row['R@10'], row['R@50'], row[mAP] 
+        """
+        if idx >= 4: break
+        # print(idx,row['R@1'])
+        # print(evals_df.at[idx, 'R@1'])
+        metrics = []
+        if np.isnan(row['R@1']):
+            metrics.append('R@1')
+        if np.isnan(row['R@5']):
+            metrics.append('R@5')
+        if np.isnan(row['R@10']):
+            metrics.append('R@10')
+        if np.isnan(row['R@50']):
+            metrics.append('R@50')
+        if np.isnan(row['mAP']):
+            metrics.append('average_precision')
+        print(metrics)
+        metrics_result = _evaluate(corpus_embedd=embeddings_files[row['rows']][1], 
+                                    queries_embedd=embeddings_files[row['rows']][0],
+                                    relevance=os.path.join(directory_path,'data','queries_songs_relevance.bin'),
+                                    metrics=metrics, top_k='all')
+        # metrics_result = {'R@10':[1244,6,57,6,8,3,3,72,72],
+        #                     'R@50':[534,354,6,24,1,3,5,4,36,5,7],
+        #                     'average_precision':[1,2,3,4,5,6]}
+        for m in metrics_result:
+            metrics_result[m] = round(np.mean(metrics_result[m]),3)
+            print(m, metrics_result[m])
+            if m == 'average_precision':
+                evals_df.at[idx,'mAP'] = metrics_result[m]
+            else: 
+                evals_df.at[idx, m] = metrics_result[m]
+        
+        evals_df.to_csv(evals_df_path, index=False)
+    evals_df.to_csv(evals_df_path, index=False)
+    return evals_df
 
 def eval_graph(num_queries):
-    # with open(os.path.join(directory_path,'data','precision_50_l.bin'),'rb') as f:   
+    # with open(os.path.join(directory_path,'data','regular_eval','precision_50_l.bin'),'rb') as f:   
     #     precision_50_l = pickle.load(f)
-    with open(os.path.join(directory_path,'data','precision_20_l.bin'),'rb') as f:
+    with open(os.path.join(directory_path,'data','regular_eval','precision_20_l.bin'),'rb') as f:
         precision_20_l = pickle.load(f)
-    with open(os.path.join(directory_path,'data','precision_10_l.bin'),'rb') as f:
+    with open(os.path.join(directory_path,'data','regular_eval','precision_10_l.bin'),'rb') as f:
         precision_10_l = pickle.load(f)
-    with open(os.path.join(directory_path,'data','precision_1_l.bin'),'rb') as f:  
+    with open(os.path.join(directory_path,'data','regular_eval','precision_1_l.bin'),'rb') as f:  
         precision_1_l = pickle.load(f)
 
-    with open(os.path.join(directory_path,'data','recall_50_l.bin'),'rb') as f:
+    with open(os.path.join(directory_path,'data','regular_eval','recall_50_l.bin'),'rb') as f:
         recall_50_l = pickle.load(f)
-    with open(os.path.join(directory_path,'data','recall_20_l.bin'),'rb') as f:
+    with open(os.path.join(directory_path,'data','regular_eval','recall_20_l.bin'),'rb') as f:
         recall_20_l = pickle.load(f)
-    with open(os.path.join(directory_path,'data','recall_10_l.bin'),'rb') as f:
+    with open(os.path.join(directory_path,'data','regular_eval','recall_10_l.bin'),'rb') as f:
         recall_10_l = pickle.load(f)
-    with open(os.path.join(directory_path,'data','recall_1_l.bin'),'rb') as f:
+    with open(os.path.join(directory_path,'data','regular_eval','recall_1_l.bin'),'rb') as f:
         recall_1_l = pickle.load(f)
     # print(precision_1_l)
     # print(recall_1_l)
 
     X = np.arange(0,num_queries,1)
     # plot(X, precision_50_l, np.average(precision_50_l),  'precision@50', 1, Ylabel='precision')
-    plot(X, precision_20_l, np.average(precision_20_l),  'precision@20', 2, Ylabel='precision')
-    plot(X, precision_10_l, np.average(precision_10_l),  'precision@10', 3, Ylabel='precision')
-    plot(X, precision_1_l,  np.average(precision_1_l),   'precision@1', 4, Ylabel='precision')
-    plot(X, recall_50_l,    np.average(recall_50_l),     'recall@50', 5, Ylabel='recall')
-    plot(X, recall_20_l,    np.average(recall_20_l),     'recall@20', 6, Ylabel='recall')
-    plot(X, recall_10_l,    np.average(recall_10_l),     'recall@10', 7, Ylabel='recall')
-    plot(X, recall_1_l,     np.average(recall_1_l),      'recall@1',  8, Ylabel='recall')
-# hits([34,53,1,46,5,6,2,73,23,41],[651,1,6,66,4,58,5,64,168,41,38,486,51])
+    # plot(X, precision_20_l, np.average(precision_20_l),  'precision@20', 2, Ylabel='precision')
+    # plot(X, precision_10_l, np.average(precision_10_l),  'precision@10', 3, Ylabel='precision')
+    # plot(X, precision_1_l,  np.average(precision_1_l),   'precision@1', 4, Ylabel='precision')
+    # plot(X, recall_50_l,    np.average(recall_50_l),     'recall@50', 5, Ylabel='recall')
+    # plot(X, recall_20_l,    np.average(recall_20_l),     'recall@20', 6, Ylabel='recall')
+    # plot(X, recall_10_l,    np.average(recall_10_l),     'recall@10', 7, Ylabel='recall')
+    # plot(X, recall_1_l,     np.average(recall_1_l),      'recall@1',  8, Ylabel='recall')
+
 # corpus_embeddings_path = os.path.join(directory_path,'data','corpus_bert_embeddings.bin')
 # queries_embeddings_path = os.path.join(directory_path,'data','queries_bert_embeddings.bin')
 # relevance_path = os.path.join(directory_path,'data','queries_songs_relevance.bin')
 # evaluate_full_dataset(corpus_embeddings_path, queries_embeddings_path,relevance_path, 1, 10)
 # print("efghjky6u7ilouyjtrew")
-eval_graph(3802)
+# eval_graph(3802)
+full_evaluate(False)
 """ AUC-ROC, and mean average precision (mAP)"""
 """Throughout the section, we use the standard
 retrieval metrics: recall at rank k (R@k) which measures the
@@ -220,231 +333,5 @@ percentage of targets retrieved within the top k ranked results
 (meanR) rank. For all metrics, we report the mean and standard
 deviation of three different randomly seeded runs"""
 
-def get_relevance_label_df(query_answer_pair_filepath):
-    query_answer_pair = load_from_json(query_answer_pair_filepath)
-    relevance_label_df = pd.DataFrame.from_records(query_answer_pair)
-    return relevance_label_df
 
-def get_relevance_label(relevance_label_df):
-    relevance_label_df.rename(columns={'question': 'query_string'}, inplace=True)
-    relevance_label = relevance_label_df.groupby(['query_string'])['answer'].apply(list).to_dict()
-    return relevance_label
 
-class Evaluation:
-    """ Class for generating evaluation of re-ranked results 
-    
-    :param qas_filename: evaluating test queries using query_answer_pairs.json / synthetic_query_answer_pairs.json file
-    
-    :param rank_results_filepath: filepath to rank results
-        BERT-FAQ/data/CovidFAQ/rank_results         # CovidFAQ
-        BERT-FAQ/data/StackFAQ/rank_results         # StackFAQ
-        BERT-FAQ/data/FAQIR/rank_results            # FAQIR
-    :param jc_threshold: jaccard similarity threshold
-    :param test_data: param used for generating evaluation for synthetic/user_query test data
-    :param rankers: rankers e.g. unsupervised, supervised
-    :param rank_fields: rank fields e.g. BERT-Q-a, BERT-Q-q
-    :param loss_types:  loss types e.g. triplet, softmax
-    :param query_types: query types e.g. faq, user_query
-    :param neg_types: negative types e.g. simple, hard
-    :param top_k: top k e.g. 2, 3, 5
-    """
-
-    def __init__(self, qas_filename, rank_results_filepath, jc_threshold=1.0, test_data="synthetic", rankers=["unsupervised", "supervised"], 
-                 rank_fields=["BERT-Q-a", "BERT-Q-q"], loss_types=["triplet", "softmax"], query_types=["faq", "user_query"], 
-                 neg_types=["simple", "hard"], top_k=[2, 3, 5, 10]):
-        
-
-        self.top_k = top_k
-        # self.rankers = rankers
-        self.neg_types = neg_types
-        # self.test_data = test_data
-        self.loss_types = loss_types
-        # self.rank_fields = rank_fields
-        # self.query_types = query_types
-        self.rank_results_filepath = rank_results_filepath
-
-        self.ndcg_per_query = []
-        self.prec_per_query = []
-        self.map_per_query = []
-
-        list_of_qas = load_from_json(qas_filename)
-
-        total_questions = 0
-        filtered_questions = 0
-
-        self.valid_queries = []
-        
-        for item in list_of_qas:
-            total_questions += 1
-            if 'jc_sim' in item:
-                jc = float(item['jc_sim'])
-                if jc <= jc_threshold:
-                    filtered_questions += 1
-                    self.valid_queries.append(item['question'])
-
-    def compute_map(self, result_filepath, ranker, match_field, rank_field="", loss_type="", query_type="", neg_type=""):
-        """ Compute average precision score for a set of rank results
-        
-        :param result_filepath:  filepath to Elasticsearch rank results
-        :param ranker: supervised / unsupervised
-        :param match_field: answer / question / question_answer / question_answer_concat
-        :param loss_type: triplet / softmax
-        :param rank_field: BERT-Q-a / BERT-Q-q
-        :param query_type: faq / user_query
-        :param neg_type: simple / hard
-        """
-        query_results = load_from_json(result_filepath)
-
-        sum_ap = 0
-        num_queries = 0
-        map_per_query = []
-        for result in query_results:
-            query_string = result['query_string']
-
-            if query_string in self.valid_queries:
-
-                topk_results = result['rerank_preds']
-
-                labels = []
-                reranks = []
-
-                for topk in topk_results:
-                    labels.append(topk['label'])
-                    reranks.append(topk['score'])
-
-                true_relevance = np.array(labels)
-                scores = np.array(reranks)
-
-                ap = 0
-                all_zeros = not np.any(labels)
-                if labels and reranks and not all_zeros:
-                    ap = average_precision_score(true_relevance, scores)
-
-                sum_ap = sum_ap + ap
-                num_queries = num_queries + 1
-
-                query_map = {
-                    "Query": query_string,
-                    "MAP": ap,
-                    "Method": ranker,
-                    "Matching Field": match_field,
-                    "Ranking Field": rank_field,
-                    "Loss": loss_type,
-                    "Training Data": query_type,
-                    "Negative Sampling": neg_type
-                }
-                map_per_query.append(query_map)
-
-        return (float(sum_ap / num_queries)), map_per_query
-
-    def compute_prec(self, result_filepath, k, ranker, match_field, rank_field="", loss_type="", query_type="", neg_type=""):
-        """ Compute precision score for a set of rank results
-        
-        :param result_filepath:  filepath to Elasticsearch rank results
-        :param ranker: supervised / unsupervised
-        :param match_field: answer / question / question_answer / question_answer_concat
-        :param loss_type: triplet / softmax
-        :param rank_field: BERT-Q-a / BERT-Q-q
-        :param query_type: faq / user_query
-        :param neg_type: simple / hard
-        """
-        query_results = load_from_json(result_filepath)
-
-        sum_prec = 0
-        num_queries = 0
-        prec_per_query = []
-        for result in query_results:
-            query_string = result['query_string']
-
-            if query_string in self.valid_queries:
-                topk_results = result['rerank_preds']
-
-                labels = []
-                reranks = []
-
-                for topk in topk_results[:k]:
-                    labels.append(topk['label'])
-                    reranks.append(topk['score'])
-
-                true_relevance = np.array(labels)
-                scores = np.array(reranks)
-
-                prec = 0
-                all_zeros = not np.any(labels)
-                if labels and reranks and not all_zeros:
-                    prec = sum(true_relevance) / len(true_relevance)
-
-                sum_prec = sum_prec + prec
-                num_queries = num_queries + 1
-
-                query_prec = {
-                    "Query": query_string,
-                    "k": k,
-                    "Prec": prec,
-                    "Method": ranker,
-                    "Matching Field": match_field,
-                    "Ranking Field": rank_field,
-                    "Loss": loss_type,
-                    "Training Data": query_type,
-                    "Negative Sampling": neg_type
-                }
-                prec_per_query.append(query_prec)
-
-        return (float(sum_prec / num_queries)), prec_per_query
-
-    def compute_ndcg(self, result_filepath, k, ranker, match_field, rank_field="", loss_type="", query_type="", neg_type=""):
-        """ Compute NDCG score for a set of rank results
-        
-        :param result_filepath:  filepath to Elasticsearch rank results
-        :param ranker: supervised / unsupervised
-        :param match_field: answer / question / question_answer / question_answer_concat
-        :param loss_type: triplet / softmax
-        :param rank_field: BERT-Q-a / BERT-Q-q
-        :param query_type: faq / user_query
-        :param neg_type: simple / hard
-        """
-        query_results = load_from_json(result_filepath)
-
-        sum_ndcg = 0
-        num_queries = 0
-        ndcg_per_query = []
-
-        for result in query_results:
-            query_string = result['query_string']
-         
-            if query_string in self.valid_queries:
-                
-                topk_results = result['rerank_preds']
-
-                labels = []
-                reranks = []
-
-                for topk in topk_results[:k]:
-                    labels.append(topk['label'])
-                    reranks.append(topk['score'])
-
-                true_relevance = np.asarray([labels])
-                scores = np.asarray([reranks])
-                
-                ndcg = 0
-                if labels and reranks:
-                    ndcg = ndcg_score(true_relevance, scores)
-
-                sum_ndcg = sum_ndcg + ndcg
-                num_queries = num_queries + 1
-
-                query_ndcg = {
-                    "Query": query_string,
-                    "k": k,
-                    "NDCG": ndcg,
-                    "Method": ranker,
-                    "Matching Field": match_field,
-                    "Ranking Field": rank_field,
-                    "Loss": loss_type,
-                    "Training Data": query_type,
-                    "Negative Sampling": neg_type
-                }
-                ndcg_per_query.append(query_ndcg)
-
-        return (float(sum_ndcg / num_queries)), ndcg_per_query
-    
