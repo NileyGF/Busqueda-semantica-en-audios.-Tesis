@@ -1,8 +1,27 @@
 import src.BERT_embedding as BERT_embedding
+from src.core import directory_path
 import nltk
 import pickle
 import numpy as np
+import os
 # nltk.download('punkt')
+
+def _get_descrip_from_embeddings(doc_likehood:dict, documents_vectors_list:list):
+    """doc_likehood[k] = np_cosine_similarity(query_vector, documents_vectors_list[k]) for the embedding k.
+       doc_likehood is sorted in descending mode of the values
+       Returns a dictionary of song_id:cosine insted of embedding_id:cosine. To do that, for a song i 
+       the cosine value will be the max of the values corresponding to embeddings related to that song."""
+    embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
+    with open(embedd_corpus_relation_path, 'rb') as f:
+        embedd_corpus_relation = pickle.load(f)
+    embedd_descr_dict = dict(embedd_corpus_relation)
+    result = {}
+    for k in doc_likehood:
+        corresp_song = embedd_descr_dict[k]
+        if result.get(corresp_song,False):
+            continue
+        result[corresp_song] = doc_likehood[k]
+    return result
 
 def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
     """
@@ -19,25 +38,25 @@ def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
         doc_likehood[k] = cosine_sim # TODO k represents the index of the document in the django app
     
     ranked_docs = dict(sorted(doc_likehood.items(), key=lambda item: item[1], reverse=True))
-
+    ranked_songs = _get_descrip_from_embeddings(ranked_docs, documents_vectors_list)
     # Return the top_k docs with non-0-relevance
      
-    i = 0
-    while i < len(list(ranked_docs.values())) and list(ranked_docs.values())[i] > 1e-8:
-        i += 1
+    # i = 0
+    # while i < len(list(ranked_songs.values())) and list(ranked_songs.values())[i] > 1e-8:
+    #     i += 1
         # if top_k != "all" and i >= top_k: 
         #     break
     # if isinstance(top_k, int) and top_k > 0 and i < top_k: 
     #     top_k = i
     
     if top_k == "all":
-        if i < len(documents_vectors_list):
-            return list(ranked_docs.keys())[0:i]
-        return list(ranked_docs.keys())
+        # if i < len(documents_vectors_list):
+        #     return list(ranked_songs.keys())[0:i]
+        return list(ranked_songs.keys())
 
-    top_k = min(top_k, i)
+    # top_k = min(top_k, i)
 
-    index_list = list(ranked_docs.keys())[0:top_k]
+    index_list = list(ranked_songs.keys())[0:top_k]
     
     return index_list
 

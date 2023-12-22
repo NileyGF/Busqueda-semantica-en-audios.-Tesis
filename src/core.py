@@ -7,6 +7,10 @@ current_file_path = os.path.abspath(__file__)
 directory_path = os.path.dirname(current_file_path) #  src
 musiccaps_csv_all_path =  os.path.join(directory_path, "musiccaps-public.csv")
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+root = BASE_DIR.parent
+music_folder_path = os.path.join(root,'download-musiccaps-dataset-main', 'music_data')
+
 class Song:
     def __init__(self, file_path:str) -> None:
         self.song_file = file_path
@@ -47,14 +51,11 @@ class FeaturesExtractor:
     # def relevant_only(self, predictions:dict, max_results:int=1):
     #     pass
 
-def downloaded_songs_name_path():
+def downloaded_songs_name_path(music_folder:str=None):
     downloaded_songs = {}
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    # print(BASE_DIR)
-    root = BASE_DIR.parent
-    # print(root)
-    music_folder = os.path.join(root,'download-musiccaps-dataset-main', 'music_data')
-    # print(music_folder)
+    if music_folder == None:
+        music_folder = music_folder_path
+    
     files = os.listdir(music_folder)
     for file in files:
         # file = 'file_name + ext'        

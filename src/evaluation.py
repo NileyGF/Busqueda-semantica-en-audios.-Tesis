@@ -136,20 +136,20 @@ def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str,
         print(q)
         if 'precision' in metrics:
             metrics_d['precision'].append(precision(qrels, retrieved, top_k))
-        elif 'R@1' in metrics:
+        if 'R@1' in metrics:
             metrics_d['R@1'].append(recall(qrels, retrieved, 1))
-        elif 'R@5' in metrics:
+        if 'R@5' in metrics:
             metrics_d['R@5'].append(recall(qrels, retrieved, 5))
-        elif 'R@10' in metrics:
+        if 'R@10' in metrics:
             metrics_d['R@10'].append(recall(qrels, retrieved, 10))
-        elif 'R@50' in metrics:
+        if 'R@50' in metrics:
             metrics_d['R@50'].append(recall(qrels, retrieved, 50))
-        elif 'recall' in metrics:
+        if 'recall' in metrics:
             metrics_d['recall'].append(recall(qrels, retrieved, top_k))
-        elif 'average_precision' in metrics:
+        if 'average_precision' in metrics:
             metrics_d['average_precision'].append(average_precision(qrels, retrieved))
     et = time.time()
-    print(f"Evaluation took {round(et-st,4)} seconds.") #  seconds
+    print(f"Evaluation took {round(et-st,4)} seconds.") # over 3600 seconds
     return metrics_d
 
 def __evaluate(corpus_embedd:str, queries_embedd:str, relevance:str):
@@ -218,9 +218,9 @@ def full_evaluate(restart=True):
             "tags_descriptions_extend", "MuLan", "SoundDescs"]
     embedd_directory = os.path.join(directory_path,'data','embeddings')
     embeddings_files = {"captions_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin')), 
-                        "captions_descriptions_extend":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'),), 
+                        "captions_descriptions_extend":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin')), 
                         "tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin')), 
-                        "tags_descriptions_extend":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'),)
+                        "tags_descriptions_extend":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin'))
                         }
     cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP']
     if restart:
@@ -268,6 +268,9 @@ def full_evaluate(restart=True):
         if np.isnan(row['mAP']):
             metrics.append('average_precision')
         print(metrics)
+        
+        if len(metrics) == 0: continue
+
         metrics_result = _evaluate(corpus_embedd=embeddings_files[row['rows']][1], 
                                     queries_embedd=embeddings_files[row['rows']][0],
                                     relevance=os.path.join(directory_path,'data','queries_songs_relevance.bin'),
@@ -324,7 +327,7 @@ def eval_graph(num_queries):
 # evaluate_full_dataset(corpus_embeddings_path, queries_embeddings_path,relevance_path, 1, 10)
 # print("efghjky6u7ilouyjtrew")
 # eval_graph(3802)
-full_evaluate(False)
+# full_evaluate(False)
 """ AUC-ROC, and mean average precision (mAP)"""
 """Throughout the section, we use the standard
 retrieval metrics: recall at rank k (R@k) which measures the
