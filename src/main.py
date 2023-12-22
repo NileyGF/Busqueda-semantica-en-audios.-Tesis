@@ -141,19 +141,6 @@ def update_a_song_features(index:int, features_dict:dict=SPECIFIC_FEATURES):
     musiccaps_df.to_csv(dataset_path, index=False)
     return musiccaps_df
 
-# error_songs=["-cQ-jUTEgck","3OLeJZF4oI0","5xBfKiQcMZQ","6k6tF0s0lNs","6lPgzqrvHHw","6lPw0wKu7_M","6nWWTNVRDjw","FXVu-YwjhxM",
-#              "IL1n6jzABVw","ILE12hEW5Ck","IN71kMOAk_k","VRxFYwbik6A","VV85n-ebuUU","VZJfkEet6EQ","VZfrDZhI7BU","crToMuDxmL8",
-#              "ewI4q7_4TBQ","hRbukCd6N68","hSSzn4bIwZg","hTAWbHXCJ2A","hTNKYJ6suII","hTPxqUtlLdo","pLqasxGYWX8","rLtXML8Y5wo" ]
-# dataset_path = os.path.join(directory_path,'data','musiccaps-subset.csv') 
-# musiccaps_df = pd.read_csv(dataset_path)
-# musiccaps_df= musiccaps_df[~musiccaps_df['ytid'].isin(error_songs)]
-# print(musiccaps_df.columns)
-# musiccaps_df = musiccaps_df.drop(['Unnamed: 0'], axis=1)
-# print(musiccaps_df.columns)
-# musiccaps_df.to_csv(os.path.join(directory_path,'data','musiccaps-subset.csv'), index=False) 
-# extract_features_all_dataset()
-# processed_dataset_path = os.path.join(directory_path,'musiccaps-subset-feat.csv') # os.path.join(directory_path,'musiccaps-subset-feat_index.csv')
-
 
 """ Second part of the pipeline : 
 Convert the features information from tags (metadata), to a sentence, caption like.
@@ -175,8 +162,6 @@ def get_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset
     musiccaps_df = pd.read_csv(dataset_path)
     
     description_dict = {'ytid':[], 'description':[]}
-    # descriptions_and_name = []
-    # descriptions = []
 
     for idx, row in musiccaps_df.iterrows():
         song_description = ""
@@ -201,7 +186,6 @@ def get_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset
     # return descriptions, descriptions_and_name
     return description_dict['description'], inner_merged   
 
-# get_descriptions_from_feat(SPECIFIC_FEATURES)
 
 """ Third part of the pipeline : 
 Information Retrieval System (Temporarily is ccosine similarity )
@@ -340,13 +324,6 @@ def relevant_descriptions_by_query(query:str, top_k='all', embeddings_path='corp
 
     return docs_idx_list
 
-# embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
-# with open(embedd_corpus_relation_path, 'rb') as f:
-#     embedd_corpus_relation = pickle.load(f) 
-# print(embedd_corpus_relation[3817], len(embedd_corpus_relation))
-# save_descript_embedd()
-# save_queries2_embedd()
-# extended_descript_embedd()
 
 """ Fourth part of the pipeline : 
 Django web app to access and test the Information Retrieval System.
@@ -408,7 +385,6 @@ def relevance_judgments(caption=True) -> list:
     
     return relevance
 
-# relevance_judgments()
 
 
 features_extracted_csv = os.path.join(directory_path,'data','musiccaps-subset-feat.csv')
@@ -417,7 +393,6 @@ descriptions_embeddings_path = os.path.join(directory_path,'data','embeddings','
 descriptions_extended_embeddings_path = os.path.join(directory_path,'data','embeddings','extended_corpus_bert_embeddings.bin')
 queries_embeddings_path = os.path.join(directory_path,'data','embeddings','queries_bert_embeddings.bin')
 queries_relevance_path = os.path.join(directory_path,'data','queries_songs_relevance.bin')
-# TODO ^change name
 queries2_embeddings_path = os.path.join(directory_path,'data','embeddings','queries2_bert_embeddings.bin')
 queries2_relevance_path = os.path.join(directory_path,'data','queries2_songs_relevance.bin')
 

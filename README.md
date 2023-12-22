@@ -6,15 +6,27 @@ Besides de documents on the repository, the analysis of the state of the art on 
 
 Machine learning, Information Retrieval Systems, Music Information Retrieval, BERT, essentia, Music Classification, NLP
 
-source env/bin/activate # ubuntu linux
+### Requirements: Linux or MacOS, python 3.10
 
-Set-ExecutionPolicy Unrestricted -Scope Process # windows
-env\bin\Activate.ps1
+1. install miniconda following the instruction at : https://docs.conda.io/projects/miniconda/en/latest/ 
+2. clone the repository 
+3. python310 -m venv env
+4. source env/bin/activate
+5. conda create -n ess python=3.10
+6. conda activate ess
+7. conda install -c conda-forge -y cudatoolkit=11.2 cudnn=8.1
+8. pip install essentia-tensorflow
 
-conda activate ess
+To replicate the preprocessing:
 
-python3 -m src.test.py
+    python3 -m src.main
 
-cd django-app
+To test in django-app:
 
-python3 manage.py runserver
+    cd django-app
+
+    python3 manage.py runserver
+
+## The current results are:
+
+![Image](evaluations.png)
