@@ -1,8 +1,8 @@
 %===================================================================================
 % Chapter: Introduction
 %===================================================================================
-\chapter*{Introducción}\label{chapter:introduction}
-\addcontentsline{toc}{chapter}{Introducción}
+\chapter{Introducción}
+\label{chapter:introduction}
 %===================================================================================
 El auge de la tecnología digital, en los últimos años, ha llevado a una explosión en la cantidad de contenido multimedia accesible en línea. Incluyendo texto (libros, páginas web, ...), imágenes, videos y música; la red se ha convertido en un repositorio de información con un crecimiento vertiginoso \cite{owidinternet}. La necesidad de buscar en bases de datos cada vez más grandes ha impulsado importantes avances en el campo de la búsqueda y recuperación de información. Existen motores de búsqueda para diversos contenidos como páginas webs, imágenes y videos; sin embargo la música no es accesible de la misma forma \cite{Koepke2021AudioRW}. En este contexto, la presente tesis se propone explorar nuevas técnicas y enfoques para la búsqueda y recuperación de música en grandes bases de datos, con el objetivo de mejorar la accesibilidad de este recurso. \\
 \section{Contexto histórico/social} % before: Motivación
@@ -44,8 +44,8 @@ Los objetivos específicos planteados para dar cumplimiento al objetivo general 
     % \item Crear un \textit{framework} que permita extraer características de una canción y que sea extensible respecto a los modelos de extracción de características.
     % \item Crear un software que utilizando grandes modelos de lenguaje convierta los características extraídas, en un texto coherente y sin alucinaciones. 
     % \item Crear un SRI con un modelo similar al modelo vectorial, pero utilizando como vectores los \textit{embeddings} de las consultas y textos (empleando BERT).
-\end{itemize}\\
-% \section{Propuesta de solución} % optional, kinda
+\end{itemize}
+% \section*{Propuesta de solución} % optional, kinda
 % Para cumplir con los objetivos planteados se propone
 %% - campo de acción
 %% - pregunta ciéntifica
@@ -56,10 +56,7 @@ A través del documento se abordarán las siguientes preguntas con la intención
     \item ¿Se puede diseñar un sistema de recuperación que utilice las características extraídas (que son básicamente metadatos), pero sin las limitaciones que conllevan?  % ¿Es posible convertir una estructura de datos con las características de una canción en un texto descriptivo, similar al resultante de hacer \textit{captioning}, pero utilizando LLMC?
     % \item ¿Qué problemas puede traer la propensión a alucinar de dichos LLM para esta tarea?
     \item ¿Un SRI utilizando \textit{embeddings} es más efectivo en cuánto a similitud semántica que empleando vectores de bolsa de palabras? % semántica latente no es factible por el enorme costo computacional que tiene, que empeora con el tamaño del corpus, y bueno, queremos analizar grandes bases de datos. 
-\end{itemize}\\
+\end{itemize}
 \section{Estructura de la tesis}
 %% - estructura del trabajo
-A continuación se describe la estructura del documento. En el capítulo \textbf{Preliminares} se define el marco teórico del trabajo, que abarcará los modelos de recuperación de información, los acercamientos a recuperación de audios y música, modelos de lenguaje y como sobreponerse al \textit{semantic gap}. En el capítulo \textbf{Propuesta} se presenta la propuesta específica para atacar el problema planteado, mientras que en el capítulo \textbf{Detalles de implementación} se describen los detalles de implementación incluyendo las alternativas que no se pudieron comprobar. En el capítulo \textbf{Resultados computacionales} se muestran las evaluaciones del modelo de recuperación y similares para los pasos intermedios del sistema. Finalmente, en se muestran las conclusiones, recomendaciones y el camino al trabajo futuro sobre el tema.
-
-
-
+A continuación se describe la estructura del documento. El capítulo \hyperref[chap:development]{Desarrollo} se compone de 5 secciones. En la sección \ref{sec:sota} se define el marco teórico del trabajo, que abarcará los modelos de recuperación de información, los acercamientos a recuperación de audios y música, modelos de lenguaje y como sobreponerse al \textit{semantic gap}. En la sección \ref{sec:design} se presenta la modelación de la propuesta para atacar el problema planteado, mientras que en la sección \ref{sec:implementation} se describen los detalles de implementación incluyendo las alternativas que no se pudieron comprobar. Finalmente, en la sección \ref{sec:results}  se muestran las evaluaciones del modelo de recuperación y similares para los pasos intermedios del sistema. Los próximos capítulos son: las \hyperref[chap:conclusions]{conclusiones} y el de las \hyperref[chap:recommendations]{recomendaciones}.

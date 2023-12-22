@@ -1,280 +1,286 @@
-\chapter{Preliminares}
-\label{chap:preliminaries} % target: 
+%===================================================================================
+% Chapter: Development
+%===================================================================================
+\chapter{Desarrollo}
+\label{chap:development} % target: 20-30 pages
+%===================================================================================
 
-En este capítulo se presentan los recursos fundamentales utilizados en el trabajo. En la sección \ref{sec:vrp} se introducen los problemas de enrutamiento de vehículos y las características de sus principales variantes. En la sección \ref{sec:models} se describen los modelos matemáticos para los VRP, así como los distintos tipos que existen. En esa sección se hará referencia además, a los lenguajes de modelación algebraica (AML por sus siglas en inglés), en específico a LMML que es el utilizado en este trabajo. En la sección \ref{sec:unitTesting} se presentan las ideas principales sobre las unidades de prueba y, por último, en la sección \ref{sec:lisp} se exponen los elementos del lenguaje Common Lisp que se emplearon en la implementación de la herramienta propuesta.
+\section{Marco teórico}
+\label{sec:sota}  %% \ref{sec:sota}
+% En este capítulo se presentan los recursos fundamentales utilizados en el trabajo. En la sección \ref{sec:vrp} se introducen los problemas de enrutamiento de vehículos y las características de sus principales variantes. En la sección \ref{sec:models} se describen los modelos matemáticos para los VRP, así como los distintos tipos que existen. En esa sección se hará referencia además, a los lenguajes de modelación algebraica (AML por sus siglas en inglés), en específico a LMML que es el utilizado en este trabajo. En la sección \ref{sec:unitTesting} se presentan las ideas principales sobre las unidades de prueba y, por último, en la sección \ref{sec:lisp} se exponen los elementos del lenguaje Common Lisp que se emplearon en la implementación de la herramienta propuesta.
 
-\section{Problemas de Enrutamiento de Vehículos}\label{sec:vrp}
-El problema de enrutamiento de vehículos (VRP por sus siglas en inglés) es un problema concerniente a la distribución de mercancías entre un conjunto de almacenes y clientes. El objetivo del VRP es diseñar rutas de costo mínimo desde un almacén a un conjunto de clientes geográficamente dispersos sujeto a un conjunto de restricciones. En la versión más simple de VRP se trata de minimizar la distancia recorrida por una flota de vehículos donde se parte de un depósito central, se satisface la demanda de todos los clientes y no se excede la capacidad de los vehículos.
+% \section{Problemas de Enrutamiento de Vehículos}\label{sec:vrp}
+% El problema de enrutamiento de vehículos (VRP por sus siglas en inglés) es un problema concerniente a la distribución de mercancías entre un conjunto de almacenes y clientes. El objetivo del VRP es diseñar rutas de costo mínimo desde un almacén a un conjunto de clientes geográficamente dispersos sujeto a un conjunto de restricciones. En la versión más simple de VRP se trata de minimizar la distancia recorrida por una flota de vehículos donde se parte de un depósito central, se satisface la demanda de todos los clientes y no se excede la capacidad de los vehículos.
 
-Los componentes principales de un VRP son los clientes, los vehículos y los almacenes. Las diferentes restricciones que se le imponen a los mismos para describir situaciones distintas dan lugar a múltiples variantes del VRP. A continuación se presentan las variantes más conocidas.
+% Los componentes principales de un VRP son los clientes, los vehículos y los almacenes. Las diferentes restricciones que se le imponen a los mismos para describir situaciones distintas dan lugar a múltiples variantes del VRP. A continuación se presentan las variantes más conocidas.
 
-\subsection{Variantes del Problema de Enrutamiento de Vehículos}
-\label{subsec:variants}
+% \subsection{Variantes del Problema de Enrutamiento de Vehículos}
+% \label{subsec:variants}
 
-En esta sección se presentan algunas de las principales variantes del VRP. Las versiones que se definirán son el VRP con restricciones de capacidad (CVRP), el VRP con ventanas de tiempo (VRPTW), el VRP con {\it backhaul} (VRPB) y el VRP con entrega y recogida (VRPPD). Cada una de estas variantes básicas puede complejizarse al combinarse con las otras o al modificar algunas de sus características. Estas modificaciones han sido examinadas en la literatura \cite{toth@vrp} y se han definido diferentes modelos para cada una de ellas. La correctitud de algunos de esos modelos se comprobará con la herramienta propuesta en este trabajo.
+% En esta sección se presentan algunas de las principales variantes del VRP. Las versiones que se definirán son el VRP con restricciones de capacidad (CVRP), el VRP con ventanas de tiempo (VRPTW), el VRP con {\it backhaul} (VRPB) y el VRP con entrega y recogida (VRPPD). Cada una de estas variantes básicas puede complejizarse al combinarse con las otras o al modificar algunas de sus características. Estas modificaciones han sido examinadas en la literatura \cite{toth@vrp} y se han definido diferentes modelos para cada una de ellas. La correctitud de algunos de esos modelos se comprobará con la herramienta propuesta en este trabajo.
 
-\subsubsection{VRP con Restricciones de Capacidad (CVRP)}
-El VRP con restricciones de capacidad (CVRP por sus siglas en inglés) es la variante más simple de VRP y una de las más estudiadas en la literatura \cite{toth@vrp}. En ella, se debe encontrar un conjunto de rutas óptimas para una flota de vehículos iguales (flota homogénea), localizada en un depósito central, con el objetivo de abastecer a un conjunto de clientes cuyas demandas son conocidas. Además, todos los clientes deben ser visitados exactamente una vez y las demandas no se pueden dividir entre los vehículos. La carga de cada vehículo no puede exceder su capacidad.
+% \subsubsection{VRP con Restricciones de Capacidad (CVRP)}
+% El VRP con restricciones de capacidad (CVRP por sus siglas en inglés) es la variante más simple de VRP y una de las más estudiadas en la literatura \cite{toth@vrp}. En ella, se debe encontrar un conjunto de rutas óptimas para una flota de vehículos iguales (flota homogénea), localizada en un depósito central, con el objetivo de abastecer a un conjunto de clientes cuyas demandas son conocidas. Además, todos los clientes deben ser visitados exactamente una vez y las demandas no se pueden dividir entre los vehículos. La carga de cada vehículo no puede exceder su capacidad.
 
-\subsubsection{VRP con Ventanas de Tiempo (VRPTW)}
-El objetivo del VRP con ventanas de tiempo (VRPTW por sus siglas en inglés) es abastecer a un conjunto de clientes en unos intervalos de tiempo predefinidos encontrando rutas óptimas sin que se incumplan las restricciones de capacidad. Al igual que el CVRP, todos los clientes deben ser visitados exactamente una vez.
+% \subsubsection{VRP con Ventanas de Tiempo (VRPTW)}
+% El objetivo del VRP con ventanas de tiempo (VRPTW por sus siglas en inglés) es abastecer a un conjunto de clientes en unos intervalos de tiempo predefinidos encontrando rutas óptimas sin que se incumplan las restricciones de capacidad. Al igual que el CVRP, todos los clientes deben ser visitados exactamente una vez.
 
-\subsubsection{VRP con {\it Backhaul} (VRPB)}
-En el VRP con {\it backhaul} el conjunto de clientes se particiona en dos subconjuntos. El primer conjunto contiene los clientes cuya demanda debe ser satisfecha y el segundo conjunto está formado por los clientes con una cantidad de productos que debe ser recogida. Cuando una ruta incluye a ambos tipos de clientes, todos los que pertenezcan al primer conjunto deben ser visitados antes que los clientes que pertenecen al segundo conjunto. La demanda total de cada tipo de cliente visitado en una ruta no puede exceder la capacidad de cada vehículo y cada cliente debe ser visitado exactamente una vez. Generalmente, en esta variante no se permite que exista una ruta que contenga solo clientes del segundo conjunto.
+% \subsubsection{VRP con {\it Backhaul} (VRPB)}
+% En el VRP con {\it backhaul} el conjunto de clientes se particiona en dos subconjuntos. El primer conjunto contiene los clientes cuya demanda debe ser satisfecha y el segundo conjunto está formado por los clientes con una cantidad de productos que debe ser recogida. Cuando una ruta incluye a ambos tipos de clientes, todos los que pertenezcan al primer conjunto deben ser visitados antes que los clientes que pertenecen al segundo conjunto. La demanda total de cada tipo de cliente visitado en una ruta no puede exceder la capacidad de cada vehículo y cada cliente debe ser visitado exactamente una vez. Generalmente, en esta variante no se permite que exista una ruta que contenga solo clientes del segundo conjunto.
 
-\subsubsection{VRP con Entrega y Recogida (VRPPD)}
-En el VRP con entrega y recogida (VRPPD por sus siglas en inglés) a cada cliente se le asocian dos cantidades que representan las demandas de mercancías para entregar y recoger. Cada cliente conoce el vértice del que proviene su entrega, y el vértice al que va destinada su recogida. Para cada cliente el proceso de entrega siempre debe ocurrir antes que el de recogida. Al igual que las variantes ya descritas, en el VRPPD  se debe visitar exactamente una vez a cada cliente, la capacidad de los vehículos no se debe sobrepasar por la carga.
+% \subsubsection{VRP con Entrega y Recogida (VRPPD)}
+% En el VRP con entrega y recogida (VRPPD por sus siglas en inglés) a cada cliente se le asocian dos cantidades que representan las demandas de mercancías para entregar y recoger. Cada cliente conoce el vértice del que proviene su entrega, y el vértice al que va destinada su recogida. Para cada cliente el proceso de entrega siempre debe ocurrir antes que el de recogida. Al igual que las variantes ya descritas, en el VRPPD  se debe visitar exactamente una vez a cada cliente, la capacidad de los vehículos no se debe sobrepasar por la carga.
 
-Cada una de estas variantes de VRP han sido descritas a través de modelos de optimización matemáticos. A continuación se presentan las principales características de los mismos.
+% Cada una de estas variantes de VRP han sido descritas a través de modelos de optimización matemáticos. A continuación se presentan las principales características de los mismos.
 
-\section{Modelos de Optimización Matemáticos}\label{sec:models}
-Un modelo matemático describe las características y restricciones de un problema de optimización \cite{kallrath@modeling2012}. Según Otero, Kakes y Marrero \cite{modelTextbook}, un modelo se define como una descripción abstracta de un sistema que representa de forma aproximada el comportamiento del problema. El término {\it matemático} se añade cuando en la descripción del sistema se utilizan expresiones matemáticas.
+% \section{Modelos de Optimización Matemáticos}\label{sec:models}
+% Un modelo matemático describe las características y restricciones de un problema de optimización \cite{kallrath@modeling2012}. Según Otero, Kakes y Marrero \cite{modelTextbook}, un modelo se define como una descripción abstracta de un sistema que representa de forma aproximada el comportamiento del problema. El término {\it matemático} se añade cuando en la descripción del sistema se utilizan expresiones matemáticas.
 
-Los modelos matemáticos están conformados por las variables, las constantes o parámetros y las relaciones matemáticas o restricciones. Las variables representan los diferentes estados o respuestas del sistema y pueden tomar distintos valores, mientras que las constantes toman valores fijos que intervienen en la descripción del modelo. Las relaciones matemáticas son ecuaciones y desigualdades que relacionan las variables y constantes del modelo. Un modelo de optimización está formado, además, por una función objetivo que define la búsqueda de la mejor respuesta entre aquellas que cumplan con las restricciones planteadas.
+% Los modelos matemáticos están conformados por las variables, las constantes o parámetros y las relaciones matemáticas o restricciones. Las variables representan los diferentes estados o respuestas del sistema y pueden tomar distintos valores, mientras que las constantes toman valores fijos que intervienen en la descripción del modelo. Las relaciones matemáticas son ecuaciones y desigualdades que relacionan las variables y constantes del modelo. Un modelo de optimización está formado, además, por una función objetivo que define la búsqueda de la mejor respuesta entre aquellas que cumplan con las restricciones planteadas.
 
-Las soluciones que cumplen todas las restricciones de un modelo de optimización se llaman soluciones factibles y las que, además, minimicen la función objetivo, se conocen como soluciones óptimas.
+% Las soluciones que cumplen todas las restricciones de un modelo de optimización se llaman soluciones factibles y las que, además, minimicen la función objetivo, se conocen como soluciones óptimas.
 
-Los VRP son problemas de optimización cuyo objetivo es encontrar rutas de costo mínimo sujetas a determinadas restricciones en dependencia de la variante. Por esta razón, pueden ser descritos mediante modelos de optimización matemáticos. En la siguiente sección se presenta la modelación teórica básica de estos problemas.
+% Los VRP son problemas de optimización cuyo objetivo es encontrar rutas de costo mínimo sujetas a determinadas restricciones en dependencia de la variante. Por esta razón, pueden ser descritos mediante modelos de optimización matemáticos. En la siguiente sección se presenta la modelación teórica básica de estos problemas.
 
-\subsection{Modelación teórica de los VRP}\label{subsec:modelTeo}
-Los VRP se modelan como un grafo completo $G = (V, A)$  donde $V = \{0, 1, ..., n\}$ son los vértices y $A = \{(i, j) \ |\ i, j \in V \}$ son las aristas que unen vértices. Los vértices $\{1, 2, ..., n\}$ representan a los clientes y $0$ representa al almacén. A cada arista $(i, j) \in A$ se le asocia un costo $c_{ij}$ representado en una matriz. Como no se permiten aristas $(i, i)$ el costo asociada a las mismas es $c_{ii} = +\infty \ \ \forall i \in V$. Si el grafo fuera dirigido, entonces se tiene una matriz de costo asimétrica, que define un problema de enrutamiento de vehículos asimétrico (ACVRP). Cada cliente tiene asociado una demanda $d_i \ge 0\ \ \forall i \in V /\ \{0\}$ y el almacén tiene una demanda ficticia $d_0 = 0$. Se tienen $K$ vehículos en el almacén con capacidad $C$ y se asume que $d_i \le C \ \ \forall i \in V$. Además, se asume que $K$ es mayor o igual que $K_{min}$ (cantidad mínima de vehículos necesarios para satisfacer a todos los clientes).
+% \subsection{Modelación teórica de los VRP}\label{subsec:modelTeo}
+% Los VRP se modelan como un grafo completo $G = (V, A)$  donde $V = \{0, 1, ..., n\}$ son los vértices y $A = \{(i, j) \ |\ i, j \in V \}$ son las aristas que unen vértices. Los vértices $\{1, 2, ..., n\}$ representan a los clientes y $0$ representa al almacén. A cada arista $(i, j) \in A$ se le asocia un costo $c_{ij}$ representado en una matriz. Como no se permiten aristas $(i, i)$ el costo asociada a las mismas es $c_{ii} = +\infty \ \ \forall i \in V$. Si el grafo fuera dirigido, entonces se tiene una matriz de costo asimétrica, que define un problema de enrutamiento de vehículos asimétrico (ACVRP). Cada cliente tiene asociado una demanda $d_i \ge 0\ \ \forall i \in V /\ \{0\}$ y el almacén tiene una demanda ficticia $d_0 = 0$. Se tienen $K$ vehículos en el almacén con capacidad $C$ y se asume que $d_i \le C \ \ \forall i \in V$. Además, se asume que $K$ es mayor o igual que $K_{min}$ (cantidad mínima de vehículos necesarios para satisfacer a todos los clientes).
 
-Se definen también, para todo conjunto $S\subset V$, las relaciones $d(S) = \sum_{i \in S} d_i$ como la demanda total del conjunto $S$ y $r(S)$ como la cantidad mínima de vehículos necesarios para satisfacer a todos los clientes de $S$.
+% Se definen también, para todo conjunto $S\subset V$, las relaciones $d(S) = \sum_{i \in S} d_i$ como la demanda total del conjunto $S$ y $r(S)$ como la cantidad mínima de vehículos necesarios para satisfacer a todos los clientes de $S$.
 
-Para cada vértice $i \in V$ se definen los conjuntos $\Delta^+(i) = \{j\ |\ (i, j) \in A\}$ y $\Delta^-(i) = \{j\ |\ (j, i) \in A\}$. A $\vert\Delta^-(i)\vert$ y $\vert\Delta^+(i)\vert$ se les denomina grado de entrada y de salida, respectivamente.
+% Para cada vértice $i \in V$ se definen los conjuntos $\Delta^+(i) = \{j\ |\ (i, j) \in A\}$ y $\Delta^-(i) = \{j\ |\ (j, i) \in A\}$. A $\vert\Delta^-(i)\vert$ y $\vert\Delta^+(i)\vert$ se les denomina grado de entrada y de salida, respectivamente.
 
-Tomando como base esta modelación teórica de los VRP se definen distintas variables e interpretaciones de las mismas por lo que existen diversas formulaciones de los modelos de VRP. En la sección siguiente se presentan las formulaciones más conocidas.
+% Tomando como base esta modelación teórica de los VRP se definen distintas variables e interpretaciones de las mismas por lo que existen diversas formulaciones de los modelos de VRP. En la sección siguiente se presentan las formulaciones más conocidas.
 
-\subsection{Tipos de formulaciones para modelar VRPs}\label{subsec:modelTypes}
+% \subsection{Tipos de formulaciones para modelar VRPs}\label{subsec:modelTypes}
 
-Cada VRP puede modelarse de distintas maneras. Entre las modelaciones más conocidas se encuentran las formulaciones de flujo de vehículos de dos y tres índices, las de flujo de mercancías y las formulaciones por partición de conjuntos. En este trabajo se analizan solo las primeras tres formulaciones debido a que la última requiere construir el conjunto de todas las soluciones factibles y esto es un proceso computacionalmente costoso, y no es de interés para esta investigación.
+% Cada VRP puede modelarse de distintas maneras. Entre las modelaciones más conocidas se encuentran las formulaciones de flujo de vehículos de dos y tres índices, las de flujo de mercancías y las formulaciones por partición de conjuntos. En este trabajo se analizan solo las primeras tres formulaciones debido a que la última requiere construir el conjunto de todas las soluciones factibles y esto es un proceso computacionalmente costoso, y no es de interés para esta investigación.
 
-\subsubsection{Flujo de vehículos de dos índices}
-Las formulaciones por flujo de vehículos de dos índices usan solamente variables enteras $x_{ij} \ \ \forall (i, j) \in A$ asociadas a cada arco del grafo que cuentan el número de veces que los vehículos pasan directamente de $i$ a $j$.
+% \subsubsection{Flujo de vehículos de dos índices}
+% Las formulaciones por flujo de vehículos de dos índices usan solamente variables enteras $x_{ij} \ \ \forall (i, j) \in A$ asociadas a cada arco del grafo que cuentan el número de veces que los vehículos pasan directamente de $i$ a $j$.
 
-Esta formulación ha sido usada ampliamente para modelar las variantes CVRP y VRPB, pero es inadecuada para describir versiones más complejas del VRP \cite{toth@vrp}. Además, las formulaciones por flujo de vehículos no permiten conocer directamente qué vehículo atraviesa cada arco usado en la solución.
+% Esta formulación ha sido usada ampliamente para modelar las variantes CVRP y VRPB, pero es inadecuada para describir versiones más complejas del VRP \cite{toth@vrp}. Además, las formulaciones por flujo de vehículos no permiten conocer directamente qué vehículo atraviesa cada arco usado en la solución.
 
-El CVRP se puede definir mediante este tipo de formulación como se muestra a continuación:
+% El CVRP se puede definir mediante este tipo de formulación como se muestra a continuación:
 
-$$
-\min \displaystyle{\sum_{i \in V}\sum_{j \in V} c_{ij} x_{ij}}
-$$
-\begin{eqnarray}
-s.a. \ \ \displaystyle{\sum_{i \in V} x_{ij}} & = & 1\ \ \forall j \in V / \{0\} \\
-\displaystyle{\sum_{j \in V} x_{ij}} & = & 1\ \ \forall i \in V / \{0\} \\
-\displaystyle{\sum_{i \in V} x_{i0}} & = & K\\
-\displaystyle{\sum_{j \in V} x_{0j}} & = & K\\
-\displaystyle{\sum_{i \not\in S}\sum_{j \in S} x_{ij}} & \geq & r(S) \ \ \forall S \subseteq V / \{0\},\ S \neq \emptyset\\
-x_{ij} & \in & \{0, 1\} \ \ \forall\ i,\ j \in V
-\end{eqnarray}
+% $$
+% \min \displaystyle{\sum_{i \in V}\sum_{j \in V} c_{ij} x_{ij}}
+% $$
+% \begin{eqnarray}
+% s.a. \ \ \displaystyle{\sum_{i \in V} x_{ij}} & = & 1\ \ \forall j \in V / \{0\} \\
+% \displaystyle{\sum_{j \in V} x_{ij}} & = & 1\ \ \forall i \in V / \{0\} \\
+% \displaystyle{\sum_{i \in V} x_{i0}} & = & K\\
+% \displaystyle{\sum_{j \in V} x_{0j}} & = & K\\
+% \displaystyle{\sum_{i \not\in S}\sum_{j \in S} x_{ij}} & \geq & r(S) \ \ \forall S \subseteq V / \{0\},\ S \neq \emptyset\\
+% x_{ij} & \in & \{0, 1\} \ \ \forall\ i,\ j \in V
+% \end{eqnarray}
 
-Las restricciones (1.1) y (1.2) del modelo obligan a la solución a visitar exactamente una vez a cada cliente. Las restricciones (1.3) y (1.4) controlan que del depósito partan y regresen exactamente $K$ vehículos. Finalmente, la restricción (1.5), conocida como {\it restricción de corte de capacidad} (CCC por sus siglas en inglés), impone tanto la conexión de la solución como los requerimientos de capacidad.
+% Las restricciones (1.1) y (1.2) del modelo obligan a la solución a visitar exactamente una vez a cada cliente. Las restricciones (1.3) y (1.4) controlan que del depósito partan y regresen exactamente $K$ vehículos. Finalmente, la restricción (1.5), conocida como {\it restricción de corte de capacidad} (CCC por sus siglas en inglés), impone tanto la conexión de la solución como los requerimientos de capacidad.
 
-\subsubsection{Flujo de vehículos de tres índices}
-Las formulaciones por flujo de vehículos de tres índices son un modo de resolver parcialmente las principales desventajas de los modelos de dos índices para indicar explícitamente qué vehículo recorre cada arco. Para ello se tienen variables de flujo $x_{ijk}$ cuya interpretación varía en dependencia del problema que se modele. Por ejemplo, para el CVRP estas variables son enteras y cuentan la cantidad de veces que el vehículo $k$ pasa por el arco $(i, j) \in A$. Sin embargo, para el VRPTW, las variables $x_{ijk}$ son binarias y señalan si el arco $(i, j) \in A$ ha sido utilizado por el vehículo $k$ o no.
+% \subsubsection{Flujo de vehículos de tres índices}
+% Las formulaciones por flujo de vehículos de tres índices son un modo de resolver parcialmente las principales desventajas de los modelos de dos índices para indicar explícitamente qué vehículo recorre cada arco. Para ello se tienen variables de flujo $x_{ijk}$ cuya interpretación varía en dependencia del problema que se modele. Por ejemplo, para el CVRP estas variables son enteras y cuentan la cantidad de veces que el vehículo $k$ pasa por el arco $(i, j) \in A$. Sin embargo, para el VRPTW, las variables $x_{ijk}$ son binarias y señalan si el arco $(i, j) \in A$ ha sido utilizado por el vehículo $k$ o no.
 
-Con esta formulación se pueden modelar VRP más complejos como el VRPTW debido a la flexibilidad de la misma para incorporar características adicionales del problema \cite{toth@vrp}. Esto suele implicar la adición de variables. Por ejemplo, para el VRPTW se tienen, además, las variables de tiempo $w_{ik}$, $i \in V$ y $k \in K$ donde $K$ es el conjunto de vehículos, que representan el inicio del servicio en el nodo $i$ cuando lo visita el vehículo $k$.
+% Con esta formulación se pueden modelar VRP más complejos como el VRPTW debido a la flexibilidad de la misma para incorporar características adicionales del problema \cite{toth@vrp}. Esto suele implicar la adición de variables. Por ejemplo, para el VRPTW se tienen, además, las variables de tiempo $w_{ik}$, $i \in V$ y $k \in K$ donde $K$ es el conjunto de vehículos, que representan el inicio del servicio en el nodo $i$ cuando lo visita el vehículo $k$.
 
-Para formular el VRPTW son necesarios los parámetros siguientes:
+% Para formular el VRPTW son necesarios los parámetros siguientes:
 
-\begin{itemize}
-	\item $c_{ij}$ - costo de viajar desde $i$ hasta $j$
-	\item $t_{ij}$ - tiempo de viaje entre $i$ y $j$
-	\item $d_i$ - demanda en el nodo $i$
-	\item $E$ - tiempo de partida más temprano desde el depósito
-	\item $L$ - tiempo de arribo más tarde en el depósito
-	\item $s_i$ - tiempo de servicio en el nodo $i$
-	\item $[a_i, b_i]$ - ventana de tiempo para el nodo $i$
-\end{itemize}
+% \begin{itemize}
+% 	\item $c_{ij}$ - costo de viajar desde $i$ hasta $j$
+% 	\item $t_{ij}$ - tiempo de viaje entre $i$ y $j$
+% 	\item $d_i$ - demanda en el nodo $i$
+% 	\item $E$ - tiempo de partida más temprano desde el depósito
+% 	\item $L$ - tiempo de arribo más tarde en el depósito
+% 	\item $s_i$ - tiempo de servicio en el nodo $i$
+% 	\item $[a_i, b_i]$ - ventana de tiempo para el nodo $i$
+% \end{itemize}
 
-Además, se agrega un nodo ficticio $n + 1$ que representa una copia del depósito, por lo que todas las rutas deben comenzar en 0 y terminar en $n + 1$.
+% Además, se agrega un nodo ficticio $n + 1$ que representa una copia del depósito, por lo que todas las rutas deben comenzar en 0 y terminar en $n + 1$.
 
-El modelo para el VRPTW es el siguiente:
+% El modelo para el VRPTW es el siguiente:
 
-$$
-\min \displaystyle{\sum_{k \in K} \sum_{(i, j) \in A} c_{ij} x_{ijk}}
-$$
-\begin{eqnarray}
-s.a. \displaystyle{\sum_{k \in K} \sum_{j \in \Delta^+(i)} x_{ijk}} & = & 1 \ \ \forall i \in V / \{0, n + 1\}\\
-\displaystyle{\sum_{j \in \Delta^+(0)} x_{0jk}} & = & 1 \ \ \forall k \in K\\
-\displaystyle{\sum_{i \in \Delta^-(j)} x_{ijk} - \sum_{i \in \Delta^+(j)} x_{jik}} & = & 0 \ \ \forall k \in K, j \in V / \{0, n + 1\}\\
-\displaystyle{\sum_{i \in \Delta^-(n + 1)} x_{i, n + 1, k}} & = & 1 \ \ \forall k \in K\\
-x_{ijk}(w_{ik} + s_i + t_{ij} - w_{jk}) & \leq & 0 \ \ \forall k \in K, (i, j) \in A\\
-a_i \displaystyle{\sum_{j \in \Delta^+(i)} x_{ijk}} \leq & w_{ik} & \leq b_i \displaystyle{\sum_{j \in \Delta^+(i)} x_{ijk}}\\ \nonumber & & \forall k \in K, i \in V / \{0, n + 1\}\\
-E \leq & w_{ik} & \leq L \ \ \forall k \in K, i \in \{0, n + 1\}\\
-\displaystyle{\sum_{i \in V / \{0, n + 1\}} d_i \sum_{j \in \Delta^+(i)} x_{ijk}} & \leq & C \ \ \forall k \in K\\
-x_{ijk} & \in & \{0, 1\} \ \ \forall k \in K, (i, j) \in A
-\end{eqnarray}
+% $$
+% \min \displaystyle{\sum_{k \in K} \sum_{(i, j) \in A} c_{ij} x_{ijk}}
+% $$
+% \begin{eqnarray}
+% s.a. \displaystyle{\sum_{k \in K} \sum_{j \in \Delta^+(i)} x_{ijk}} & = & 1 \ \ \forall i \in V / \{0, n + 1\}\\
+% \displaystyle{\sum_{j \in \Delta^+(0)} x_{0jk}} & = & 1 \ \ \forall k \in K\\
+% \displaystyle{\sum_{i \in \Delta^-(j)} x_{ijk} - \sum_{i \in \Delta^+(j)} x_{jik}} & = & 0 \ \ \forall k \in K, j \in V / \{0, n + 1\}\\
+% \displaystyle{\sum_{i \in \Delta^-(n + 1)} x_{i, n + 1, k}} & = & 1 \ \ \forall k \in K\\
+% x_{ijk}(w_{ik} + s_i + t_{ij} - w_{jk}) & \leq & 0 \ \ \forall k \in K, (i, j) \in A\\
+% a_i \displaystyle{\sum_{j \in \Delta^+(i)} x_{ijk}} \leq & w_{ik} & \leq b_i \displaystyle{\sum_{j \in \Delta^+(i)} x_{ijk}}\\ \nonumber & & \forall k \in K, i \in V / \{0, n + 1\}\\
+% E \leq & w_{ik} & \leq L \ \ \forall k \in K, i \in \{0, n + 1\}\\
+% \displaystyle{\sum_{i \in V / \{0, n + 1\}} d_i \sum_{j \in \Delta^+(i)} x_{ijk}} & \leq & C \ \ \forall k \in K\\
+% x_{ijk} & \in & \{0, 1\} \ \ \forall k \in K, (i, j) \in A
+% \end{eqnarray}
 
-La restricción (1.7) del modelo especifica que los clientes solo pueden ser visitados por un único vehículo. Las restricciones desde la (1.8) a la (1.10) caracterizan el flujo seguido por el vehículo $k$ en el camino. Las tres restricciones siguientes (1.11), (1.12) y (1.13) garantizan el cumplimiento de las consideraciones de tiempo, mientras que la (1.14) garantiza las de capacidad.
+% La restricción (1.7) del modelo especifica que los clientes solo pueden ser visitados por un único vehículo. Las restricciones desde la (1.8) a la (1.10) caracterizan el flujo seguido por el vehículo $k$ en el camino. Las tres restricciones siguientes (1.11), (1.12) y (1.13) garantizan el cumplimiento de las consideraciones de tiempo, mientras que la (1.14) garantiza las de capacidad.
 
-\subsubsection{Flujo de mercancías}
-Las formulaciones por flujo de mercancías requieren que los arcos sean dirigidos, por lo que se define el modelo en el grafo equivalente\footnote{El grafo dirigido equivalente a un grafo no dirigido es el que se obtiene de sustituir cada arista $(i, j) \in E$ por dos arcos con dirección $(i, j) \in A$ y $(j, i) \in A$.} al grafo no dirigido. Estas formulaciones cuentan con variables binarias $x_{ij}$ y variables continuas $y_{ij}$. Las variables $x_{ij}$ valen 1 si el cliente $j$ se visita justo después del cliente $i$, y las variables continuas no negativas $y_{ij}$ representan el flujo de mercancías a través de los caminos recorridos por los vehículos y se asocian a cada arco $(i, j) \in A$. Si un vehículo atraviesa el arco $(i, j)$, entonces $y_{ij}$ y $y_{ji}$ representan la carga con que el vehículo recorre ese arco, y la capacidad residual del vehículo, respectivamente. Es decir, $y_{ji} = C - y_{ij}$.
+% \subsubsection{Flujo de mercancías}
+% Las formulaciones por flujo de mercancías requieren que los arcos sean dirigidos, por lo que se define el modelo en el grafo equivalente\footnote{El grafo dirigido equivalente a un grafo no dirigido es el que se obtiene de sustituir cada arista $(i, j) \in E$ por dos arcos con dirección $(i, j) \in A$ y $(j, i) \in A$.} al grafo no dirigido. Estas formulaciones cuentan con variables binarias $x_{ij}$ y variables continuas $y_{ij}$. Las variables $x_{ij}$ valen 1 si el cliente $j$ se visita justo después del cliente $i$, y las variables continuas no negativas $y_{ij}$ representan el flujo de mercancías a través de los caminos recorridos por los vehículos y se asocian a cada arco $(i, j) \in A$. Si un vehículo atraviesa el arco $(i, j)$, entonces $y_{ij}$ y $y_{ji}$ representan la carga con que el vehículo recorre ese arco, y la capacidad residual del vehículo, respectivamente. Es decir, $y_{ji} = C - y_{ij}$.
 
-Al igual que en el problema VRPTW, para modelar el CVRP utilizando esta formulación es necesario agregar un nodo ficticio $n + 1$ para el depósito. A continuación se muestra el modelo para el CVRP utilizando esta formulación y los elementos de la modelación teórica presentados en la sección \ref{subsec:modelTeo}.
+% Al igual que en el problema VRPTW, para modelar el CVRP utilizando esta formulación es necesario agregar un nodo ficticio $n + 1$ para el depósito. A continuación se muestra el modelo para el CVRP utilizando esta formulación y los elementos de la modelación teórica presentados en la sección \ref{subsec:modelTeo}.
 
-$$
-\min \sum_{(i, j) \in A} c_{ij} x_{ij}
-$$
-\begin{eqnarray}
-s.a \displaystyle{\sum_{j \in V} (y_{ji} - y_{ij})} & = & 2 d_i \ \ \forall i \in V / \{0, n + 1\} \label{m1:1}\\
-\displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{0j}} & = & d(V / \{0, n + 1\}) \label{m1:2}\\
-\displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{j0}} & = & KC - d(V / \{0, n + 1\}) \label{m1:3}\\
-\displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{n + 1 j}} & = & KC \label{m1:4}\\
-y_{ij} + y_{ji} & = & C (x_{ij} + x_{ji}) \ \ \forall (i, j) \in A \label{m1:5}\\
-\displaystyle{\sum_{j \in V} x_{ij}} & = & 1 \ \ \forall i \in V / \{0, n + 1\} \label{m1:6}\\
-\displaystyle{\sum_{j \in V} x_{ji}} & = & 1 \ \ \forall i \in V / \{0, n + 1\} \label{m1:7}\\
-y_{ij} & \ge & 0 \ \ \forall (i, j) \in A\\
-x_{ij} & \in & {0, 1} \ \ \forall (i, j) \in A
-\end{eqnarray}
+% $$
+% \min \sum_{(i, j) \in A} c_{ij} x_{ij}
+% $$
+% \begin{eqnarray}
+% s.a \displaystyle{\sum_{j \in V} (y_{ji} - y_{ij})} & = & 2 d_i \ \ \forall i \in V / \{0, n + 1\} \label{m1:1}\\
+% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{0j}} & = & d(V / \{0, n + 1\}) \label{m1:2}\\
+% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{j0}} & = & KC - d(V / \{0, n + 1\}) \label{m1:3}\\
+% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{n + 1 j}} & = & KC \label{m1:4}\\
+% y_{ij} + y_{ji} & = & C (x_{ij} + x_{ji}) \ \ \forall (i, j) \in A \label{m1:5}\\
+% \displaystyle{\sum_{j \in V} x_{ij}} & = & 1 \ \ \forall i \in V / \{0, n + 1\} \label{m1:6}\\
+% \displaystyle{\sum_{j \in V} x_{ji}} & = & 1 \ \ \forall i \in V / \{0, n + 1\} \label{m1:7}\\
+% y_{ij} & \ge & 0 \ \ \forall (i, j) \in A\\
+% x_{ij} & \in & {0, 1} \ \ \forall (i, j) \in A
+% \end{eqnarray}
 
-La restricción \ref{m1:1} impone la condición de preservación del flujo. Las restricciones de la \ref{m1:2} a la \ref{m1:4} garantizan los valores correctos para las variables de flujo de mercancías incidentes en los vértices del depósito. La restricción \ref{m1:5} impone la relación entre las variables de flujo de vehículos y el grado de los vértices, mientras que las restricciones \ref{m1:6} y \ref{m1:7} definen la obligatoriedad de la visita a cada cliente y de la salida desde el mismo, respectivamente.
+% La restricción \ref{m1:1} impone la condición de preservación del flujo. Las restricciones de la \ref{m1:2} a la \ref{m1:4} garantizan los valores correctos para las variables de flujo de mercancías incidentes en los vértices del depósito. La restricción \ref{m1:5} impone la relación entre las variables de flujo de vehículos y el grado de los vértices, mientras que las restricciones \ref{m1:6} y \ref{m1:7} definen la obligatoriedad de la visita a cada cliente y de la salida desde el mismo, respectivamente.
 
-Cada una de estas formulaciones y, por consiguiente, los modelos que definen, pueden ser expresadas utilizando herramientas computacionales que facilitan, en muchos casos, la resolución del modelo. En la sección siguiente se presenta una de estas herramientas: los lenguajes de modelación algebraica.
+% Cada una de estas formulaciones y, por consiguiente, los modelos que definen, pueden ser expresadas utilizando herramientas computacionales que facilitan, en muchos casos, la resolución del modelo. En la sección siguiente se presenta una de estas herramientas: los lenguajes de modelación algebraica.
 
-\subsection{Lenguajes de Modelación Algebraica}
+% \subsection{Lenguajes de Modelación Algebraica}
 
-Un modelo matemático de optimización se puede escribir utilizando un Lenguaje de Modelación Algebraica (AML por sus siglas en inglés). Los AML son lenguajes declarativos de alto nivel que permiten desarrollar modelos de optimización de forma más directa para los programadores y más legibles para los usuarios. Entre los AML más conocidos están GAMS \cite{gams, rosenthal@gams}, PuLP \cite{mitchell@pulp2009, mitchell@pulp2011} y Pyomo \cite{hart@pyomo}. Recientemente, en la Facultad de Matemática y Computación de la Universidad de La Habana se desarrolló un nuevo AML: LMML (Lenguaje para la Modelación Matemática en Lisp) \cite{claudia@lmml}. Este último será utilizado en este trabajo.
+% Un modelo matemático de optimización se puede escribir utilizando un Lenguaje de Modelación Algebraica (AML por sus siglas en inglés). Los AML son lenguajes declarativos de alto nivel que permiten desarrollar modelos de optimización de forma más directa para los programadores y más legibles para los usuarios. Entre los AML más conocidos están GAMS \cite{gams, rosenthal@gams}, PuLP \cite{mitchell@pulp2009, mitchell@pulp2011} y Pyomo \cite{hart@pyomo}. Recientemente, en la Facultad de Matemática y Computación de la Universidad de La Habana se desarrolló un nuevo AML: LMML (Lenguaje para la Modelación Matemática en Lisp) \cite{claudia@lmml}. Este último será utilizado en este trabajo.
 
-LMML cuenta con todas las estructuras básicas de los AML como la declaración de variables, parámetros, conjuntos, funciones y restricciones, además de permitir la utilización de sumatorias y cuantificadores. Con este lenguaje se puede obtener la descripción de los modelos en otros lenguajes como \LaTeX, GMPL y PuLP. Una de las características más provechosas de LMML es su extensibilidad al poderse adicionar nuevas funcionalidades al lenguaje con facilidad.
+% LMML cuenta con todas las estructuras básicas de los AML como la declaración de variables, parámetros, conjuntos, funciones y restricciones, además de permitir la utilización de sumatorias y cuantificadores. Con este lenguaje se puede obtener la descripción de los modelos en otros lenguajes como \LaTeX, GMPL y PuLP. Una de las características más provechosas de LMML es su extensibilidad al poderse adicionar nuevas funcionalidades al lenguaje con facilidad.
 
-La herramienta implementada, además de apoyarse en las funcionalidades del lenguaje LMML, se basa en la estrategia de unidades de prueba. En la sección siguiente se presentan las ideas principales sobre esta estrategia.
+% La herramienta implementada, además de apoyarse en las funcionalidades del lenguaje LMML, se basa en la estrategia de unidades de prueba. En la sección siguiente se presentan las ideas principales sobre esta estrategia.
 
-\section{Unidades de Prueba}\label{sec:unitTesting}
-En esta sección se introducen las unidades de prueba, estrategia utilizada en este trabajo para desarrollar la herramienta de validación automática de modelos para el VRP.
+% \section{Unidades de Prueba}\label{sec:unitTesting}
+% En esta sección se introducen las unidades de prueba, estrategia utilizada en este trabajo para desarrollar la herramienta de validación automática de modelos para el VRP.
 
-El concepto de unidades de prueba se remonta a los primeros años del lenguaje de programación {\it Smalltalk} en la década de 1970 \cite{ammann@introSoftTest}. El uso de esta estrategia ha demostrado ser una de las mejores maneras para los desarrolladores de aumentar la calidad del código y de entender con mayor profundidad los requerimientos funcionales de una clase o un método \cite{ammann@introSoftTest, manning@UT}. 
+% El concepto de unidades de prueba se remonta a los primeros años del lenguaje de programación {\it Smalltalk} en la década de 1970 \cite{ammann@introSoftTest}. El uso de esta estrategia ha demostrado ser una de las mejores maneras para los desarrolladores de aumentar la calidad del código y de entender con mayor profundidad los requerimientos funcionales de una clase o un método \cite{ammann@introSoftTest, manning@UT}. 
 
-Las unidades de prueba son una estrategia diseñada para comprobar la correctitud de un fragmento de código. Una unidad de prueba se entiende usualmente como un método o función que invoca otro fragmento de código y después comprueba la correctitud de algunas suposiciones \cite{manning@UT}. Sin embargo, esta definición suele extenderse a aspectos más específicos que definen las propiedades que una ``buena'' unidad de prueba debe tener.
+% Las unidades de prueba son una estrategia diseñada para comprobar la correctitud de un fragmento de código. Una unidad de prueba se entiende usualmente como un método o función que invoca otro fragmento de código y después comprueba la correctitud de algunas suposiciones \cite{manning@UT}. Sin embargo, esta definición suele extenderse a aspectos más específicos que definen las propiedades que una ``buena'' unidad de prueba debe tener.
 
-Según Osherove \cite{manning@UT} ``una {\bf unidad de prueba} es un pedazo de código automático que invoca al método o clase bajo prueba y comprueba algunas asunciones sobre el comportamiento lógico de ese método o clase''. Las características principales de una unidad de prueba correcta son la confiabilidad, legibilidad y que se pueda mantener. Una unidad de prueba debe escribirse fácilmente y debe ejecutarse rápido.
+% Según Osherove \cite{manning@UT} ``una {\bf unidad de prueba} es un pedazo de código automático que invoca al método o clase bajo prueba y comprueba algunas asunciones sobre el comportamiento lógico de ese método o clase''. Las características principales de una unidad de prueba correcta son la confiabilidad, legibilidad y que se pueda mantener. Una unidad de prueba debe escribirse fácilmente y debe ejecutarse rápido.
 
-En las fuentes consultadas existen distintas técnicas y teorías para escribir unidades de prueba que sean automáticas, reusables y extensibles. Para ello se definen criterios de cobertura para decidir qué entradas utilizar como pruebas \cite{ammann@introSoftTest}. Un {\it criterio de cobertura} es una regla o una colección de ellas que imponen un conjunto de requerimientos a un conjunto de prueba. Por ejemplo, si se quisieran cubrir todas las decisiones de un programa (siendo este el criterio de cobertura), entonces cada decisión da lugar a dos requerimientos: que la decisión evalúe falso y que evalúe verdadero. Se define {\it cobertura} como el cumplimiento de un criterio de cobertura por un conjunto de prueba, es decir, que para cada requerimiento, exista al menos una prueba en el conjunto de prueba que lo satisfaga.
+% En las fuentes consultadas existen distintas técnicas y teorías para escribir unidades de prueba que sean automáticas, reusables y extensibles. Para ello se definen criterios de cobertura para decidir qué entradas utilizar como pruebas \cite{ammann@introSoftTest}. Un {\it criterio de cobertura} es una regla o una colección de ellas que imponen un conjunto de requerimientos a un conjunto de prueba. Por ejemplo, si se quisieran cubrir todas las decisiones de un programa (siendo este el criterio de cobertura), entonces cada decisión da lugar a dos requerimientos: que la decisión evalúe falso y que evalúe verdadero. Se define {\it cobertura} como el cumplimiento de un criterio de cobertura por un conjunto de prueba, es decir, que para cada requerimiento, exista al menos una prueba en el conjunto de prueba que lo satisfaga.
 
-Los criterios de cobertura se utilizan usualmente de dos maneras: para generar casos de prueba que satisfagan dicho criterio, o para generar casos de pruebas externamente (a mano o de forma pseudo aleatoria) y luego medir la prueba de acuerdo a la cobertura que logren \cite{ammann@introSoftTest}. En el primer caso, la generación de las pruebas ocurre automáticamente dado un criterio. En el segundo caso, por ejemplo, se pueden tener un conjunto de pruebas predefinidas, escoger aleatoriamente un subconjunto de ellas y luego medir cuánto cumplen con el criterio. En la herramienta implementada, se aplica el primer método como se explicará en el capítulo \ref{chap:system}.
+% Los criterios de cobertura se utilizan usualmente de dos maneras: para generar casos de prueba que satisfagan dicho criterio, o para generar casos de pruebas externamente (a mano o de forma pseudo aleatoria) y luego medir la prueba de acuerdo a la cobertura que logren \cite{ammann@introSoftTest}. En el primer caso, la generación de las pruebas ocurre automáticamente dado un criterio. En el segundo caso, por ejemplo, se pueden tener un conjunto de pruebas predefinidas, escoger aleatoriamente un subconjunto de ellas y luego medir cuánto cumplen con el criterio. En la herramienta implementada, se aplica el primer método como se explicará en el capítulo \ref{chap:system}.
 
-A continuación se presenta un ejemplo sencillo de una unidad de prueba.
+% A continuación se presenta un ejemplo sencillo de una unidad de prueba.
 
-\subsection{Ejemplo de una unidad de prueba}
-En la figura \ref{alg:func} se tiene la definición de un método que determina si la extensión de un archivo pertenece a un código de Lisp o no.
+% \subsection{Ejemplo de una unidad de prueba}
+% En la figura \ref{alg:func} se tiene la definición de un método que determina si la extensión de un archivo pertenece a un código de Lisp o no.
 
-\begin{figure}[h!]
-  \begin{lstlisting}[language=Python]
-    def is_lisp_extension (filename):
-	  return ends_with(filename, ".lisp")
-  \end{lstlisting}
-  \caption{Método para determinar si la extensión de un archivo pertenece a un código de Lisp.}  \label{alg:func}
-\end{figure}
+% \begin{figure}[h!]
+%   \begin{lstlisting}[language=Python]
+%     def is_lisp_extension (filename):
+% 	  return ends_with(filename, ".lisp")
+%   \end{lstlisting}
+%   \caption{Método para determinar si la extensión de un archivo pertenece a un código de Lisp.}  \label{alg:func}
+% \end{figure}
 
-Para probar el correcto comportamiento de esta función se define como criterio de cobertura las distintas salidas del método. Este criterio especifica como conjunto de requerimientos los dos estados de la salida: que sea falsa o que sea verdadera. Para ello se definen las dos unidades de prueba mostradas en la Figura \ref{alg:test} que satisfacen el criterio de cobertura definido.
+% Para probar el correcto comportamiento de esta función se define como criterio de cobertura las distintas salidas del método. Este criterio especifica como conjunto de requerimientos los dos estados de la salida: que sea falsa o que sea verdadera. Para ello se definen las dos unidades de prueba mostradas en la Figura \ref{alg:test} que satisfacen el criterio de cobertura definido.
 
-\begin{figure}[h!]
-\begin{lstlisting}[language=Python]
-def test_true_is_lisp_extension ():
-  if is_lisp_extension("code.lisp"):
-    return True
-  else:
-    return False
+% \begin{figure}[h!]
+% \begin{lstlisting}[language=Python]
+% def test_true_is_lisp_extension ():
+%   if is_lisp_extension("code.lisp"):
+%     return True
+%   else:
+%     return False
 
-def test_false_is_lisp_extension ():
-  if is_lisp_extension("code.lsp"):
-    return False
-  else:
-    return True
-\end{lstlisting}
-\caption{Funciones de prueba que verifica si el método {\tt is\_lisp\_extension} está correcto.} \label{alg:test}
-\end{figure}
+% def test_false_is_lisp_extension ():
+%   if is_lisp_extension("code.lsp"):
+%     return False
+%   else:
+%     return True
+% \end{lstlisting}
+% \caption{Funciones de prueba que verifica si el método {\tt is\_lisp\_extension} está correcto.} \label{alg:test}
+% \end{figure}
 
-El ejemplo mostrado pretende ser solo una ilustración de los conceptos vistos con anterioridad. Una posible mejora a las pruebas definidas en la Figura \ref{alg:test} es la generación aleatoria o pseudo-aleatoria de las posibles entradas al método {\tt is\_lisp\_extension}.
+% El ejemplo mostrado pretende ser solo una ilustración de los conceptos vistos con anterioridad. Una posible mejora a las pruebas definidas en la Figura \ref{alg:test} es la generación aleatoria o pseudo-aleatoria de las posibles entradas al método {\tt is\_lisp\_extension}.
 
-Una vez introducidos los elementos teóricos que serán usados en este trabajo, es necesario describir el lenguaje de programación en el que está implementada la herramienta que se propone. La sección siguiente presenta los elementos del lenguaje Common Lisp que fueron utilizados para el desarrollo del método de validación de modelos para VRP.
+% Una vez introducidos los elementos teóricos que serán usados en este trabajo, es necesario describir el lenguaje de programación en el que está implementada la herramienta que se propone. La sección siguiente presenta los elementos del lenguaje Common Lisp que fueron utilizados para el desarrollo del método de validación de modelos para VRP.
 
-\section{Common Lisp}\label{sec:lisp}
+% \section{Common Lisp}\label{sec:lisp}
 
-Las variantes del VRP presentadas en la sección \ref{subsec:variants} se decriben mediante diversas características. Cada una de ellas define restricciones sobre las soluciones. Para generar soluciones que satisfagan las características especificadas para cada problema, es posible definir métodos que garanticen el cumplimiento (o incumplimiento) de cada una de esas restricciones en la solución. El lenguaje de programación Common Lisp cuenta con los recursos para definir cada característica y asociarle un método para la generación de las soluciones.
+% Las variantes del VRP presentadas en la sección \ref{subsec:variants} se decriben mediante diversas características. Cada una de ellas define restricciones sobre las soluciones. Para generar soluciones que satisfagan las características especificadas para cada problema, es posible definir métodos que garanticen el cumplimiento (o incumplimiento) de cada una de esas restricciones en la solución. El lenguaje de programación Common Lisp cuenta con los recursos para definir cada característica y asociarle un método para la generación de las soluciones.
 
-En la sección \ref{subsec:lispIntro} se muestra la sintaxis básica de Lisp, así como la manera de definir funciones y macros. La definición de clases mediante el Sistema de Objetos de Common Lisp (CLOS) se introducirá en la sección \ref{subsec:clos}.
+% En la sección \ref{subsec:lispIntro} se muestra la sintaxis básica de Lisp, así como la manera de definir funciones y macros. La definición de clases mediante el Sistema de Objetos de Common Lisp (CLOS) se introducirá en la sección \ref{subsec:clos}.
 
-\subsection{Sintaxis, funciones y macros}\label{subsec:lispIntro}
-La sintaxis de Lisp es diferente a la sintaxis de los lenguajes tradicionales. Las dos características más evidentes son la amplia utilización de paréntesis y la notación prefija. Es decir, cuando normalmente se escribiría la expresión {\tt 2 + 3}, en Lisp se especificaría esta suma como {\tt (+ 2 3)}.
+% \subsection{Sintaxis, funciones y macros}\label{subsec:lispIntro}
+% La sintaxis de Lisp es diferente a la sintaxis de los lenguajes tradicionales. Las dos características más evidentes son la amplia utilización de paréntesis y la notación prefija. Es decir, cuando normalmente se escribiría la expresión {\tt 2 + 3}, en Lisp se especificaría esta suma como {\tt (+ 2 3)}.
 
-Los objetos en Lisp se denominan {\it s-expresiones} y son listas de objetos arbitrarios, incluyendo otras listas y átomos. Los átomos son secuencias de caracteres concatenados como números, letras y caracteres especiales, mientras que las listas están formadas por cualquier cantidad de elementos separados por espacio \cite{seibel@practicalCL}.
+% Los objetos en Lisp se denominan {\it s-expresiones} y son listas de objetos arbitrarios, incluyendo otras listas y átomos. Los átomos son secuencias de caracteres concatenados como números, letras y caracteres especiales, mientras que las listas están formadas por cualquier cantidad de elementos separados por espacio \cite{seibel@practicalCL}.
 
-A partir de las s-expresiones se definen las {\it formas}. Estos son los objetos que se evalúan. Las funciones y macros son s-expresiones cuyo primer elemento define el nombre de la función o macro y el resto son los argumentos.
+% A partir de las s-expresiones se definen las {\it formas}. Estos son los objetos que se evalúan. Las funciones y macros son s-expresiones cuyo primer elemento define el nombre de la función o macro y el resto son los argumentos.
 
-Las macros son una manera de extender la sintaxis básica del lenguaje a formas más expresivas y adecuadas a cada problema específico. Una macro es una función que toma s-expresiones como argumentos y devuelve una forma de Lisp que se evalúa en el lugar donde se invocó a la macro.
+% Las macros son una manera de extender la sintaxis básica del lenguaje a formas más expresivas y adecuadas a cada problema específico. Una macro es una función que toma s-expresiones como argumentos y devuelve una forma de Lisp que se evalúa en el lugar donde se invocó a la macro.
 
-Para facilitar la extensibilidad de la herramienta de validación propuesta en este trabajo se utilizan las macros para ofrecer una forma cómoda de definir nuevas características de los VRP. Además, el uso de macros permite evitar la repetición de código en los métodos que se implementaron.
+% Para facilitar la extensibilidad de la herramienta de validación propuesta en este trabajo se utilizan las macros para ofrecer una forma cómoda de definir nuevas características de los VRP. Además, el uso de macros permite evitar la repetición de código en los métodos que se implementaron.
 
-Las características de cada variante de VRP se definen mediante un sistema de clases. En la sección \ref{subsec:clos} se presentan las características del sistema de objetos de Common Lisp.
+% Las características de cada variante de VRP se definen mediante un sistema de clases. En la sección \ref{subsec:clos} se presentan las características del sistema de objetos de Common Lisp.
 
-\subsection{Sistema de Objetos de Common Lisp (CLOS)}\label{subsec:clos}
-El Sistema de Objetos de Common Lisp (CLOS por sus siglas en inglés) es un conjunto de operadores que permiten la programación orientada a objetos dentro del lenguaje \cite{graham@ansiCL}. Este sistema permite la definición de clases con herencia múltiple y está formado por funciones genéricas con polimorfismo en múltiples argumentos y combinaciones de métodos. En las secciones siguientes se presentan las principales características de cada uno de estos elementos.
+% \subsection{Sistema de Objetos de Common Lisp (CLOS)}\label{subsec:clos}
+% El Sistema de Objetos de Common Lisp (CLOS por sus siglas en inglés) es un conjunto de operadores que permiten la programación orientada a objetos dentro del lenguaje \cite{graham@ansiCL}. Este sistema permite la definición de clases con herencia múltiple y está formado por funciones genéricas con polimorfismo en múltiples argumentos y combinaciones de métodos. En las secciones siguientes se presentan las principales características de cada uno de estos elementos.
 
-\subsubsection{Clases}
+% \subsubsection{Clases}
 
-Las clases son la representación de los objetos en la programación orientada a objetos. En CLOS, las clases se forman con un nombre, una lista de clases ancestros y una lista de campos \cite{graham@ansiCL}. 
+% Las clases son la representación de los objetos en la programación orientada a objetos. En CLOS, las clases se forman con un nombre, una lista de clases ancestros y una lista de campos \cite{graham@ansiCL}. 
 
-La lista de clases ancestros define las clases de las que se heredan, llamadas {\it superclases}. Una clase hereda la unión de los campos y el comportamiento de cada una de sus superclases.
+% La lista de clases ancestros define las clases de las que se heredan, llamadas {\it superclases}. Una clase hereda la unión de los campos y el comportamiento de cada una de sus superclases.
 
-La manera más simple de definir un campo es asignándole un nombre. Sin embargo, en el caso general, la definición de un campo es una lista que comienza con un nombre y está seguida por un conjunto de propiedades como la manera de acceder al campo y el valor que tendrá por defecto.
+% La manera más simple de definir un campo es asignándole un nombre. Sin embargo, en el caso general, la definición de un campo es una lista que comienza con un nombre y está seguida por un conjunto de propiedades como la manera de acceder al campo y el valor que tendrá por defecto.
 
-Por ejemplo, para definir la característica de visitar a un cliente una única vez, se define la clase siguiente:
+% Por ejemplo, para definir la característica de visitar a un cliente una única vez, se define la clase siguiente:
 
-\begin{lstlisting}
-(defclass visit-cliente-only-once () ())
-\end{lstlisting}
+% \begin{lstlisting}
+% (defclass visit-cliente-only-once () ())
+% \end{lstlisting}
 
-Esta clase no hereda de ningún ancestro ni tiene campos. La ausencia de estos componentes se especifica mediante la lista vacía {\tt ()} que es equivalente al valor {\tt null} de los lenguajes de programación convencionales.
+% Esta clase no hereda de ningún ancestro ni tiene campos. La ausencia de estos componentes se especifica mediante la lista vacía {\tt ()} que es equivalente al valor {\tt null} de los lenguajes de programación convencionales.
 
-Una diferencia de CLOS con los sistemas de objetos tradicionales es que los métodos se definen fuera del cuerpo de la clase a través de funciones genéricas. En la siguiente sección se presentan las principales características de las funciones genéricas.
+% Una diferencia de CLOS con los sistemas de objetos tradicionales es que los métodos se definen fuera del cuerpo de la clase a través de funciones genéricas. En la siguiente sección se presentan las principales características de las funciones genéricas.
 
-\subsubsection{Funciones genéricas}\label{subsubsec:genericFunction}
-Una función genérica es una función compuesta por uno o más métodos \cite{graham@ansiCL}. Los argumentos de cada método se pueden especializar para indicar el tipo de los argumentos a los cuales se aplica dicha función. Cuando una función genérica se invoca se usa el método más específico para el cual las clases de los argumentos coinciden con la especialización de los parámetros.
+% \subsubsection{Funciones genéricas}\label{subsubsec:genericFunction}
+% Una función genérica es una función compuesta por uno o más métodos \cite{graham@ansiCL}. Los argumentos de cada método se pueden especializar para indicar el tipo de los argumentos a los cuales se aplica dicha función. Cuando una función genérica se invoca se usa el método más específico para el cual las clases de los argumentos coinciden con la especialización de los parámetros.
 
-Por ejemplo, para la jerarquía de clases representada en la figura \ref{fig:fgClass} se define la función genérica y los métodos correspondientes mostrados en la figura \ref{fig:fgMethods}. Los métodos especializan el parámetro {\tt obj} en cada clase definida.
+% Por ejemplo, para la jerarquía de clases representada en la figura \ref{fig:fgClass} se define la función genérica y los métodos correspondientes mostrados en la figura \ref{fig:fgMethods}. Los métodos especializan el parámetro {\tt obj} en cada clase definida.
 
-\begin{figure}[h!]
-\begin{lstlisting}
-(defclass animal () ())
-(defclass perro (animal) ())
-\end{lstlisting}
-	\caption{Jerarquía de clases.}  \label{fig:fgClass}
-\end{figure}
+% \begin{figure}[h!]
+% \begin{lstlisting}
+% (defclass animal () ())
+% (defclass perro (animal) ())
+% \end{lstlisting}
+% 	\caption{Jerarquía de clases.}  \label{fig:fgClass}
+% \end{figure}
 
-\begin{figure}[h!]
-\begin{lstlisting}
-(defgeneric come (obj))
+% \begin{figure}[h!]
+% \begin{lstlisting}
+% (defgeneric come (obj))
 
-(defmethod come ((obj animal))
-   (format t "No se que comer..."))
+% (defmethod come ((obj animal))
+%    (format t "No se que comer..."))
  
-(defmethod come ((obj perro))
-   (format t "Mmm... Que hueso mas rico..."))
-\end{lstlisting}
-	\caption{Función genérica {\tt come} y su implementación para las clases {\tt animal} y {\tt perro}.}  \label{fig:fgMethods}
-\end{figure}
+% (defmethod come ((obj perro))
+%    (format t "Mmm... Que hueso mas rico..."))
+% \end{lstlisting}
+% 	\caption{Función genérica {\tt come} y su implementación para las clases {\tt animal} y {\tt perro}.}  \label{fig:fgMethods}
+% \end{figure}
 
-Cuando se llama a una función genérica con unos argumentos específicos, el orden en que se llaman los métodos se modifica en dependencia de la combinación de métodos asociada a esa función genérica. En la sección siguiente se describen las distintas variantes para especificar dichas combinaciones.
+% Cuando se llama a una función genérica con unos argumentos específicos, el orden en que se llaman los métodos se modifica en dependencia de la combinación de métodos asociada a esa función genérica. En la sección siguiente se describen las distintas variantes para especificar dichas combinaciones.
 
-\subsubsection{Combinaciones de métodos}\label{subsubsec:combination}
+% \subsubsection{Combinaciones de métodos}\label{subsubsec:combination}
 
-Las combinaciones de métodos son una característica relevante del sistema de objetos de Common Lisp. Mediante ellas es posible especificar cuál debe ser el resultado de la invocación de una función genérica y el orden en el que se deben ejecutar los métodos de dicha función genérica.
+% Las combinaciones de métodos son una característica relevante del sistema de objetos de Common Lisp. Mediante ellas es posible especificar cuál debe ser el resultado de la invocación de una función genérica y el orden en el que se deben ejecutar los métodos de dicha función genérica.
 
-Los métodos se pueden extender con métodos auxiliares que incluyen los métodos ``antes de'' ({\tt before}), ``después de'' ({\tt after}) y ``en lugar de'' ({\tt around}). Al método que no tiene ninguna de las especificaciones mencionadas se le llama método primario. Los métodos {\tt before} y {\tt after}, como sus nombres indican, se llaman antes y después del método primario, respectivamente. Si un método {\tt around} existe, entonces se llamará en lugar del método primario y, dentro de su cuerpo, puede invocar al método primario mediante el uso de la función {\tt call-next-method}.
+% Los métodos se pueden extender con métodos auxiliares que incluyen los métodos ``antes de'' ({\tt before}), ``después de'' ({\tt after}) y ``en lugar de'' ({\tt around}). Al método que no tiene ninguna de las especificaciones mencionadas se le llama método primario. Los métodos {\tt before} y {\tt after}, como sus nombres indican, se llaman antes y después del método primario, respectivamente. Si un método {\tt around} existe, entonces se llamará en lugar del método primario y, dentro de su cuerpo, puede invocar al método primario mediante el uso de la función {\tt call-next-method}.
 
-Entre los métodos aplicables, una vez se invoca una función genérica, se llama método más específico al que cumple que el tipo de sus argumentos es el más especializado dentro de la jerarquía. La combinación estándar de métodos es la siguiente:
+% Entre los métodos aplicables, una vez se invoca una función genérica, se llama método más específico al que cumple que el tipo de sus argumentos es el más especializado dentro de la jerarquía. La combinación estándar de métodos es la siguiente:
 
-\begin{enumerate}
-	\item Se invoca el método {\tt around} más específico, si existe.
-	\item De lo contrario, se llaman los métodos en el orden siguiente:
-	\begin{enumerate}
-		\item Todos los métodos {\tt before} (de más a menos específico)
-		\item El método primario más específico
-		\item Todos los métodos {\tt after} (de menos a más específico)
-	\end{enumerate}
-\end{enumerate}
+% \begin{enumerate}
+% 	\item Se invoca el método {\tt around} más específico, si existe.
+% 	\item De lo contrario, se llaman los métodos en el orden siguiente:
+% 	\begin{enumerate}
+% 		\item Todos los métodos {\tt before} (de más a menos específico)
+% 		\item El método primario más específico
+% 		\item Todos los métodos {\tt after} (de menos a más específico)
+% 	\end{enumerate}
+% \end{enumerate}
 
-En el primer caso se devuelve el valor del método {\tt around}, mientras que en el segundo se devuelve el valor del método primario más específico.
+% En el primer caso se devuelve el valor del método {\tt around}, mientras que en el segundo se devuelve el valor del método primario más específico.
 
-Utilizando los elementos descritos en este capítulo (unidades de prueba, modelos matemáticos y las funcionalidades de LMML y Common Lisp), es posible describir el método propuesto de validación de modelos para un VRP específico. En el capítulo siguiente se describe el funcionamiento del sistema de validación.
+% Utilizando los elementos descritos en este capítulo (unidades de prueba, modelos matemáticos y las funcionalidades de LMML y Common Lisp), es posible describir el método propuesto de validación de modelos para un VRP específico. En el capítulo siguiente se describe el funcionamiento del sistema de validación.
