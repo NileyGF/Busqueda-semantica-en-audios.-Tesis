@@ -19,7 +19,7 @@ Machine learning, Information Retrieval Systems, Music Information Retrieval, BE
 
 To replicate the preprocessing:
 
-    python3 -m src.main
+    python3 -m src.__main__
 
 To test in django-app:
 

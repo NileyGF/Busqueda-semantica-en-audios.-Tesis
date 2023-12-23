@@ -96,6 +96,7 @@ def process_query(query:str, docs_embeddings_list:list=None, documents_list:list
     if docs_embeddings_list == None and documents_list == None:
         raise Exception("To process the query is necessary to have a corpus, either on a text list or an embeddings list.")
     if docs_embeddings_list == None and documents_list != None:
+        print("NOoo") 
         docs_embeddings_list = extract_embeddings_for_docs_list(documents_list)
     
     tokenized_query = BERT_embedding.bert_tokenize(text=query)

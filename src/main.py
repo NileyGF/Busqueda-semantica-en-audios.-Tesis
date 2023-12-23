@@ -306,16 +306,18 @@ def save_queries2_embedd():
     print(f"Embeddings extractions for the queries 2 using BERT, took {round(et-st,4)} seconds.") # 5292.654 seconds 
     return embeddings_path, queries_embeddings_list
 
-
-def relevant_descriptions_by_query(query:str, top_k='all', embeddings_path='corpus_bert_embeddings.bin'):
+def relevant_descriptions_by_query(query:str, embeddings_path:str, top_k='all'):
     docs_embeddings_list = None
     documents_list = None
     try:
         with open(embeddings_path, 'rb') as f:
             docs_embeddings_list = pickle.load(f)
     except:
-        documents_list = [] # TODO
-        docs_embeddings_list = emb_ret.extract_embeddings_for_docs_list(documents_list=documents_list, save=True, save_path=embeddings_path)
+        pass
+    descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
+    documents_list = descriptions_df["description"].values.tolist()
+        # documents_list = [] # TODO
+        # docs_embeddings_list = emb_ret.extract_embeddings_for_docs_list(documents_list=documents_list, save=True, save_path=embeddings_path)
 
     if docs_embeddings_list != None:
         docs_idx_list = emb_ret.process_query(query=query, docs_embeddings_list=docs_embeddings_list, top_k=top_k)
@@ -384,7 +386,6 @@ def relevance_judgments(caption=True) -> list:
     print(f"Relevance queries-songs calculation, took {round(et-st,4)} seconds.") # 370.1901 seconds  / 2240.6727 
     
     return relevance
-
 
 
 features_extracted_csv = os.path.join(directory_path,'data','musiccaps-subset-feat.csv')
@@ -457,4 +458,3 @@ def replicate_evaluation(music_folder_path:str, restart=True):
     evaluation_df = eval.full_evaluate(restart=restart)
 
     return evaluation_df
-print(replicate_evaluation(music_folder_path=None,restart=False))
