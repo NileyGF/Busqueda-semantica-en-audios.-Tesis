@@ -87,12 +87,16 @@ def average_precision(qrels: list, retrieved: list, top_k:int = 0):
     """
     # https://vitalflux.com/mean-average-precision-map-for-information-retrieval-systems/
     ap = []
-    for k in range(len(retrieved)):
+    topk = top_k if top_k > 0 else len(retrieved)
+    for k in range(topk):
         if retrieved[k] in qrels:
             pk = precision(qrels, retrieved, k+1)
             # print("pk: ", pk, "rel: ", rel)
             ap.append(pk)
             # print(ap)
+
+    if len(ap) == 0:
+        return 0
     return np.sum(ap) / len(ap)
 # print(average_precision([0,1,3,4,6,9],[0,1,2,3,4,5,6,7,8,9]))
 
@@ -136,7 +140,7 @@ def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str,
         qrels = relevance_list[q]
         # if q not in retrieved:
         #     raise Exception("How can this be??")
-        print(q)
+        # print(q)
         if 'precision' in metrics:
             metrics_d['precision'].append(precision(qrels, retrieved, top_k))
         if 'R@1' in metrics:
@@ -246,7 +250,7 @@ def full_evaluate(restart=True):
                                 'R@5':[None,None,None,None,None,60.6,0.16,25.4], 
                                 'R@10':[None,None,None,None,None,70.8,0.25,38.4], 
                                 'R@50':[None,None,None,None,None,86,None,None], 
-                                'mAP@10':[None,None,None,None,None,None,None,None],
+                                'mAP@10':[None,None,None,None,None,None,None,0],
                                 'mAP':[None,None,None,None,0.081,None,None,None]}
         evals_df = pd.DataFrame.from_dict(options_metrics_dict)
         # evals_df.index = idxs
@@ -267,6 +271,7 @@ def full_evaluate(restart=True):
         # print(idx,row['R@1'])
         # print(evals_df.at[idx, 'R@1'])
         metrics = []
+        # print(row)
         if np.isnan(row['R@1']):
             metrics.append('R@1')
         if np.isnan(row['R@5']):
@@ -293,8 +298,10 @@ def full_evaluate(restart=True):
         for m in metrics_result:
             metrics_result[m] = round(np.mean(metrics_result[m]),3)
             print(m, metrics_result[m])
-            if 'average_precision' in m:
+            if 'average_precision' == m:
                 evals_df.at[idx,'mAP'] = metrics_result[m]
+            elif 'average_precision@10' == m:
+                evals_df.at[idx,'mAP@10'] = metrics_result[m]
             else: 
                 evals_df.at[idx, m] = metrics_result[m]
         
