@@ -74,7 +74,7 @@ def recall(qrels: list, retrieved: list, top_k:int = 0):
     retrieved_relevants = hits(qrels, retrieved, k)
     return retrieved_relevants / len(qrels)
 
-def average_precision(qrels: list, retrieved: list):
+def average_precision(qrels: list, retrieved: list, top_k:int = 0):
     """ Average Precision is the average of the Precision scores computed after each relevant song is retrieved. 
         qrels:       list of relevant songs
         retrieved:   list of retrieved songs
@@ -125,11 +125,14 @@ def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str,
     for l in relevance_sim_list:
         l1 = [i for i,j in l]
         relevance_list.append(l1)
-
+        
+    np.random.seed(0) 
+    queries_indexes = list(np.random.permutation(np.arange(0,len(queries_embeddings_list))) [:1000])
+    random_1k_queries = {i:queries_embeddings_list[i] for i in queries_indexes}
     st = time.time()
     metrics_d = {m:[] for m in metrics}
-    for q in range(len(queries_embeddings_list)):
-        retrieved = emb_ret.evaluate_query(query_vector=queries_embeddings_list[q], documents_vectors_list=corpus_embeddings_list, top_k='all')
+    for q in random_1k_queries:
+        retrieved = emb_ret.evaluate_query(query_vector=random_1k_queries[q], documents_vectors_list=corpus_embeddings_list, top_k='all')
         qrels = relevance_list[q]
         # if q not in retrieved:
         #     raise Exception("How can this be??")
@@ -148,6 +151,8 @@ def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str,
             metrics_d['recall'].append(recall(qrels, retrieved, top_k))
         if 'average_precision' in metrics:
             metrics_d['average_precision'].append(average_precision(qrels, retrieved))
+        if 'average_precision@10' in metrics:
+            metrics_d['average_precision@10'].append(average_precision(qrels, retrieved, 10))
     et = time.time()
     print(f"Evaluation took {round(et-st,4)} seconds.") # over 3600 seconds
     return metrics_d
@@ -223,7 +228,7 @@ def full_evaluate(restart=True):
                         "tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin')), 
                         "tags_descriptions_extend":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin'))
                         }
-    cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP']
+    cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP@10','mAP']
     if restart:
         # options_metrics_dict = {"captions_descriptions":[],
         #                         "captions_descriptions_extend":[],
@@ -235,12 +240,13 @@ def full_evaluate(restart=True):
         #                         "LangBasedRetrieval_SentenceBERT":[0.04,0.16,0.25,None,None],
         #                         "Contrastive_SentenceBERT":[6.8,25.4,38.4,None,None]
         #                         }
-        # cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP']
+        # cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP@10','mAP']
         options_metrics_dict = {'rows':idxs,
                                 'R@1':[None,None,None,None,None,31.1,0.04,6.8], 
                                 'R@5':[None,None,None,None,None,60.6,0.16,25.4], 
                                 'R@10':[None,None,None,None,None,70.8,0.25,38.4], 
                                 'R@50':[None,None,None,None,None,86,None,None], 
+                                'mAP@10':[None,None,None,None,None,None,None,None],
                                 'mAP':[None,None,None,None,0.081,None,None,None]}
         evals_df = pd.DataFrame.from_dict(options_metrics_dict)
         # evals_df.index = idxs
@@ -269,6 +275,8 @@ def full_evaluate(restart=True):
             metrics.append('R@10')
         if np.isnan(row['R@50']):
             metrics.append('R@50')
+        if np.isnan(row['mAP@10']):
+            metrics.append('average_precision@10')
         if np.isnan(row['mAP']):
             metrics.append('average_precision')
         print(metrics)
@@ -285,7 +293,7 @@ def full_evaluate(restart=True):
         for m in metrics_result:
             metrics_result[m] = round(np.mean(metrics_result[m]),3)
             print(m, metrics_result[m])
-            if m == 'average_precision':
+            if 'average_precision' in m:
                 evals_df.at[idx,'mAP'] = metrics_result[m]
             else: 
                 evals_df.at[idx, m] = metrics_result[m]
@@ -324,6 +332,5 @@ def eval_graph(num_queries):
     # plot(X, recall_20_l,    np.average(recall_20_l),     'recall@20', 6, Ylabel='recall')
     # plot(X, recall_10_l,    np.average(recall_10_l),     'recall@10', 7, Ylabel='recall')
     # plot(X, recall_1_l,     np.average(recall_1_l),      'recall@1',  8, Ylabel='recall')
-
 
 
