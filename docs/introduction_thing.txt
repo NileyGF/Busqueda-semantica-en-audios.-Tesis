@@ -107,8 +107,8 @@ de la música de una manera más natural y enriquecedora.
 
 Posibles lineas de apertura:
 
-     1. En la actualidad, la disponibilidad de vasta, y fácilmente accesible, creciente cantidad de 
-     información musical ...
+    1. En la actualidad, la disponibilidad de vasta, y fácilmente accesible, creciente cantidad de 
+    información musical ...
 
     2. El extenso y constante crecimiento de contenido generado en la red en los años recientes, ha 
     introducido una apremiante necesidad de buscar en bases de datos cada vez más grandes de multimedia.

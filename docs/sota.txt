@@ -1,1 +1,227 @@
-This work relates to several themes in the literature: 
+This work relates to several themes in the literature: Music Information Retrieval, music information processing and 
+retrieval, text-based music retrieval, semantic gap, natural language processing in MIR, learning from language supervision, 
+semantic embeddings, music captioning, symbolic queries for music retrieval.
+
+Music Information Retrieval/(music information processing and retrieval):
+The research field of Music Information Retrieval (MIR) is usually defined as concerned with the extraction and 
+inference of meaningful features from music (from the audio signal, symbolic representation or external sources such as 
+web pages), indexing of music using these features, and the development of different search and retrieval schemes (for 
+instance, content-based search, music recommendation systems, or user interfaces for browsing large music collections) \cite{Schedl2014MusicIR}.
+
+Music is a highly multimodal human artifact. By modality we mean a specific way to digitize music information \cite{Simonetta2019MultimodalMI}. 
+Different modalities are obtained through different transducers, in different places or times, and/or belong to different 
+media. Examples of modalities that may be associated to a single piece of music include audio, lyrics, symbolic scores, 
+album covers, and so on \cite{Simonetta2019MultimodalMI, Schedl2014MusicIR}. 
+
+Computational MIR approaches typically use features and create models to describe music by one or more of the following 
+categories of music perception: music content, music context, user properties, and user context as defined in \cite{Schedl2014MusicIR}. 
+They refer to music content as the aspects encoded in the audio signal as: rhythm, melody, loudness, song lyrics 
+and timbre. While music context is defined as factors that cannot be extracted directly from the audio but are, 
+nevertheless related to the music item, artist, or performer. When focusing on the user, user contextaspects represent
+dynamic and frequently changing factors and user properties refer to constant or only slowly changing characteristics 
+of the user, such as her music taste or music education.
+It is important to state that there are interconnections between some features from different categories. For instance, 
+aspects reflected in music context (e.g. musical genre) can be modeled by music content (e.g. instrumentation).
+
+MIR and processing tasks:
+    - feature extraction from music content and context. Audio features can be subdivided in physical and perceptual \cite{Alas2016ARO}.
+    Physical features, which can be computed in various domains, such as time, frequency or wavelet; includes 
+    zero-crossing rate, amplitude, rhythm, autoregression-based, STFT-based, brightness, tonality, chroma, spectrum 
+    shape. Perceptual features try to integrate human sound perception processing. For example, Mel Frequency Cepstral
+    Coefficients (MFCC), perceptual wavelet packets, loudness.
+    %Besides audio feature can be extracted: video and image features and text features.
+
+
+    Content-based features are extracted from raw signals to 
+    characterize audio in terms of pitch, timbre or rhythm, among others. Many of these features are extracted from 
+    short-time frames using the Short Time Fourier Transform (STFT). One of the most commonly used timbral features 
+    is Mel-frequency cepstral coefficients (MFCCs), which captures short-term power spectrum of a sound, reducing 
+    high dimensional sound signals into low dimensional representations.
+    - similarity is the task of computing the amount of similarity between the information content. Often, this 
+    task has the purpose of retrieving documents from a collection through a query, which can be explicitly expressed 
+    by the user or implicitly deduced by the system \cite{Simonetta2019MultimodalMI}. A very common  example of 
+    explicit similarity queries is query-by example, in which the query is represented by an audio recording and 
+    the system retrieves the correct song. On the other hand, implicit queries are used in recommender systems 
+    and playlist generators.
+    - The classification process consists in taking as input a music and returning one or more labels. A popular 
+    classification task is the mood or emotion recognition \cite{Kim2010StateOT}, while an emerging one is genre 
+    classification \cite{Allamy20211DCA, AthulyaK2021DeepLB, Qiu2021DBTMPEDB, Rafi2021ComparativeAO, Koparde2021ASO, Ndou2021MusicGC, Prince2022MusicGC}. 
+    Both these two tasks can take advantage of audio recordings, lyrics, cover arts and meta-tags. Other 
+    classification tasks include: instrument classification, derivative works classification, tonic identification, 
+    expressive musical description. 
+
+MIR and processing applications:
+    - music retrieval applications intend to help users find music in large collections by a particular similarity 
+    criterion. In Query-by humming and query-by tapping, the goal is to retrieve music from a given melodic or rhythmic 
+    input. The previously mentioned applications are based on the comparison of a target music signal against a 
+    database (also referred asquery by example), but users may want to find music fulfilling certain requirements
+    (e.g. “give me songs with a tempo of 100 bpm or in C major”) as stated by Isaacson [110]. In fact, humans mostly 
+    use tags or semantic descriptors (e.g. “happy” or “rock”) to refer to music. Semantic/tag-based or category-based 
+    retrieval systems ...
+    - audio alignment matching or synchronization is a similar scenario of music retrieval where, in addition to 
+    identifying a given audio fragment, the aim is to locally link time positions from two music signals.
+    - music recommendation systems typically propose a list of music pieces based on modeling the user's musical 
+    preferences.
+    - automatic music playlist generation can be regarded as highly related to music recommendation. Its aim is to 
+    create an ordered list of results, such as music tracks or artists, to provide meaningful playlists enjoyable 
+    by the listener. One of the differences between music recommendation and playlist generation is that the former 
+    typically aims at proposing new songs not known by the user, while the latter aims at reorganizing already 
+    known material.
+
+Text-based music retrieval:
+Over the years, many approaches have been proposed to browse, search and discover music through a variety of 
+interfaces \cite{Manco2022ContrastiveAL}. Beyond simple search by metadata, music retrieval systems
+allow to express queries via lyrics \cite{Tsukuda2017LyricJA}, audio examples \cite{Lee2020DisentangledMM}, 
+videos \cite{Li2019QueryBV} and humming \cite{Patel2021MusicRS}, among others.
+Although each of these query types has its merits, none of them supports one of the most popular ways of searching 
+for music today: through free-form text. For example, we commonly look for songs by typing text into a search 
+engine or by asking online song naming communities to identify a piece of music we do not have bibliographic or 
+editorial information about. Enabling MIR systems to interpret natural language queries can have far reaching 
+benefits \cite{Manco2022ContrastiveAL}.
+An ideal text-based retrieval system needs to be flexible to allow various input types (e.g. word, sentence) 
+and abundant vocabularies. For example, one can use broadly used tags, such as genre, to explore the music 
+library. Sometimes the input queries may include unseen types of music tags. Also, another can use more 
+detailed sentence-level descriptions to discover music.
+Text-based retrieval is challenging because it needs to handle not only editorial metadata (e.g., title, artist, 
+release year) but also semantic information (e.g., genre, mood, theme). Furthermore, modern retrieval systems, 
+such as voice assistants, need to generalize to sentence-level natural language inputs beyond fixed tag 
+vocabularies \cite{Doh2022TowardUT}. 
+
+Another recent approach to information retrieval (IR) is through Neural ranking models, which use shallow or deep 
+neural networks. Traditional learning to rank models employ machine learning techniques over hand-crafted 
+IR features. By contrast, neural models learn representations of language from raw text that can bridge the 
+gap between query and document vocabulary \cite{Mitra2017NeuralMF}. 
+Since the turn of the decade, there have been dramatic improvements in performance in computer vision, 
+speech recognition, and machine translation tasks, witnessed in research and in real-world 
+applications \cite{LeCun2015DeepL}. These breakthroughs were largely fuelled by recent advances in neural 
+network models, usually with multiple hidden layers, known as deep architectures \cite{Bahdanau2014NeuralMT, Deng2014DeepLM, Hinton2012DeepNN, LeCun2015DeepL}.
+Neural models for IR use vector representations of text, and usually contain a large number of parameters 
+that needs to be tuned. ML models with large set of parameters typically require a large quantity of 
+training data \cite{Taylor2006OptimisationMF}.
+Learning suitable representations of text also demands large-scale datasets for training \cite{Mitra2016LearningTM}. 
+Therefore, unlike classical IR models, these neural approaches tend to be data-hungry, with performance that 
+improves with more training data \cite{Mitra2017NeuralMF}.
+
+The most similar approaches to our research are the studies at \cite{Huang2022MuLanAJ, Manco2022ContrastiveAL} 
+which uses crossmodal and multimodal contrastive learning to create either a shared embeddings space or multimodal
+embeddings. At november 2022, \cite{Doh2022TowardUT} delves into a study of effective design choices for 
+text-to-music retrieval systems, proposing a universal text-to-music retrieval system that achieves
+comparable retrieval performances in both tag-level and sentence-level inputs.
+
+Semantic gap:
+The semantic gap in music retrieval refers to the difference between low-level acoustic descriptions and 
+high-level human concepts (meaningful to human music perception). For example, the same tempo appears in 
+different music genres, and a given music genre can be characterized by different tempos \cite{Su2022HighperformanceCM}.
+This gap exists because the features that computers can analyze, such as pitch, tempo, and loudness, 
+are not the same as the concepts that humans use to relate to music collections \cite{Celma2006BridgingTM}.
+Ideally, music retrieval and recommendation approaches should incorporate aspects of several categories to 
+overcome the semantic gap \cite{Schedl2014MusicIR}.
+A multimodal approach to bridging the music semantic gap involves combining various techniques and data sources 
+to improve the accuracy of music retrieval and recommendation systems \cite{Celma2006AMA}.
+
+NLP in MIR:
+Natural Language Processing (NLP) is a field of Computer Science and Artificial Intelligence concerned 
+with the interaction between computers and human (natural) language \cite{NLP4MIR}. NLP is a core component 
+in daily life technologies: web search, speech recognition and synthesis, automatic summaries in the web, 
+product (including music) recommendation, machine translation, etc. 
+
+Prior works in the MIR literature have explored leveraging natural language in the music domain from 
+different angles. Early efforts focused on text as a modality in isolation, adopting NLP techniques to 
+construct knowledge bases from music-related text corpora \cite{Oramas2016InformationEF}, or build semantic 
+graphs for artist similarity from biographies \cite{Oramas2015ASA}. Recent efforts have instead started 
+favouring multimodal approaches. These have explored deep learning with multimodal input data, typically 
+audio combined with text, such as reviews or lyrics, for applications as varied as music classification 
+and recommendation \cite{Oramas2018MultimodalDL}, mood detection \cite{Delbouys 2018MusicMD}, music 
+emotion recognition \cite{Jeon2017MusicER} and music captioning \cite{Manco2021MusCapsGC, Cai2020MusicAA}.
+
+The idea of enabling MIR systems to interpret natural language queries is not new; some works like 
+\cite{Whitman2002MusicalQA} have suggested similar research directions. So far, however, multimodal systems 
+that integrate natural language have not been widely adopted within the MIR community, possibly due to a 
+lack of suitable datasets or to the practical limitations of NLP methods predating modern language models \cite{Manco2022ContrastiveAL}.
+In light of recent breakthroughs in language modelling, it is argued that audio-and-language learning has 
+the potential of closing the semantic gap in MIR.
+
+Music captioning:
+Music captioning is defined as the task of generating a natural language description of music audio content in a human-like manner.
+MusCaps \cite{Manco2021MusCapsGC} in 2021, claim to present the first music audio captioning model. 
+Until recently, MIR approaches to music description typically relied on single-label or multi-label 
+classification. A prominent example is music auto-tagging \cite{Choi2016AutomaticTU, Lee2017SamplelevelDC, Pons2017EndtoendLF}, 
+in which descriptive keywords are assigned to a music clip so as to convey high-level characteristics 
+of the input such as genre, instrumentation and emotion.
+
+Captioning systems need to recognise signal-level features such as instrumentation and high-level 
+descriptors such as genre. They also produce fully formed, descriptive sentences, that more 
+closely match human queries.
+Through the joint use and processing of audio and linguistic information, music captioning also provides a 
+first step towards the development of audio-and-language models for music understanding.
+Finally, music captioning has several useful direct applications as enabling search and discovery of music 
+through more human-like queries or providing explanations for automatic music recommendations \cite{Manco2021MusCapsGC}.
+
+\textit{Audio Retrieval with Natural Language Queries: A Benchmark Study} \cite{Koepke2021AudioRW} studies on
+audio envents (not musicals) retrieval with free form natural language queries. Taking into consideration that,
+learning (in a machine learning fashion) to retrieve audio with natural language queries requires data with 
+paired text and sound; \cite{Koepke2021AudioRW} claim that audio captioning datasets naturally lend themselves 
+to this task, since they contain audio and a matching text description for the sound. They propose to learn 
+cross-modal embeddings using audio captioning datasets to the retrieval system. Several natural language music 
+retrieval research mention this idea with music captioning datasets \cite{Huang2022MuLanAJ, Doh2022TowardUT, Manco2022ContrastiveAL}.
+However it is also stated that the current existing datasets do not span the diversity of sound-descriptive 
+language \cite{Huang2022MuLanAJ}; meanwhile \cite{Doh2022TowardUT} ends up using a concatenation of tags from 
+different annotation sources as captions.
+
+Learning from Language Supervision:
+Multimodal learning still occupies a marginal role in MIR and has yet to fully enjoy the benefits of modern 
+language models \cite{Manco2022ContrastiveAL}. The key insight behind these models is that language captures 
+many of the abstractions humans use to navigate the world and can therefore act as a rich supervisory signal 
+for general purpose learning, even in tasks that are not directly based on language.
+
+Classifiers are generally trained to label examples with predefined and fixed class inventories. Empowered by recent 
+advances in neural language modeling and their demonstrated transfer learning competence, researchers have 
+begun exploring less restrictive natural language interfaces to access the categorical information underlying 
+raw signals \cite{Huang2022MuLanAJ}. The majority of this work has been in the visual and audio event 
+domain, with jointly embedding media content with natural language captions \cite{Koepke2021AudioRW, Jia2021ScalingUV, Radford2021LearningTV, Nagrani2022LearningAM}. 
+
+The success of these efforts strongly depends on large-scale training resources and hefty neural network 
+architectures that are flexible enough to model the complex, non-monotonic relationship between language 
+and other modalities. In particular, the visual domain has greatly benefited from the availability of 
+large amounts of captioned images available across the web \cite{Jia2021ScalingUV}. However, in the general 
+environmental audio domain, such large-scale audio-caption pairs are less readily available and related efforts have 
+relied on small captioned datasets \cite{Drossos2019ClothoAA, Kim2019AudioCapsGC}. 
+
+
+Embeddings:
+An embedding is a representation of items in a new space such that the properties of, and the relationships 
+between, the items are preserved. The goal of an embedding is to generate a simpler representation, where 
+simplification may mean a reduction in the number of dimensions, an increase in the sparseness of the 
+representation, disentangling the principle components of the vector space, or a combination of these goals \cite{Mitra2017NeuralMF}.
+
+Word embeddings of a pre-trained models are used in a various application, as well as in the construction of 
+representations for sentences, paragraphs, and documents \cite{Brundha2022VectorMB}. 
+With word embedding models, preprocessed text or documents are mapped to vectors of real numbers by technologies 
+such as neural networks, dimensionality reduction on the word co-occurrence matrix, etc \cite{Yuan2020ImprovingIR}. 
+Since it takes the context where the word appears into consideration, it makes the predication of missing words 
+in a document possible. In contrast, the traditional keyword-based search engine cannot solve the problem of 
+high term mismatch and consider the distinct meaning between the semantically similar words in the matching process. % \cite{Yuan2020ImprovingIR}
+The most used/studied embeddings models in the literature include:
+- Word2vec \cite{Mikolov2013EfficientEO} (2013): is a group of related models that are used to produce word embeddings. These 
+  models are shallow, two-layer neural networks that are trained to reconstruct linguistic contexts of words. Word2vec 
+  can utilize either of two model architectures to produce these distributed representations of words: Continuous 
+  Bag-Of-Words (CBOW) or continuously sliding skip-gram. In both architectures, word2vec considers both individual 
+  words and a sliding context window as it iterates over the corpus. The problem of sparsity in word2vec cause the 
+  dimension of its vector space higher than other technologies, which causes too much memory resources and low robustness \cite{Yuan2020ImprovingIR}. 
+- GloVe \cite{Pennington2014GloVeGV} (2014): named after Global Vectors, is an unsupervised learning algorithm for 
+  obtaining vector representations for words. It results in a global log-bilinear regression model that combines 
+  the advantages of the two major model families in the literature: global matrix factorization and local context 
+  window methods. 
+- BERT \cite{Devlin2019BERTPO} (2019): stands for Bidirectional Encoder Representations from Transformers, is a 
+  language model based on the transformer architecture, notable for its dramatic improvement over previous state 
+  of the art models. The pre-trained BERT model can be finetuned with just one additional output layer to create 
+  state-of-the-art models for a wide range of tasks, such as question answering and language inference, without 
+  substantial task-pecific architecture modifications. Sentence BERT (SBERT) \cite{Reimers2019SentenceBERTSE} is 
+  a machine learning based algorithm which uses sentence transformer to generate sentence embedding using Siamese 
+  BERT neural network. SBERT can be beneficial for semantic search and semantic textual resemblance. 
+
+Information retrieval system based on embeddings take an input from user in the form of query. Then the 
+system processes all the queries and generate vector embeddings which helps in matching the query with 
+existing collection of documents present in the corpus. The query and the document embeddings themselves 
+can be compared using a variety of similarity metrics, such as cosine similarity or dot-product. The relevant 
+documents are then sent to the user in the decreasing order of relevance which helps in identifying how results are better.
