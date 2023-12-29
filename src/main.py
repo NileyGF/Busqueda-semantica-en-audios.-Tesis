@@ -186,6 +186,44 @@ def get_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset
     # return descriptions, descriptions_and_name
     return description_dict['description'], inner_merged   
 
+def get_tags_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset-descriptions.csv'):
+    """ Given a features dictionary and a dataframe and get a descriptions for every song in the dataframe, 
+        using the features that are in the dictionary. Also, the description for each feaure will be extracted 
+        using the property 'feature_description' from the FeaturesExtractor.
+        
+        features_dict : dict -> feature_name: feature_extractor_class
+        df_name : str -> .csv with the songs and the features extracted
+    """
+    st = time.time()
+    dataset_path = os.path.join(directory_path, 'data', df_name) 
+    musiccaps_df = pd.read_csv(dataset_path)
+    
+    description_dict = {'ytid':[], 'tags_description':[]}
+
+    for idx, row in musiccaps_df.iterrows():
+        song_description = ""
+        description_dict['ytid'].append(row['ytid'])
+        # print(idx)
+        for feat in features_dict:
+            feature_value = row[feat]
+            print(feature_value)
+            song_description += feature_value + '; '
+        print(song_description[:-2])
+        return
+        description_dict['tags_description'].append(song_description)
+        
+    features_df = pd.DataFrame.from_dict(description_dict)
+
+    inner_merged = pd.merge(musiccaps_df, features_df)
+    # inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-desriptions_index.csv')) # , header=False, index=False
+    inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'), index=False) 
+    
+    with open(os.path.join(directory_path,'data','tags_descriptions_list.bin'),'wb') as file:
+        pickle.dump(description_dict['tags_description'], file)
+    print(round(time.time()-st,4)," sec")
+    # time: 0.75 sec
+    # return descriptions, descriptions_and_name
+    return description_dict['tags_description'], inner_merged   
 
 """ Third part of the pipeline : 
 Information Retrieval System (Temporarily is ccosine similarity )
@@ -218,6 +256,51 @@ def save_descript_embedd():
 
     et = time.time()
     print(f"Embeddings extractions for the corpus using BERT, took {round(et-st,4)} seconds.") # 5097.6766 seconds
+    return embeddings_path, docs_embeddings_list, embedd_corpus_relation
+
+def save_tags_descript_embedd():
+    try: 
+        descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
+        descriptions_list = descriptions_df["tags_description"].values.tolist()
+    except Exception as er:
+        print(er)
+        get_tags_descriptions_from_feat(SPECIFIC_FEATURES)
+        descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
+        descriptions_list = descriptions_df["tags_description"].values.tolist()
+
+    embeddings_path = os.path.join(directory_path,'data','embeddings','corpus2_bert_embeddings.bin')
+    embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
+    # with open(embeddings_path, 'rb') as f:
+    #     embeddings_list = pickle.load(f)
+    with open(embedd_corpus_relation_path, 'rb') as f:
+        embedd_corpus_relation = pickle.load(f)
+    st = time.time()
+    print('starting:',st)
+    # last = len(embedd_corpus_relation)
+    emb_ret.extract_embeddings_for_docs_list(documents_list=descriptions_list, save=True, save_path=embeddings_path)
+    with open(embeddings_path, 'rb') as f:
+        docs_embeddings_list = pickle.load(f)
+    # for s in range(len(descriptions_list)):
+    #     sentence = descriptions_list[s]
+    #     print(s)
+    #     print(sentence)
+        
+    #     tokenized = emb_ret.BERT_embedding.bert_tokenize(text=sentence)
+    #     if len(tokenized) > 512:
+    #         print(f"The BERT tokens, for the text number {s}, length is longer than the specified maximum sequence length . {len(tokenized)} > 512. ")
+    #         print(sentence)
+    #         raise Exception()
+    #     embedding, _ = emb_ret.BERT_embedding.sentential_embeddings(tokenized_text=tokenized)
+    #     embeddings_list.append(embedding)
+        # embedd_corpus_relation.append((last,s))
+        # last += 1
+    # extended_embeddings_path = os.path.join(directory_path,'data','embeddings','extended_corpus_bert_embeddings.bin')
+    # with open(extended_embeddings_path, 'wb') as f:
+    #     pickle.dump(embeddings_list,f)
+    # with open(embedd_corpus_relation_path, 'wb') as f:
+    #     pickle.dump(embedd_corpus_relation,f) 
+    et = time.time()
+    print(f"Embeddings extractions for the corpus 2 using BERT, took {round(et-st,4)} seconds.") # 52863.9011 seconds
     return embeddings_path, docs_embeddings_list, embedd_corpus_relation
 
 def extended_descript_embedd():
@@ -391,6 +474,7 @@ def relevance_judgments(caption=True) -> list:
 features_extracted_csv = os.path.join(directory_path,'data','musiccaps-subset-feat.csv')
 descriptions_csv = os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv')
 descriptions_embeddings_path = os.path.join(directory_path,'data','embeddings','corpus_bert_embeddings.bin')
+tags_descriptions_embeddings_path = os.path.join(directory_path,'data','embeddings','corpus2_bert_embeddings.bin')
 descriptions_extended_embeddings_path = os.path.join(directory_path,'data','embeddings','extended_corpus_bert_embeddings.bin')
 queries_embeddings_path = os.path.join(directory_path,'data','embeddings','queries_bert_embeddings.bin')
 queries_relevance_path = os.path.join(directory_path,'data','queries_songs_relevance.bin')
@@ -415,13 +499,19 @@ def replicate_evaluation(music_folder_path:str, restart=True):
     
     descriptions_list = descriptions_df["description"].values.tolist()
     
-    # Get BERT embedding for corpus, corpus extended, queries and queries2
+    # Get BERT embedding for corpus, corpus2, corpus extended, queries and queries2
     try:
         with open(descriptions_embeddings_path, 'rb') as f:
             descriptions_embeddings_list = pickle.load(f)
     except Exception as err:
         print("Error while reading the corpus embeddings :",err)
         save_descript_embedd()
+    try:
+        with open(tags_descriptions_embeddings_path, 'rb') as f:
+            tags_descriptions_embeddings_list = pickle.load(f)
+    except Exception as err:
+        print("Error while reading the corpus 2 embeddings :",err)
+        save_tags_descript_embedd()
     try:
         with open(descriptions_extended_embeddings_path, 'rb') as f:
             descriptions_extended_embeddings_list = pickle.load(f)

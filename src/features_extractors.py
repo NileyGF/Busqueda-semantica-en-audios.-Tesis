@@ -1,4 +1,4 @@
-# from essentia.standard import MonoLoader, TensorflowPredictEffnetDiscogs, TensorflowPredict2D
+from essentia.standard import MonoLoader, TensorflowPredictEffnetDiscogs, TensorflowPredict2D
 
 from ast import literal_eval
 import numpy as np

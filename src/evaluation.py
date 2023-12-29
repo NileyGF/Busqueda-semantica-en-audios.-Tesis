@@ -223,13 +223,15 @@ def __evaluate(corpus_embedd:str, queries_embedd:str, relevance:str):
 
 def full_evaluate(restart=True):
     evals_df_path = os.path.join(directory_path,'data','evaluations.csv')
-    idxs = ["captions_descriptions", "captions_descriptions_extend", "tags_descriptions", 
-            "tags_descriptions_extend", "MuLan", "SoundDescs",
-            "LangBasedRetrieval_SentenceBERT","Contrastive_SentenceBERT"]
+    idxs = ["captions_descriptions", "captions_tags_descriptions", "captions_descriptions_extend", "tags_descriptions", 
+            "captions_tags_descriptions", "tags_descriptions_extend", "MuLan", "SoundDescs",
+            "LangBasedRetrieval_SentenceBERT", "Contrastive_SentenceBERT"]
     embedd_directory = os.path.join(directory_path,'data','embeddings')
     embeddings_files = {"captions_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
+                        "captions_tags_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus2_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
                         "captions_descriptions_extend":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
                         "tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin')), 
+                        "tags_tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus2_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin')), 
                         "tags_descriptions_extend":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin'))
                         }
     cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP@10','mAP']
@@ -246,10 +248,10 @@ def full_evaluate(restart=True):
         #                         }
         # cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP@10','mAP']
         options_metrics_dict = {'rows':idxs,
-                                'R@1':[None,None,None,None,None,31.1,0.04,6.8], 
-                                'R@5':[None,None,None,None,None,60.6,0.16,25.4], 
-                                'R@10':[None,None,None,None,None,70.8,0.25,38.4], 
-                                'R@50':[None,None,None,None,None,86,None,None], 
+                                'R@1':[None,None,None,None,None,0.311,0.04,0.068], 
+                                'R@5':[None,None,None,None,None,0.606,0.16,0.254], 
+                                'R@10':[None,None,None,None,None,0.708,0.25,0.384], 
+                                'R@50':[None,None,None,None,None,0.86,None,None], 
                                 'mAP@10':[None,None,None,None,None,None,None,0],
                                 'mAP':[None,None,None,None,0.081,None,None,None]}
         evals_df = pd.DataFrame.from_dict(options_metrics_dict)
