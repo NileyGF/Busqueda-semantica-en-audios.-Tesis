@@ -1,0 +1,31 @@
+Dataset Curators:
+This dataset was shared by @googleai
+
+Licensing Information:
+The license for this dataset is cc-by-sa-4.0
+
+The MusicCaps dataset contains 5,521 music examples, each of which is labeled with an English aspect list and a free text caption written by musicians. An aspect list is for example "pop, tinny wide hi hats, mellow piano melody, high pitched female vocal melody, sustained pulsating synth lead", while the caption consists of multiple sentences about the music, e.g.,
+
+"A low sounding male voice is rapping over a fast paced drums playing a reggaeton beat along with a bass. Something like a guitar is playing the melody along. This recording is of poor audio-quality. In the background a laughter can be noticed. This song may be playing in a bar."
+% \cite{https://huggingface.co/datasets/google/MusicCaps}
+
+The text is solely focused on describing how the music sounds, not the metadata like the artist name.
+
+The labeled examples are 10s music clips from the AudioSet dataset (2,858 from the eval and 2,663 from the train split).
+
+Please cite the corresponding paper, when using this dataset: 
+http://arxiv.org/abs/2301.11325 (DOI: 10.48550/arXiv.2301.11325)
+
+The following repository has an example script and notebook to load the clips. The notebook also includes a Gradio demo that helps explore some samples: 
+https://github.com/nateraw/download-musiccaps-dataset
+
+Data Fields:
+- ytid : YT ID pointing to the YouTube video in which the labeled music segment appears. You can listen to the segment by opening https://youtu.be/watch?v={ytid}&start={start_s}
+- start_s : Position in the YouTube video at which the music starts.
+- end_s : Position in the YouTube video at which the music end. All clips are 10s long.
+- audioset_positive_labels : Labels for this segment from the AudioSet (https://research.google.com/audioset/) dataset.
+- aspect_list : A list of aspects describing the music.
+- caption : A multi-sentence free text caption describing the music.
+- author_id : An integer for grouping samples by who wrote them.
+- is_balanced_subset : If this value is true, the row is a part of the 1k subset which is genre-balanced.
+- is_audioset_eval : If this value is true, the clip is from the AudioSet eval split. Otherwise it is from the AudioSet train split.

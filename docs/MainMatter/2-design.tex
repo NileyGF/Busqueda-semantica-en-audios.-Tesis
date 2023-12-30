@@ -1,164 +1,71 @@
 \section{Modelación y diseño}
 \label{sec:design}
-El primer paso es definir qué método utilizar para obtener una representación de la música que pueda ser utilizada para recuperación semántica con consultas textuales.
-\subsection{Dataset}
-\label{subsec:dataset}
-% El sistema de validación de modelos para un VRP específico está basado en la estrategia de unidades de pruebas descrita en la sección \ref{sec:unitTesting}. Sin embargo, a diferencia del objetivo de las unidades de prueba, donde se desea comprobar la correctitud de un fragmento de código, en este trabajo se desea verificar si un modelo de optimización matemático para un VRP determinado refleja todas las características del mismo. Para ello se generan soluciones que cumplan o incumplan las características del problema y se evalúan en las restricciones del modelo. Si los resultados de la evaluación son satisfactorios, entonces parece que el modelo está correcto; de lo contrario, es posible asegurar que existe algún error en el mismo.
+El primer paso es definir qué método utilizar para obtener una representación de la música sobreponiendose a la brecha semántica) que pueda ser 
+utilizada para recuperación semántica con consultas textuales.
 
-% El sistema de validación está compuesto por cuatro componentes: el {\it generador de soluciones de alto nivel}, el {\it generador de soluciones de bajo nivel}, el {\it generador de funciones} y el {\it evaluador del modelo} como se muestra en la figura \ref{fig:system}.
+Una de las estrategias de recuperación de información (con consultas textuales) utilizada extensamente, como se ha mencionado anteriormente, es mediante metadatos. Pero también hemos de recordar que dicha estrategia requiere que las canciones contengan metadatos curados (que no es muy práctico en los escenarios actuales donde la multimedia se genera en grandes cantidades, y libremente). Además, como segunda desventaja, la información conocida sobre las canciones estaría limitada al conjunto fijo de metadatos que se predefinan. %  (relativamente pequeño)
 
-% \begin{figure}[htb]
-% 	\centering
-% 	\includegraphics[width=0.75\textwidth]{MainMatter/images/system.png}
-% 	\caption{Componentes del sistema propuesto en este trabajo.} \label{fig:system}
-% \end{figure}
+Si se extraen los metadatos (tags, features) automáticamente con modelos de Machine Learning de clasificación y auto-tagging, se hace frente al primer problema mencionado: como hacer que todas las canciones tengan metadatos, sin requerir una cantidad de trabajo humano irrealista. Dado que los tags se extraen automáticamente, se abre una ventana a contrarrestar la segunda desventaja, ya que la cantidad de tags dependería de la cantidad de modelos de Machine Learning. Esto incluso permite que el conjunto no sea fijo. Con el costo de reprocesar la base de datos, se hace posible actualizar y añadir valores.
 
-% En este capítulo se describirán las entradas del sistema y cada uno de los componentes mencionados, haciendo énfasis en el funcionamiento de cada uno. Además, se presentará un ejemplo con el cual se guiará la explicación. A continuación se describen las entradas del sistema: la descripción del VRP y el modelo para ese problema.
+Otra estrategia, que ha sido analizada por las escasas investigaciones en el tema, es diseñar un modelo para convertir la música al espacio del lenguage natural, o convertir las descripciones textuales y la música a un espacio compartido. El problema fundamental de este acercamiento es que requiere un conjunto bastante grande de pares texto-audio, con suficiente diversidad y abarcamiento para maximimar la generalización del modelo. La inexistencia de dichos \textit{datasets}, en conjunto con la dificultades de requerimientos computacionales; no nos permiten realizar el entrenamiento necesario para implementar esta estrategia. % TODO cite la inexistencia de datasets
 
-% \section{Entradas del sistema}\label{sec:inputs}
-% El objetivo de la herramienta implementada es determinar si un modelo matemático de un VRP es correcto o no. Para ello, es necesario escribir el modelo en el lenguaje LMML y realizar una descripción del VRP que se desea modelar. Esta descripción se realiza a través de las características abstractas del problema presentadas en la sección siguiente.
+Nuestra propuesta, extraer los features automáticamente, trabaja bajo la premisa de que el campo de MIR se ha desarrollado en tareas de clasificación y auto-tagging lo suficiente para ser competitivo con metadatos hechos a mano; relativo al esfuerzo que conlleva cada uno.\\ % TODO specify a little more on our proposal
 
-% \subsection{Características abstractas}
+Para garantizar que el sistema de recuperación tenga en cuenta la similitud semántica, se propone utilizar un aceramiento con \textit{Sentence BERT} \ref{subsec:semantic_embedd} para comparar las consultas con las descripciones de la música. Los acercamientos tradicionales en SRI para mantener la significación semántica, suelen requerir estructuras complejas y un largo tiempo de pre-procesamiento o de ranking. Con el auge de los modelos de lenguaje (alrededor de los últimos de cinco años) y su capacidad de capturar significado semántico y relación contextual; se ha abierto el camino para combinar la eficiencia del modelo vectorial con bolsa de palabras y el aumento en precisión de los modelos como SVD. 
+% TODO explain the relationship between language models and the combinatio % TODO cite modelo vectorial and SVD at least
 
-% Los VRP se describen a través de un conjunto de características a las que se hará referencia en este trabajo como \emph{características abstractas}. Estas se refieren a las restricciones que la solución de un VRP debe satisfacer y que están definidas en términos de los elementos de un VRP (clientes, rutas, depósitos, etc.).
+Dado que SBERT captura el embedding de un texto, y que el framework de extracción de features lo que devuelve es una lista de tags, es necesario 
+convertirla a texto en lenguaje natural.  %, bridging de cierta forma el semantic gap. % TODO Im too lazy even for translating
+% TODO Introduce table-to-text and similar. 
 
-% Por ejemplo, el CVRP se define por el siguiente conjunto de características abstractas:
+La mejor alternativa que se encontró es utilizar \textit{TableGPT: few-shot Table-to-text generation with Table Structure Reconstruction and Content Matching}. Donde utilizan GPT-2 para entrenar table-to-text enfocándose en las deficiencias de GPT-2, en cuanto a estructuras de tabla y fidelidad textual. Sin embargo este modelo no se encuentra accesible para ser utilizado directamente con inferencia. Para utilizarlo sería necesario recrear todo su proceso de entrenamiento. % TODO explain economic problems and computing power
 
-% \begin{enumerate}
-% 	\item Los clientes deben ser visitados solo una vez.
-% 	\item Las rutas deben comenzar y terminar en el depósito central.
-% 	\item La carga de los vehículos no debe exceder a su capacidad.
-% \end{enumerate}
+Entonces las propuestas factibles son: 
+\begin{itemize}
+    \item utilizar GPT-2 para generar descripciones a partir de la lista de metadatos
+    \item crear una oración con <<fuerza bruta>>, por ejemplo para el género: \textit{"The music genre sounds like $<$genre value$>$."}
+    \item utilizar un aceramiento similar a \cite{Manco2022ContrastiveAL} de concatenar tags en un string
+\end{itemize}
+La primera requiere hacer \textit{prompt engineering} y no garantiza fidelidad con los datos extraídos. Mientras que las otras dos resultarían en descripciones que distan de la forma en que las personas realmente realizan consultas. 
 
-% Una vez que el VRP esté descrito mediante un conjunto de características abstractas $A$, se definirá el conjunto de todas las posibles biparticiones sobre $A$ como el conjunto de tuplas $B_A = \{(C_i, C_i^c), i = \overline{1, 2^{|A|}}\}$ donde $C_i$ es el $i$-ésimo subconjunto de $A$ y $C_i^c$ es su complemento.
+Teniendo en cuenta todo esto, se propone intentar las tres estrategias de convertir tags en descripciones y comparar los resultados con las tres alternativas.\\
 
-% En el caso del CVRP el conjunto $B_A$ es el siguiente:
+En conclusión, para la implementación del prototipo objetivo; que consiste en una plataforma donde realizar consultas en lenguaje natural sobre una base de datos de música y obtener resultados con significación semántica; la propuesta (como se puede observar en la imagen \ref{fig:corpus_embeddings}) consiste en:
 
-% $B_A=\{(\{\}, \{1, 2, 3\}), (\{1\}, \{2, 3\}),(\{2\}, \{1, 3\}), (\{3\}, \{1, 2\}), (\{1, 2\}, \{3\}),$\\$(\{2, 3\}, \{1\}), (\{1, 3\}, \{2\}), (\{1, 2, 3\}, \{\})\}$.
+\begin{itemize}
+    \item un sistema de extracción de features compuesto por modelos de clasificación de música (incluyendo features de bajo y alto nivel).
+    \item las características extraídas, entonces, son convertidas en descripciones utilizando las tres alternativas mencionadas anteriormente, obteniendo tres corpus de \textit{captions}.
+    \item finalmente las descripciones serían procesadas con SBERT para generar los \textit{embeddings}.
+\end{itemize}
 
-% Cada elemento de $B_A$ representa dos conjuntos que se usan en este trabajo para generar soluciones de alto nivel. Dichas soluciones deben cumplir con las características del primer conjunto e incumplir las del segundo. En la próxima sección se presenta el componente del sistema que realiza esta función: el generador de soluciones de alto nivel.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Graphics/corpus_embeddings.png}
+	\caption{Diseño propuesto.} 
+    \label{fig:corpus_embeddings}
+\end{figure}
 
-% \section{Generador de soluciones de alto nivel}\label{sec:first}
-% El generador de soluciones de alto nivel se encarga de crear soluciones a partir de un conjunto de características que debe cumplir. Este conjunto será nombrado en este trabajo como requerimiento. A continuación se define el concepto de solución de alto nivel y después se describe la manera de definir el conjunto de requerimientos tomando como punto de partida las características del problema. Por último se muestra el funcionamiento de este componente. 
+En el apartado de recuperación de información, el sistema consiste en recopilar la consulta del usuario, generar el vector de embedding con SBERT y encontrar las canciones más similares comparando el vector con el corpus de embeddings, utilizando similitud de coseno. En la imagen \ref{fig:sri_design} se observa el diseño del SRI. % TODO cite other BERT stuff that does this
 
-% \subsection{Soluciones de alto nivel}
-% Las características abstractas describen las restricciones que las soluciones de un VRP deben satisfacer. Las \emph{soluciones de alto nivel} $\{S_i\}$ son soluciones que satisfacen las condiciones que impone cada elemento de $B_A$ y que están expresadas en función de los componentes del VRP. Por ejemplo, para las características abstractas del CVRP definidas en la sección anterior, se puede definir una solución de alto nivel con dos clientes, un vehículo y una ruta de la siguiente forma:
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Graphics/SRI.png}
+	\caption{Sistema de recuperación utilizando \textit{Sentence BERT embeddings}.} 
+    \label{fig:sri_design}
+\end{figure}
 
-% \begin{center}
-% 	{\it (depósito $\rightarrow$ cliente 1 $\rightarrow$ cliente 2 $\rightarrow$ depósito)}.
-% \end{center}
+\section{Dataset}
+\label{sec:dataset}
 
-% Sin embargo, estas soluciones de alto nivel se generan cumpliendo determinadas condiciones definidas a partir del conjunto de características abstractas del problema. En la sección siguiente se describe la definición de dichas condiciones.
+Para establecer un baseline de la eficacia del prototipo a implementar es necesario evaluarlo con las métricas usuales en SRI y preferentemente en el mismo conjunto de datos que otros trabajos en el tema. 
 
-% \subsection{Definición de los requerimientos}
-% El sistema propuesto en este trabajo está basado en la metodología de unidades de prueba. El criterio de cobertura que se definió es el de cubrir los distintos escenarios de factibilidad e infactibilidad de las soluciones para el VRP deseado. A los efectos de esta investigación, cada elemento $(C_i, C_i^c)$ de $B_A$ determina un requerimiento, donde $C_i$ representa el conjunto de características abstractas que se deben satisfacer y $C_i^C$, el conjunto de características que no deben cumplirse. La pareja $(C_i, C_i^c)$ define las condiciones que se le imponen a las soluciones que se generan para cumplir cada requerimiento.
+\textit{Contrastive Audio-Language Learning for Music} \cite{Manco2022ContrastiveAL} entrenaron y evaluaron su modelo de recuperación en un \textit{dataset} de 250 mil pares (audio, texto) creado a partir de una biblioteca de música en producción. Pero no se encuentra disponible públicamente para utilizarlo y comparar justamente los resultados.
 
-% A las soluciones generadas se les denomina \emph{subpruebas} y representan distintas situaciones en las que se cumplen las condiciones $(C_i, C_i^c)$. El cumplimiento de las condiciones puede realizarse de distintas maneras: se pueden generar soluciones {\bf extremas} donde un pequeño cambio de una solución a otra puede significar el incumplimiento de las condiciones; o crear soluciones {\bf holgadas} donde las condiciones se cumplan por un amplio margen con respecto a los casos en los que se incumplan; o construir soluciones intermedias donde algunas condiciones se cumplan de manera extrema y otras holgadas. Para el primer caso de cumplimiento de las condiciones se tienen como ejemplo soluciones con una única ruta o un solo cliente por ruta. El segundo caso puede lograrse, por ejemplo, con soluciones donde la capacidad máxima de los vehículos exceda a la suma de todas las demandas.
+La evaluación de recuperación de música a partir de consultas textuales de \textit{MuLan: A Joint Embedding of Music Audio and Natural Language} \cite{Huang2022MuLanAJ} fue una colección patentada de 7,000 listas de reproducción curadas por expertos. Que tampoco fue encontrada públicamente.
 
-% Una vez definidos los requerimientos que debe cumplir cada solución de alto nivel, es posible presentar el funcionamiento del generador de soluciones de alto nivel.
+Dado la idea mencionada en la sección \ref{subsec:music_captioning}, decidimos encontrar un \textit{dataset} de \textit{captioning}. Sin embargo la mayor parte de los datasets de captioning utilizados en la literatura son privados. Finalmente decidimos utilizar MusicCaps, que fue liberado públicamente en \cite{Agostinelli2023MusicLMGM}, una investigación apenas de este año. 
 
-% \subsection{Funcionamiento del componente}
-% El generador de soluciones de alto nivel crea, para cada elemento $(C_i, C_i^c)$ de $B_A$, $k$ pares $\{(S_j, P_j), j=\overline{1,k})\}$ donde \(S_j\) es una solución de alto nivel para la instancia de problema $P_j$, y $S_j$ satisface todas las características abstractas presentes en $C_i$ e incumple todas las características que aparecen en $C_i^c$. El valor de $k$ lo elige el usuario, aunque debe ser lo suficientemente grande para abarcar un gran número de situaciones y lo suficientemente pequeño para que la generación no represente un gran costo computacional. En este trabajo se propone un valor por defecto de 10.
+En \textit{HuggingFace} \cite{huggFaceMusicCaps} aparece una descripción del \textit{dataset}, el .csv y en \href{https://github.com/nateraw/download-musiccaps-datase}{este link de github} hay un \textit{script} para descargar los clips de YouTube. MusicCaps contiene 5,521 clips de 10 segundos, extraídos de AudioSet \cite{Gemmeke2017AudioSA}. Por cuestiones de inaccesibilidad a la cantidad suficiente de internet, para esta investigación utilizamos un subconjunto de clips,lo que no causa ningún problema dado que no necesitamos una cantidad de datos específica con que entrenar. Cada clip contiene una lista de 'aspectos' en inglés y una descripción de texto libre escrita por músicos. Una lista de aspectos es, por ejemplo, "\textit{pop, tinny wide hi hats, mellow piano melody, high pitched female vocal melody, sustained pulsating synth lead}". Mientras que la descripción consta de varias oraciones sobre la música, por ejemplo, 
+" \textit{A low sounding male voice is rapping over a fast paced drums playing a reggaeton beat along with a bass. Something like a guitar is playing the melody along. This recording is of poor audio-quality. In the background a laughter can be noticed. This song may be playing in a bar.} "
 
-% Por ejemplo, el último elemento del conjunto $B_A$ $(\{1, 2, 3\}, \{\})$ definido en la sección \ref{sec:inputs} describe una solución factible donde las características 1, 2 y 3 del CVRP deben ser cumplidas y ninguna característica debe incumplirse. Para estas condiciones, el componente podría generar el problema y la solución de alto nivel mostrados en la figura \ref{fig:probSolEj}:
-
-% \begin{figure}[h!]
-% 	\begin{minipage}{0.45\textwidth}
-% 		{\bf Problema}
-		
-% 		{\tt cantidad de clientes: 3\\capacidad: 3\\depósito: 0\\demandas: $\{1, 2, 1\}$}
-% 	\end{minipage}
-% 	\hfill
-% 	\begin{minipage}{0.45\textwidth}
-% 		{\bf Solución}
-		
-% 		{\tt rutas: $\{0, 1, 2, 0\}$ y $\{0, 3, 0\}$}
-% 	\end{minipage}
-% 	\caption{Problema y solución generada para el requerimiento $(\{1, 2, 3\}, \{\})$.} \label{fig:probSolEj}
-% \end{figure}
-
-% Las soluciones generadas por este componente se definen en función de las componentes de los VRP. Sin embargo, el modelo se define en función de variables, parámetros y conjuntos, por lo que es necesario transformar cada una de estas soluciones para que se puedan evaluar en las restricciones del modelo. A continuación se describe el componente en el que ocurre esta transformación: el generador de soluciones de bajo nivel.
-
-% \section{Generador de soluciones de bajo nivel}\label{sec:second}
-
-% Las \emph{soluciones de bajo nivel} son la representación de las soluciones de alto nivel en función de las variables, parámetros y conjuntos del modelo que se quiere validar. Para cada solución se genera un conjunto de instancias de variables $v_j$, de parámetros $p_j$ y de conjuntos $c_j$. El segundo componente del sistema propuesto transforma cada par $(S_j, P_j)$, generado por el primero, en soluciones de bajo nivel representadas por los conjuntos $v_j$, $p_j$ y $c_j$.
-
-% Por ejemplo, si se quiere representar la solución de la figura \ref{fig:probSolEj} mediante el modelo de flujo de mercancía mostrado en la sección \ref{sec:models} con variables binarias $x_{ij}$, con valor 1 cuando el cliente $j$ se visita justo después que el cliente $i$, y variables de flujo $y_{ij}$ y $y_{ji}$, se obtendría el conjunto de instancias de variables $v_j$ siguiente:
-
-% \begin{figure}[h!]
-% 	\centering
-% \begin{minipage}{0.45\textwidth}
-% 	$x$ = $\left(\begin{array}{ccccc}
-% 	0 & 1 & 0 & 1 & 0 \\
-% 	0 & 0 & 1 & 0 & 0 \\
-% 	0 & 0 & 0 & 0 & 1 \\
-% 	0 & 0 & 0 & 0 & 1 \\
-% 	0 & 0 & 0 & 0 & 0 \\
-% 	\end{array}\right)$
-% \end{minipage}
-% \hfill \begin{minipage}{0.45\textwidth}
-% 	$y$ = $\left(\begin{array}{ccccc}
-% 	0 & 3 & 0 & 1 & 0 \\
-% 	0 & 0 & 2 & 0 & 0 \\
-% 	0 & 1 & 0 & 0 & 0 \\
-% 	2 & 0 & 0 & 0 & 0 \\
-% 	0 & 0 & 3 & 3 & 0 \\
-% 	\end{array}\right)$
-% \end{minipage}
-% \caption{Conjunto de instancias de variables $v_j$}\label{fig:varEj}
-% \end{figure}
-
-% El conjunto de instancias de parámetros $p_j$ en el modelo se muestran en la figura \ref{fig:paramEj}.
-
-% \begin{figure}[h!]
-% 	\centering
-% 	$n = 3$
-	
-% 	$K = 2$
-	
-% 	$C = 3$
-	
-% 	$d = (1,\ 2,\ 3)$
-%         \caption{Conjunto de instancias de parámetros $p_j$}
-%         \label{fig:paramEj}
-% \end{figure}
-
-% Por último, el conjunto de instancias de los conjuntos $c_j$ estaría formado por un único elemento como ilustra la figura \ref{fig:setEj}.
-
-% \begin{figure}[h!]
-% 	\centering
-% 	$V = \{0,\ 1,\ 2,\ 3,\ 4\}$
-%     \caption{Instancia de conjuntos $c_j$}
-% 	\label{fig:setEj}
-% \end{figure}
-
-% Los valores 1, 2 y 3 representan a los clientes y 0 y 4 representan al depósito central dado que en esta formulación se agrega un nodo ficticio para el almacén.
-
-% Con este proceso se puede transformar cualquier solución de alto nivel en la solución de bajo nivel correspondiente para verificar la validez de las restricciones en el modelo.
-
-% Las soluciones de bajo nivel se pasan como argumentos a las restricciones del modelo. La sección siguiente describe el tercer componente del sistema propuesto en el que, por cada restricción del modelo, se genera una función. Este componente recibe el nombre de generador de funciones.
-
-% \section{Generador de funciones}\label{sec:third}
-% El generador de funciones, como su nombre lo indica, genera funciones evaluables a partir de las restricciones del problema. Para ello recibe los conjuntos de instancias de parámetros $p_j$ y de conjuntos $c_j$ obtenidos a partir de la instancia $P_j$, y transforma la restricción de acuerdo a dicha instancia. Esta función tiene como entrada las variables del modelo y devuelve un valor indicando si la solución satisface o no esa restricción. Los valores de las variables, los parámetros y los conjuntos se obtienen en el generador de soluciones de bajo nivel. Por ejemplo, para la restricción:
-
-% \begin{equation}\label{cons:wrong}
-% y_{ij} + y_{ji} = C x_{ij}\ \ \forall (i, j) \in A
-% \end{equation}
-
-% presente en el modelo de CVRP por flujo de mercancías definido en \ref{sec:models}, se generaría la función
-
-% $$
-% f(x, y) = \left\{ \begin{array}{cl}
-% 1 & si\ y_{ij} + y_{ji} = C x_{ij}\ \ \forall (i, j) \in A\\
-% 0 & en\ otro\ caso
-% \end{array}\right.
-% $$.
-
-% Con los valores de las variables del modelo y las funciones correspondientes a cada restricción obtenidos en el generador de soluciones de bajo nivel y en el generador de funciones, respectivamente, es posible validar el modelo. En la siguiente sección se describe el funcionamiento del último componente donde ocurre el proceso de validación: el evaluador del modelo.
-
-% \section{Evaluador del modelo}\label{sec:fourth}
-% En este último componente, cada una de las instancias de variables del modelo se evalúa en las funciones generadas en el tercer componente para la instancia de problema $P_j$. Después de la evaluación, en aras de validar el modelo, es necesario comprobar si todas las características en $C_i$ se satisfacen para todos los pares $(S_j, P_j)$ y si todas las características en $C_i^c$ se incumplen. Si una de esas dos verificaciones falla, entonces el modelo está incorrecto. De lo contrario, se selecciona la próxima partición $(C_{i+1}, C_{i+1}^c)$ y se repite el proceso.
-
-% Si en cada prueba ningún requerimiento se incumple, entonces el modelo parece estar correcto porque todas las condiciones impuestas a las soluciones han sido cumplidas por las restricciones del modelo. De lo contrario, se puede asegurar que el modelo está incorrecto y se muestran ejemplos que ilustran lo anterior. Por ejemplo, si la solución factible definida en la sección \ref{sec:first}, cuyos valores para las variables se muestran en la sección \ref{sec:second}, se evaluara en cada una de las funciones generadas en el componente descrito en la sección \ref{sec:third}, entonces los resultados de todas las evaluaciones en las restricciones deberían ser positivos porque la solución es factible. Si ocurriera lo contrario, entonces se puede afirmar que el modelo está incorrecto.
-
-% Una vez presentado el funcionamiento del sistema propuesto en este trabajo, es posible describir los detalles de la implementación. El siguiente capítulo abordará este aspecto.
+La escasez de datasets en MIR es un gran obstáculo en el desarrollo del campo. Se debe, en parte, a que a diferencia de otros tipos de multimedia, la música tiende a tener \textit{copyright} lo que impide crear conjuntos de datos con ejemplos representativos, que además sean lo suficientemente grandes para ser útiles en las arquitecturas de redes neuronales utilizadas en el presente aprender en el campo de texto, o imágenes, por ejemlo. Esto ha implicado que varias investigaciones recientes, incluyendo la nuestra, decidan apoyarse en las capacidades de transferencia de conocimiento que poseen los modelos de lenguaje, como fue explicado en la sección \ref{subsec:learning_lang_superv}, para tareas en MIR que incluyan trabajo con texto.
