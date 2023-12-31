@@ -27,6 +27,9 @@ class FeaturesExtractor:
     
     def feature_description(feature):
         raise NotImplementedError()
+    
+    def feature_tags_description(feature:str):
+        raise NotImplementedError()
 
     def classes_list(self) -> list:
         return self.classes

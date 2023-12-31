@@ -158,7 +158,7 @@ def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str,
         if 'average_precision@10' in metrics:
             metrics_d['average_precision@10'].append(average_precision(qrels, retrieved, 10))
     et = time.time()
-    print(f"Evaluation took {round(et-st,4)} seconds.") # over 3600 seconds
+    print(f"Evaluation took {round(et-st,4)} seconds.") # over 1021 seconds /128 sec
     return metrics_d
 
 def __evaluate(corpus_embedd:str, queries_embedd:str, relevance:str):
@@ -224,7 +224,7 @@ def __evaluate(corpus_embedd:str, queries_embedd:str, relevance:str):
 def full_evaluate(restart=True):
     evals_df_path = os.path.join(directory_path,'data','evaluations.csv')
     idxs = ["captions_descriptions", "captions_tags_descriptions", "captions_descriptions_extend", "tags_descriptions", 
-            "captions_tags_descriptions", "tags_descriptions_extend", "MuLan", "SoundDescs",
+            "tags_tags_descriptions", "tags_descriptions_extend", "MuLan", "SoundDescs",
             "LangBasedRetrieval_SentenceBERT", "Contrastive_SentenceBERT"]
     embedd_directory = os.path.join(directory_path,'data','embeddings')
     embeddings_files = {"captions_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
@@ -248,12 +248,12 @@ def full_evaluate(restart=True):
         #                         }
         # cols = ['R@1', 'R@5', 'R@10', 'R@50','mAP@10','mAP']
         options_metrics_dict = {'rows':idxs,
-                                'R@1':[None,None,None,None,None,0.311,0.04,0.068], 
-                                'R@5':[None,None,None,None,None,0.606,0.16,0.254], 
-                                'R@10':[None,None,None,None,None,0.708,0.25,0.384], 
-                                'R@50':[None,None,None,None,None,0.86,None,None], 
-                                'mAP@10':[None,None,None,None,None,None,None,0],
-                                'mAP':[None,None,None,None,0.081,None,None,None]}
+                                'R@1':[None,None,None,None,None,None,None,0.311,0.04,0.068], 
+                                'R@5':[None,None,None,None,None,None,None,0.606,0.16,0.254], 
+                                'R@10':[None,None,None,None,None,None,None,0.708,0.25,0.384], 
+                                'R@50':[None,None,None,None,None,None,None,0.86,None,None], 
+                                'mAP@10':[None,None,None,None,None,None,None,None,None,0],
+                                'mAP':[None,None,None,None,None,None,0.081,None,None,None]}
         evals_df = pd.DataFrame.from_dict(options_metrics_dict)
         # evals_df.index = idxs
         evals_df.to_csv(evals_df_path, index=False)
@@ -269,7 +269,7 @@ def full_evaluate(restart=True):
         row['rows'] = query/corpus pair
         row['R@1'], row['R@5'], row['R@10'], row['R@50'], row[mAP] 
         """
-        if idx >= 4: break
+        if idx >= 6: break
         # print(idx,row['R@1'])
         # print(evals_df.at[idx, 'R@1'])
         metrics = []
@@ -298,7 +298,10 @@ def full_evaluate(restart=True):
         #                     'R@50':[534,354,6,24,1,3,5,4,36,5,7],
         #                     'average_precision':[1,2,3,4,5,6]}
         for m in metrics_result:
-            metrics_result[m] = round(np.mean(metrics_result[m]),3)
+            if np.mean(metrics_result[m]) > 0.00001:
+                metrics_result[m] = round(np.mean(metrics_result[m]),5)
+            else:
+                metrics_result[m] = np.mean(metrics_result[m])
             print(m, metrics_result[m])
             if 'average_precision' == m:
                 evals_df.at[idx,'mAP'] = metrics_result[m]

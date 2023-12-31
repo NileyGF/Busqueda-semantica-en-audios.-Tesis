@@ -1,4 +1,4 @@
-from essentia.standard import MonoLoader, TensorflowPredictEffnetDiscogs, TensorflowPredict2D
+# from essentia.standard import MonoLoader, TensorflowPredictEffnetDiscogs, TensorflowPredict2D
 
 from ast import literal_eval
 import numpy as np
@@ -71,6 +71,12 @@ class Discogs400_GenreClass(BaseGenreClass):
         if len(genre_split) != 2:
             raise Exception("Discogs400 genre description error")
         return f"The music genre is considered to be {genre_split[0]}, {genre_split[1]}. "
+    
+    def feature_tags_description(feature:str):
+        genre_split = feature.split('---')
+        if len(genre_split) != 2:
+            raise Exception("Discogs400 genre description error")
+        return f"{genre_split[0]}, {genre_split[1]}"
 
     def extract_feature(self, music:Song):
         """ Essentia's Discogs400 Music Genre Classification
@@ -128,6 +134,9 @@ class MTG_Jamendo_GenreClass(BaseGenreClass):
 
     def feature_description(feature:str):
         return f"The music genre sounds like {feature}. "
+    
+    def feature_tags_description(feature:str):
+        return f"{feature}"
 
     def extract_feature(self, music:Song):
         """ Essentia's MTG-Jamendo Music Genre Classification
@@ -191,6 +200,10 @@ class Danceability_DiscogsClass(BaseMoodClass):
         descript = "danceable" if feature == "danceable" else "not danceable"
         return f"It is {descript}. "
 
+    def feature_tags_description(feature:str):
+        descript = "danceable" if feature == "danceable" else "not danceable"
+        return f"{descript}"
+
     def extract_feature(self, music:Song):
         """ Essentia's Discogs Music danceability (2 classes): danceable, not_danceable.
         
@@ -243,6 +256,10 @@ class Happy_DiscogsClass(BaseMoodClass):
     def feature_description(feature:str):
         descript = "happy" if feature == "happy" else "not happy"
         return f"Its melody is {descript}. "
+
+    def feature_tags_description(feature:str):
+        descript = "happy" if feature == "happy" else "not happy"
+        return f"{descript}"
 
     def extract_feature(self, music:Song):
         """ Essentia's Discogs Music \"happiness\" (2 classes): happy, non_happy.
@@ -298,6 +315,10 @@ class Sad_DiscogsClass(BaseMoodClass):
         descript = "sad" if feature == "sad" else "not sad"
         return f"Its melody is {descript}. "
 
+    def feature_tags_description(feature:str):
+        descript = "sad" if feature == "sad" else "not sad"
+        return f"{descript}"
+
     def extract_feature(self, music:Song):
         """ Essentia's Discogs Music \"sadness\" (2 classes): sad, non_sad.
         
@@ -350,6 +371,10 @@ class Relaxed_DiscogsClass(BaseMoodClass):
     def feature_description(feature:str):
         descript = "relaxing" if feature == "relaxed" else "not relaxing"
         return f"Its sound is {descript}. "
+
+    def feature_tags_description(feature:str):
+        descript = "relaxing" if feature == "relaxed" else "not relaxing"
+        return f"{descript}"
 
     def extract_feature(self, music:Song):
         """ Essentia's Discogs Music \"relaxation\" (2 classes): relaxed, non_relaxed.
@@ -414,6 +439,14 @@ class MoodTheme_MTGJamendoClass(BaseMoodClass):
 
         return f"Some of the themes are {descript}. "
 
+    def feature_tags_description(feature:str):
+        feature = literal_eval(feature)
+        descript = ""
+        for i in range(len(feature)-1):
+            descript += f"{feature[i]}, "
+        descript += f"{feature[len(feature)-1]}"
+        return f"{descript}"
+
     def extract_feature(self, music:Song):
         """ Essentia's MTG-Jamendo Music mood and theme.
         
@@ -475,6 +508,14 @@ class Instruments_MTGJamendoClass(FeaturesExtractor):
 
         return f"You can hear the sounds of {descript}. "
 
+    def feature_tags_description(feature:str):
+        feature = literal_eval(feature)
+        descript = ""
+        for i in range(len(feature)-1):
+            descript += f"{feature[i]}, "
+        descript += f"{feature[len(feature)-1]}"
+        return f"{descript}"
+
     def extract_feature(self, music:Song):
         """ Essentia's MTG-Jamendo instruments tags.
         
@@ -526,6 +567,9 @@ class VoiceGender_DiscogsClass(FeaturesExtractor):
     def feature_description(feature:str):
         return f"There is a {feature} voice. "
     
+    def feature_tags_description(feature:str):
+        return f"{feature} voice"
+
     def extract_feature(self, music:Song):
         """ Essentia's MTG-Jamendo instruments tags.
         

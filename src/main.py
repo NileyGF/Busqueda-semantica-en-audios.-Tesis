@@ -205,11 +205,11 @@ def get_tags_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-s
         description_dict['ytid'].append(row['ytid'])
         # print(idx)
         for feat in features_dict:
+            extractor: FeaturesExtractor = features_dict[feat]
             feature_value = row[feat]
-            print(feature_value)
-            song_description += feature_value + '; '
-        print(song_description[:-2])
-        return
+            # print(feature_value)
+            song_description += extractor.feature_tags_description(feature=feature_value) + '; '
+        song_description = song_description[:-2] + '.'
         description_dict['tags_description'].append(song_description)
         
     features_df = pd.DataFrame.from_dict(description_dict)
@@ -220,7 +220,7 @@ def get_tags_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-s
     
     with open(os.path.join(directory_path,'data','tags_descriptions_list.bin'),'wb') as file:
         pickle.dump(description_dict['tags_description'], file)
-    print(round(time.time()-st,4)," sec")
+    print(round(time.time()-st,4)," sec") # 5460.2604 sec
     # time: 0.75 sec
     # return descriptions, descriptions_and_name
     return description_dict['tags_description'], inner_merged   
