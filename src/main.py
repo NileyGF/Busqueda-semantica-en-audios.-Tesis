@@ -507,5 +507,5 @@ def replicate_evaluation(music_folder_path:str, restart=True):
         relevance_judgments(caption=False)
     
     evaluation_df = eval.full_evaluate(restart=restart)
-
-    return evaluation_df
+    hits_evaluation_df = eval.hits_evaluate(restart=restart)
+    return evaluation_df, hits_evaluation_df

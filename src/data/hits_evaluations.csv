@@ -1,0 +1,7 @@
+rows,hits_rate@1,hits_rate@5,hits_rate@10,hits_rate@50
+captions_descriptions,0.052,0.193,0.333,0.62
+captions_descriptions_extend,0.05,0.182,0.314,0.614
+captions_tags_descriptions,0.027,0.142,0.248,0.575
+tags_descriptions,0.087,0.215,0.301,0.522
+tags_descriptions_extend,,,,
+tags_tags_descriptions,,,,

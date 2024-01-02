@@ -20,7 +20,7 @@ def hits(qrels: list, retrieved: list, top_k:int = 0):
     return len(intersect)
 
 def hit_rate(qrels: list, retrieved: list, top_k:int = 0):
-    """ Number of retrieved relevant songs. Returns how many elements of qrels are in retrieved, using numpy 
+    """ retrieved relevant songs. Returns 1 if any retrieved is relevant, 0 otherwise.
         qrels:       list of relevant songs
         retrieved:   list of retrieved songs
         top_k:       if top_k > 0, only the top_k retrieved songs are considered
@@ -141,8 +141,18 @@ def _evaluate(corpus_embedd:str, queries_embedd:str, relevance:str, metrics:str,
             metrics_d['average_precision'].append(average_precision(qrels, retrieved))
         if 'average_precision@10' in metrics:
             metrics_d['average_precision@10'].append(average_precision(qrels, retrieved, 10))
+        
+        if 'hits_rate@1' in metrics:
+            metrics_d['hits_rate@1'].append(hit_rate(qrels, retrieved, 1))
+        if 'hits_rate@5' in metrics:
+            metrics_d['hits_rate@5'].append(hit_rate(qrels, retrieved, 5))
+        if 'hits_rate@10' in metrics:
+            metrics_d['hits_rate@10'].append(hit_rate(qrels, retrieved, 10))
+        if 'hits_rate@50' in metrics:
+            metrics_d['hits_rate@50'].append(hit_rate(qrels, retrieved, 50))
+
     et = time.time()
-    print(f"Evaluation took {round(et-st,4)} seconds.") # over 1021 seconds /128 sec
+    print(f"Evaluation took {round(et-st,4)} seconds.") # over  seconds / sec
     return metrics_d
 
 def full_evaluate(restart=True):
@@ -191,17 +201,17 @@ def full_evaluate(restart=True):
         """
         if idx >= 6: break
         metrics = []
-        if np.isnan(row['R@1']):
+        if row['R@1'] == None or np.isnan(row['R@1']):
             metrics.append('R@1')
-        if np.isnan(row['R@5']):
+        if row['R@5'] == None or np.isnan(row['R@5']):
             metrics.append('R@5')
-        if np.isnan(row['R@10']):
+        if row['R@10'] == None or np.isnan(row['R@10']):
             metrics.append('R@10')
-        if np.isnan(row['R@50']):
+        if row['R@50'] == None or np.isnan(row['R@50']):
             metrics.append('R@50')
-        if np.isnan(row['mAP@10']):
+        if row['mAP@10'] == None or np.isnan(row['mAP@10']):
             metrics.append('average_precision@10')
-        if np.isnan(row['mAP']):
+        if row['mAP'] == None or np.isnan(row['mAP']):
             metrics.append('average_precision')
         print(metrics)
         
@@ -228,3 +238,70 @@ def full_evaluate(restart=True):
     evals_df.to_csv(evals_df_path, index=False)
     return evals_df
 
+def hits_evaluate(restart=True):
+    evals_df_path = os.path.join(directory_path,'data','hits_evaluations.csv')
+    idxs = ["captions_descriptions", "captions_descriptions_extend", "captions_tags_descriptions", "tags_descriptions", 
+            "tags_descriptions_extend", "tags_tags_descriptions"]
+    embedd_directory = os.path.join(directory_path,'data','embeddings')
+    embeddings_files = {"captions_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
+                        "captions_tags_descriptions":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus2_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
+                        "captions_descriptions_extend":(os.path.join(embedd_directory,'queries_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries_songs_relevance.bin')), 
+                        "tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin')), 
+                        "tags_tags_descriptions":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'corpus2_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin')), 
+                        "tags_descriptions_extend":(os.path.join(embedd_directory,'queries2_bert_embeddings.bin'), os.path.join(embedd_directory,'extended_corpus_bert_embeddings.bin'),os.path.join(directory_path,'data','queries2_songs_relevance.bin'))
+                        }
+    cols = ['hits_rate@1', 'hits_rate@5', 'hits_rate@10', 'hits_rate@50']
+    if restart:
+        # options_metrics_dict = {"captions_descriptions":[],
+        #                         "captions_descriptions_extend":[],
+        #                         "captions_tags_descriptions":[],
+        #                         "tags_descriptions":[],
+        #                         "tags_descriptions_extend":[],
+        #                         "tags_tags_descriptions":[],
+        #                         }
+        # cols = ['hits_rate@1', 'hits_rate@5', 'hits_rate@10', 'hits_rate@50']
+        options_metrics_dict = {'rows':idxs,
+                                'hits_rate@1':[None,None,None,None,None,None], 
+                                'hits_rate@5':[None,None,None,None,None,None], 
+                                'hits_rate@10':[None,None,None,None,None,None], 
+                                'hits_rate@50':[None,None,None,None,None,None]}
+        evals_df = pd.DataFrame.from_dict(options_metrics_dict)
+        evals_df.to_csv(evals_df_path, index=False)
+    else:
+        evals_df = pd.read_csv(evals_df_path)
+        options_metrics_dict = evals_df.to_dict(orient='list')
+    
+    for idx, row in evals_df.iterrows():
+        """
+        row['rows'] = query/corpus pair
+        row['hits_rate@1'], row['hits_rate@5'], row['hits_rate@10'], row['hits_rate@50']
+        """
+        if idx >= 6: break
+        metrics = []
+        if row['hits_rate@1'] == None or np.isnan(row['hits_rate@1']) :
+            metrics.append('hits_rate@1')
+        if row['hits_rate@5'] == None or np.isnan(row['hits_rate@5']) :
+            metrics.append('hits_rate@5')
+        if row['hits_rate@10'] == None or np.isnan(row['hits_rate@10']) :
+            metrics.append('hits_rate@10')
+        if row['hits_rate@50'] == None or np.isnan(row['hits_rate@50']) :
+            metrics.append('hits_rate@50')
+        print(metrics)
+        
+        if len(metrics) == 0: continue
+
+        metrics_result = _evaluate(corpus_embedd=embeddings_files[row['rows']][1], 
+                                    queries_embedd=embeddings_files[row['rows']][0],
+                                    relevance=embeddings_files[row['rows']][2],
+                                    metrics=metrics, top_k='all')
+        for m in metrics_result:
+            if np.mean(metrics_result[m]) > 0.0001:
+                metrics_result[m] = round(np.mean(metrics_result[m]),4)
+            else:
+                metrics_result[m] = np.mean(metrics_result[m])
+            print(m, metrics_result[m])
+            evals_df.at[idx, m] = metrics_result[m]
+        
+        evals_df.to_csv(evals_df_path, index=False)
+    evals_df.to_csv(evals_df_path, index=False)
+    return evals_df
