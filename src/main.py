@@ -3,7 +3,6 @@ import src.embedding_retrieval as emb_ret
 import src.evaluation as eval
 from src.core import Song, FeaturesExtractor, musiccaps_preprocess, directory_path, downloaded_songs_name_path
 import os
-from pathlib import Path
 from ast import literal_eval
 import pandas as pd
 import pickle
@@ -28,7 +27,7 @@ def extract_features(music_path:str, features_dict:dict=SPECIFIC_FEATURES) -> di
     return features
 
 def extract_features_all_dataset(music_folder_path:str=None) -> pd.DataFrame:
-    """ Go through the dataset to extract the features.  """
+    """ Go through the dataset to extract the features.  """ # 18 horas
     try: 
         dataset_path = os.path.join(directory_path,'data','musiccaps-subset.csv') # 'musiccaps-subset.csv'
         musiccaps_df = pd.read_csv(dataset_path)
@@ -50,10 +49,8 @@ def extract_features_all_dataset(music_folder_path:str=None) -> pd.DataFrame:
             features_dict[feat] = []
 
     processed = len(features_dict['ytid'])
-    print(processed) # 3805 18 horas
-    # return
+
     for song in musiccaps_df.itertuples():
-        # print(song, song.Index)
         if song.Index < processed:
             continue
         print("Extracting features from ",songs_dict[song.ytid])
@@ -101,8 +98,8 @@ def extract_new_features_all_dataset(new_features_dict:dict, earlier_df:str="mus
     for song in musiccaps_df.itertuples():
         if song.index < processed:
             continue
-        if song.index == 10:
-            return features_dict
+        # if song.index == 10:
+        #     return features_dict
         print("Extracting features from ",songs_dict[song.ytid])
         features_dict['ytid'].append(song.ytid)
         song_feat = extract_features(music_path=songs_dict[song.ytid], features_dict=new_features_dict)
@@ -117,11 +114,7 @@ def extract_new_features_all_dataset(new_features_dict:dict, earlier_df:str="mus
     features_df = pd.DataFrame.from_dict(features_dict)
 
     inner_merged = pd.merge(musiccaps_df, features_df)
-    # print(inner_merged.head())
-    # print()
-    # print(inner_merged.shape, musiccaps_df.shape, features_df.shape)
 
-    # inner_merged.to_csv(os.path.join(directory_path,'data',earlier_df+'_index.csv')) # , header=False, index=False
     inner_merged.to_csv(os.path.join(directory_path,'data',earlier_df+'.csv'), index=False) 
     return inner_merged   
 
@@ -144,10 +137,7 @@ def update_a_song_features(index:int, features_dict:dict=SPECIFIC_FEATURES):
 
 """ Second part of the pipeline : 
 Convert the features information from tags (metadata), to a sentence, caption like.
-Now I'm doing static descriptor per-feature
-# Temporarily it will be approached using GPT2 model (huggingface API) for complete sentences.
-# It is necessary to devise a prompt that maximizes the information fidelity. 
-# It is possible to do some fine-tunnig if it is decided to download the GPT model instead of only using an API. 
+Now I'm doing static descriptor per-feature and tags concatenation.
 """
 def get_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset-feat.csv'):
     """ Given a features dictionary and a dataframe and get a descriptions for every song in the dataframe, 
@@ -176,20 +166,18 @@ def get_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset
     features_df = pd.DataFrame.from_dict(description_dict)
 
     inner_merged = pd.merge(musiccaps_df, features_df)
-    # inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-desriptions_index.csv')) # , header=False, index=False
+    
     inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'), index=False) 
     
     with open(os.path.join(directory_path,'data','descriptions_list.bin'),'wb') as file:
         pickle.dump(description_dict['description'], file)
     print(round(time.time()-st,4)," sec")
-    # time: 0.75 sec
-    # return descriptions, descriptions_and_name
     return description_dict['description'], inner_merged   
 
 def get_tags_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-subset-descriptions.csv'):
     """ Given a features dictionary and a dataframe and get a descriptions for every song in the dataframe, 
         using the features that are in the dictionary. Also, the description for each feaure will be extracted 
-        using the property 'feature_description' from the FeaturesExtractor.
+        using the property 'feature_tags_description' from the FeaturesExtractor.
         
         features_dict : dict -> feature_name: feature_extractor_class
         df_name : str -> .csv with the songs and the features extracted
@@ -207,7 +195,6 @@ def get_tags_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-s
         for feat in features_dict:
             extractor: FeaturesExtractor = features_dict[feat]
             feature_value = row[feat]
-            # print(feature_value)
             song_description += extractor.feature_tags_description(feature=feature_value) + '; '
         song_description = song_description[:-2] + '.'
         description_dict['tags_description'].append(song_description)
@@ -215,14 +202,13 @@ def get_tags_descriptions_from_feat(features_dict:list, df_name:str='musiccaps-s
     features_df = pd.DataFrame.from_dict(description_dict)
 
     inner_merged = pd.merge(musiccaps_df, features_df)
-    # inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-desriptions_index.csv')) # , header=False, index=False
+    
     inner_merged.to_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'), index=False) 
     
     with open(os.path.join(directory_path,'data','tags_descriptions_list.bin'),'wb') as file:
         pickle.dump(description_dict['tags_description'], file)
     print(round(time.time()-st,4)," sec") # 5460.2604 sec
-    # time: 0.75 sec
-    # return descriptions, descriptions_and_name
+    
     return description_dict['tags_description'], inner_merged   
 
 """ Third part of the pipeline : 
@@ -270,37 +256,16 @@ def save_tags_descript_embedd():
 
     embeddings_path = os.path.join(directory_path,'data','embeddings','corpus2_bert_embeddings.bin')
     embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
-    # with open(embeddings_path, 'rb') as f:
-    #     embeddings_list = pickle.load(f)
     with open(embedd_corpus_relation_path, 'rb') as f:
         embedd_corpus_relation = pickle.load(f)
     st = time.time()
     print('starting:',st)
-    # last = len(embedd_corpus_relation)
+    
     emb_ret.extract_embeddings_for_docs_list(documents_list=descriptions_list, save=True, save_path=embeddings_path)
     with open(embeddings_path, 'rb') as f:
         docs_embeddings_list = pickle.load(f)
-    # for s in range(len(descriptions_list)):
-    #     sentence = descriptions_list[s]
-    #     print(s)
-    #     print(sentence)
-        
-    #     tokenized = emb_ret.BERT_embedding.bert_tokenize(text=sentence)
-    #     if len(tokenized) > 512:
-    #         print(f"The BERT tokens, for the text number {s}, length is longer than the specified maximum sequence length . {len(tokenized)} > 512. ")
-    #         print(sentence)
-    #         raise Exception()
-    #     embedding, _ = emb_ret.BERT_embedding.sentential_embeddings(tokenized_text=tokenized)
-    #     embeddings_list.append(embedding)
-        # embedd_corpus_relation.append((last,s))
-        # last += 1
-    # extended_embeddings_path = os.path.join(directory_path,'data','embeddings','extended_corpus_bert_embeddings.bin')
-    # with open(extended_embeddings_path, 'wb') as f:
-    #     pickle.dump(embeddings_list,f)
-    # with open(embedd_corpus_relation_path, 'wb') as f:
-    #     pickle.dump(embedd_corpus_relation,f) 
     et = time.time()
-    print(f"Embeddings extractions for the corpus 2 using BERT, took {round(et-st,4)} seconds.") # 52863.9011 seconds
+    print(f"Embeddings extractions for the corpus 2 using BERT, took {round(et-st,4)} seconds.") #  seconds
     return embeddings_path, docs_embeddings_list, embedd_corpus_relation
 
 def extended_descript_embedd():
@@ -399,9 +364,7 @@ def relevant_descriptions_by_query(query:str, embeddings_path:str, top_k='all'):
         pass
     descriptions_df = pd.read_csv(os.path.join(directory_path,'data','musiccaps-subset-descriptions.csv'))
     documents_list = descriptions_df["description"].values.tolist()
-        # documents_list = [] # TODO
-        # docs_embeddings_list = emb_ret.extract_embeddings_for_docs_list(documents_list=documents_list, save=True, save_path=embeddings_path)
-
+        
     if docs_embeddings_list != None:
         docs_idx_list = emb_ret.process_query(query=query, docs_embeddings_list=docs_embeddings_list, top_k=top_k)
     else:
@@ -416,7 +379,7 @@ Django web app to access and test the Information Retrieval System.
 
 """ Fifth part of the pipeline : 
 Evaluations.
-Using Recall-K, Acurracy-K, F1 and so; evaluate the information retrieval. Using ablation experiment 
+Using Recall-K, Acurracy-K, mean average precision; evaluate the information retrieval. Using ablation experiment 
 with different SRI approaches, like whether embeddings improve over only vectorial. Use as queries the original 
 captions from the dataset, and it should return at least the song, perhaps include similar songs as good results too.
 Search for metrics to evaluate the sentence generation from table. 
@@ -428,7 +391,6 @@ def most_similars_to_query(query:list, embeddings_list:list, min_sim=0.95):
     rel = []
     for k in range(len(embeddings_list)):
         cosine_sim = emb_ret.BERT_embedding.np_cosine_similarity(query, embeddings_list[k])
-        # cosine_sim = BERT_embedding.cosine_distance(query_vector, documents_vectors_list[k])
         rel.append((k,cosine_sim))
 
     rel = sorted(rel, key=lambda item: item[1], reverse=True)
@@ -457,7 +419,6 @@ def relevance_judgments(caption=True) -> list:
     for capt in queries_embeddings_list:
         similars = most_similars_to_query(capt, queries_embeddings_list, 0.95)
         relevance.append(similars)
-        # print(len(similars))
 
     if caption:
         relevance_path = os.path.join(directory_path,'data','queries_songs_relevance.bin')

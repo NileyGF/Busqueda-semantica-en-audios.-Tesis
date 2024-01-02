@@ -1,10 +1,7 @@
 import src.BERT_embedding as BERT_embedding
 from src.core import directory_path
-import nltk
 import pickle
-import numpy as np
 import os
-# nltk.download('punkt')
 
 def _get_descrip_from_embeddings(doc_likehood:dict, documents_vectors_list:list):
     """doc_likehood[k] = np_cosine_similarity(query_vector, documents_vectors_list[k]) for the embedding k.

@@ -1,151 +1,48 @@
 \section{Resultados}
 \label{sec:results}
+Para evaluar SRI, tradicionalmente se parte de un conjunto de documentos y un conjunto de consultas con una relación de relevancia establecida entre ambos conjuntos \cite{manning2008introductiontoIR}. De forma que para una consulta se conoce que documentos son relevantes (y en ocasiones el nivel de relevancia). Algunos ejemplos son: \href{https://ir-datasets.com/antique.html}{\textit{antique}}, \href{https://ir-datasets.com/car.html}{\textit{car}}, \href{https://ir-datasets.com/cranfield.html}{\textit{cranfield}}, \href{https://ir-datasets.com/msmarco-passage.html}{\textit{msmarco-passage}}, \href{https://ir-datasets.com/nfcorpus.html}{\textit{nfcorpus}}, \href{https://ir-datasets.com/nyt.html}{\textit{nyt}}.
 
-% El CVRP es la variante más sencilla y estudiada de los VRP \cite{toth@vrp}. Para describirlo se han definido numerosos modelos mediante distintos tipos de formulaciones. En el capítulo \ref{chap:preliminaries} se mostraron dos de estos modelos: uno con flujo de vehículos de dos índices y otro con flujo de mercancías. En el libro de Toth y Vigo \cite{toth@vrp} se presenta un modelo por flujo de mercancía distinto al presentado en este trabajo. A continuación se muestra el modelo propuesto por Toth y Vigo:
+Las estrategias de evaluación centradas en el usuario buscan tener en cuenta diferentes factores en la percepción de las cualidades musicales, en particular de la similitud musical. Esto es especialmente importante ya que las nociones de similitud musical están probremente definidas. El acuerdo entre los humanos sobre el parecido entre dos piezas musicales está limitado a alrededor del 80\% según se afirma en la literatura \cite{Schedl2014MusicIR}.
+La mayoría de los SRI evalúan semejanza utilizando la similitud de coseno \cite{Brundha2022VectorMB}.\\
+Un gran número de estudios de recuperación de información han demostrado que los usuarios de los sistemas de recuperación tienden a prestar atención principalmente a los primeros resultados \cite{Mitra2017NeuralMF}. Por lo tanto, las métricas de recuperación de información se centran en comparaciones basadas en los primeros resultados recuperados. Estas métricas generalmente se calculan en una posición, digamos $k$, y luego se promedian sobre todas las consultas.\\
 
-% $$
-% \min \sum_{(i, j) \in A} c_{ij} x_{ij}
-% $$
-% \begin{eqnarray}
-% s.a \displaystyle{\sum_{j \in V} (y_{ji} - y_{ij})} & = & 2 d_i \ \ \forall i \in V / \{0, n + 1\}\\
-% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{0j}} & = & d(V / \{0, n + 1\})\\
-% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{j0}} & = & KC - d(V / \{0, n + 1\})\\
-% \displaystyle{\sum_{j \in V / \{0, n + 1\}} y_{n + 1 j}} & = & KC\\
-% y_{ij} + y_{ji} & = & Cx_{ij} \ \ \forall (i, j) \in A\\
-% \displaystyle{\sum_{j \in V} (x_{ij} + x_{ji})} & = & 2 \ \ \forall i \in V / \{0, n + 1\}\\
-% y_{ij} & \ge & 0 \ \ \forall (i, j) \in A\\
-% x_{ij} & \in & {0, 1} \ \ \forall (i, j) \in A
-% \end{eqnarray}
+El hecho de que no existen datasets de recuperación de información de música implica que en todos los experimentos en el tema se definen las consulas y cuáles clips son relevantes a una consulta de forma diversa y un tanto arbitraria.
 
-% En este capítulo se realizará la validación de este modelo con el sistema implementado. En las secciones \ref{sec:systemInput} y \ref{sec:systemOutput} se presentan la entrada y la salida del sistema, respectivamente. Por último, en la sección \ref{sec:results} se describe la interpretación de estos resultados.
+Utilizando la información que fue proveída en el dataset (sec. \ref{sec:dataset}) fueron concebidos dos conjuntos de consultas. El primero con las descripciones creadas por expertos y el segundo con la lista de aspectos (convertida en oraciones de forma similar al tercer corpus). Durante el preprocesamiento se extraen los embeddings (utilizando SBERT, de igual forma que con los corpus) de ambos conjuntos y se guardan en archivos binarios. Dado que es necesario establecer una relación de relevancia entre consultas y clips, fue diseñado un algoritmo que iterando por todos los embeddings de las consultas (para cada conjunto separadamente), calculando una lista que contenga los índices de los clips, para los cuales la similitud entre las descripciones en el dataset sea mayor o igual que 0.95. De esta forma siempre se obtiene el clip al que pertenece la descripción (pues la similitud es 1) y se debe obtener los clips más similares, en cuanto a como son descritos en MusicCaps.
 
-% \section{Entradas del sistema}\label{sec:systemInput}
-% Para probar el sistema se realizaron varias ejecuciones con distintos valores de $k$. Las pruebas realizadas con el sistema para validar el modelo por flujo de mercancías del CVRP utilizaron valores de $k$ iguales a 1 y a 10.
+Con 2 conjuntos de consultas y 3 de corpus hay 6 alternativas. Para cada uno se evaluaron el recobrado promedio (\textit{recall@k} con $k=$1, 5, 1, 50) y el mean average precision (mAP) y el mAP@10. \\
+En \cite{Doh2022TowardUT} se realiza uno de los análisis más recientes y abarcadores sobre modelos de recuperación de música utilizando texto. Ellos utilizan un subconjunto fijo de 1000 consultas para evaluar varios modelos; por lo que en este trabajo consideramos mantener ese número para una comparación más consistente.
 
-% La implementación del modelo en LMML se muestra en el código \ref{alg:cvrpLMML} de la página \pageref{alg:cvrpLMML}.
+Para ello se extrae un subconjunto aleatorio de 1000 consultas antes de cada proceso de evaluación. Se utilizó un \textit{seed} para que al ejecutar el proceso de evaluación se obtengan resultados consistentes. En la tabla \ref{tab:results} se puede ver los resultados de las 6 alternativas y 4 resultados de otras investigaciones.
 
-% \begin{figure}[h!] 
-% \begin{lstlisting}[basicstyle=\bfseries\ttfamily\footnotesize]
-% (defparameter
-%     cvrp-model
-%     (problem "cvrp"
-%              (set V)
-%              (set I)
-%              (param c :domain {V V})
-%              (param d :domain {V})
-%              (param n)
-%              (param P)
-%              (param K)
-%              (param M)
-%              (binary-variable x :domain {V V})
-%              (variable        y :domain {V V})
-%              (minimize (sum (a in V)
-%                          (sum (b in V)
-%                              x[a b] * c[a b])))
-%              (s.t. (sum (b in V)
-%                        y[b a] - y[a b]) = 2 * d[a]
-%                    (forall a in I))
-%              (s.t. (sum (b in I) y[0 b]) = M)
-%              (s.t. (sum (b in I) y[b 0]) = K * P - M)
-%              (s.t. (sum (b in I) y[n + 1 b]) = K * P)
-%              (s.t. y[a b] + y[b a] = P * x[a b]
-%                    (forall a in V)
-%                    (forall b in V))
-%              (s.t. (sum (b in V)  x[a b] + x[b a]) = 2
-%                    (forall a in I))))
-% \end{lstlisting}
-% 	\caption{Definición del modelo por flujo de mercancías del CVRP en LMML.}  \label{alg:cvrpLMML}
-% \end{figure}
+\begin{table}[h]
+    \footnotesize
+    \centering
+    \begin{tabular} { | l | c | c | c | c | c | c | }
+    \hline
+                      &   R@1           &   R@5   &   R@10          &   R@50          & mAP@10          &   mAP   \\ 
+    \hline
+    capt-corpus       & 0.00082         & 0.00499 & 0.00964         & 0.03492         & 0.10731         & 0.03522 \\
+    capt-ext\_corpus   & 0.00076         & 0.0059  & 0.00947         & 0.03485         & 0.1012          & 0.0357  \\ 
+    capt-tag\_corpus   & 0.00025         & 0.00202 & 0.00566         & 0.02725         & 0.07492         & 0.0374  \\ 
+    aspect-corpus     & 0.00124         & 0.0047  & 0.01169         & 0.04244         &\textbf{0.12389} & 0.02962 \\ 
+    aspect-ext\_corpus &\textbf{0.00137} & 0.0053  & 0.00976         & 0.03436         & 0.07804         & 0.02801 \\ 
+    aspect-tag\_corpus & 0.00056 &\textbf{0.00761} &\textbf{0.01254} &\textbf{0.05235} & 0.09573 &\textbf{0.03814} \\ 
+    \hline
+MuLan \cite{Huang2022MuLanAJ}&    -     &    -    &         -       &        -        &        -        & 0.084   \\ 
+MusCALL \cite{Manco2022ContrastiveAL}&  0.259  &  0.519  &  0.633   &        -        &  0.36           &   -     \\ 
+Contrastive\_SBERT \cite{Doh2022TowardUT}& 0.068&  0.254  &  0.384   &        -        &  0.15           &   -     \\ 
+Triplet\_SBERT \cite{Doh2022TowardUT} &  0.067  &  0.236  &  0.366   &        -        &  0.14           &   -     \\ 
+    \hline
+    \end{tabular}
+    \caption{Resultados de las 6 combinaciones consultas-corpus	respecto a recall y mean average precision. Comparación con las 
+    investigaciones relativamente similares.}
+    \label{tab:results}
+\end{table}
 
-% Otra de las entradas del sistema es la definición del problema mediante las características abstractas. Para el CVRP, las manera de definirlo se muestra en el código \ref{alg:cvrp2}.
+Se observa que en general, utilizar el \textit{aspect list} como consultas provee mejores resultados, en particular cuando se utiliza como corpus los tags concatenados. Además la precisión tiene mejores valores que el recobrado, incluso comparándolos con las otras investigaciones.\\
+En cuanto a las consultas de las descripciones creadas por expertos, los mejores valores se obtienen con el corpus conformado por un texto descriptivo por cada clip. El hecho de que tanto el par de las consultas formadas por tags concatenados y el corpus creado de la misma forma (\textit{aspect-tag\_corpus}), como el par de consultas en forma de descripciones y corpus en forma de descripciones, resultaran en los mejores valores; puede indicar que es mejor que el corpus tenga la forma que más prevalece en las consultas de los usuarios o un acercamiento mixto entre descripciones como texto y tags concatenados.
 
-% \begin{figure}[h!] 
-% \begin{lstlisting}
-% (defclass cvrp (dont-overload-vehicles
-%                 begin-end-in-depot
-%                 visit-client-at-most-once
-%                 visit-client-at-least-once) ())
-% \end{lstlisting}
-% 	\caption{Definición del CVRP a partir de las características abstractas.}  \label{alg:cvrp2}
-% \end{figure}
+También se pudo observar que no se obtienen resultados muy distintos entre \textit{corpus} y \textit{ext\_corpus}. Lo que conlleva a concluir que del texto se obtiene aproximadamente la misma información semántica que de las oraciones que lo componen. Dado que procesar un corpus 9 veces (en este caso porque solo se utilizaron 9 modelos) más grande aumentó el tiempo de trabajo con BERT y el de recuperación considerablemente; se debe considerar que no es una buena estrategia. 
 
-% Con los argumentos de la función {\tt evaluate-model} definidos, es posible pasar a la evaluación del sistema cuya salida se explica en la sección siguiente.
-
-% \section{Salida del sistema}\label{sec:systemOutput}
-% Con la salida del sistema es posible conocer qué pruebas resultaron exitosas y cuáles fallaron. Para las pruebas fallidas se muestran ejemplos de soluciones (factibles e infactibles en dependencia del requerimiento) donde las restricciones del modelo resultaron incorrectas.
-
-% Al validar el modelo presentado en la página \pageref{alg:cvrpLMML} con la función {\tt evaluate\\-model} el resultado para cada prueba en la que se generan soluciones infactibles es satisfactorio, pues al menos una restricción se incumple. Sin embargo, al evaluar soluciones factibles en las restricciones del modelo, la prueba falla.
-
-% Para cada una de las $k$ soluciones factibles generadas ($k = 1$ y $k = 10$), la restricción (4.5) falla. Uno de los ejemplos de solución devuelto por el sistema, que incumple dichas restricción, se muestra en la figura \ref{fig:wrongSolEj}.
-
-% \begin{figure}[h!]
-% 	\begin{minipage}{0.45\textwidth}
-% 		{\bf Problema}
-		
-% 		{\tt cantidad de clientes: 3\\capacidad: 18\\depósito: 0\\demandas: $\{6, 9, 3\}$}
-% 	\end{minipage}
-% 	\hfill
-% 	\begin{minipage}{0.45\textwidth}
-% 		{\bf Solución}
-		
-% 		{\tt rutas: $\{0, 3, 0\}$ y $\{0, 1, 2, 0\}$}
-% 	\end{minipage}
-% 	\caption{Problema y solución de ejemplo generada por el sistema que falla una de las pruebas.} \label{fig:wrongSolEj}
-% \end{figure}
-
-% Al observar la salida del sistema no es posible determinar por qué el modelo para el problema de CVRP está incorrecto. Por esta razón, a continuación se muestra el análisis realizado a esta restricción para determinar la razón del fallo y la mejor manera de corregirla.
-
-% \section{Análisis de los resultados}\label{sec:results}
-
-% Las variables del modelo correspondientes a la solución de la figura \ref{fig:wrongSolEj} se muestran en la figura \ref{fig:wrongVarEj}.
-
-% \begin{figure}[h!]
-% 	\centering
-% 	\begin{minipage}{0.45\textwidth}
-% 		$x$ = $\left(\begin{array}{ccccc}
-% 		0 & 1 & 0 & 1 & 0 \\
-% 		0 & 0 & 1 & 0 & 0 \\
-% 		0 & 0 & 0 & 0 & 1 \\
-% 		0 & 0 & 0 & 0 & 1 \\
-% 		0 & 0 & 0 & 0 & 0 \\
-% 		\end{array}\right)$
-% 	\end{minipage}
-% 	\hfill \begin{minipage}{0.45\textwidth}
-% 		$y$ = $\left(\begin{array}{ccccc}
-% 		0 & 15 & 0 & 3 & 0 \\
-% 		3 & 0 & 9 & 0 & 0 \\
-% 		0 & 9 & 0 & 0 & 0 \\
-% 		15 & 0 & 0 & 0 & 0 \\
-% 		0 & 0 & 18 & 18 & 0 \\
-% 		\end{array}\right)$
-% 	\end{minipage}
-% 	\label{fig:wrongVarEj}
-% \end{figure}
-
-% Para facilitar el análisis, se toman como ejemplo $i = 1$ y $j = 2$. Al expandir la restricción (4.5) para estos índices se obtiene la igualdad siguiente:
-
-% $$\begin{array}{rcl}
-% 	y_{12} + y_{21} & = & C x_{12}\\
-% 	9 + 9 & = & 18\\
-% 	18 & = & 18
-% \end{array}$$
-
-% Sin embargo, al invertir los índices, es decir, $i = 2$ y $j = 1$, no se cumple la igualdad:
-
-% $$\begin{array}{rcl}
-% y_{21} + y_{12} & \neq & C x_{21}\\
-% 9 + 9 & \neq & 0\\
-% 18 & \neq & 0
-% \end{array}$$
-
-% Por esta razón, la solución factible del ejemplo, al evaluarse en la restricción, obtiene un resultado negativo. La inversión de los índices, aunque no afecta la parte izquierda de la igualdad, sí afecta la parte derecha. Al representarse teóricamente el problema mediante un grafo dirigido, se cumple que $x_{ij} \neq x_{ji}$. La razón por la cual la restricción (4.5) falla radica en la asimetría del modelo teórico. Una solución posible para esta restricción es tener en cuenta en el miembro derecho los valores de $x_{ij}$ y de $x_{ji}$, en lugar de solo $x_{ij}$. La restricción correcta se muestra a continuación:
-
-% \begin{equation}\label{eq:rightCons}
-% 	y_{ij} + y_{ji} = C (x_{ij} + x_{ji}) \ \ \forall (i, j) \in A
-% \end{equation}
-
-% Con esta restricción se garantiza que si $x_{ij}$ y  $x_{ji}$ ambas valen 0, entonces las variables de flujo para esos índices deben ser nulas. Si exactamente una de las variables toma el valor 1, entonces se debe cumplir que la suma de las variables de flujo sea igual a la capacidad del vehículo. Por último, el caso en el que tanto  $x_{ij}$ como  $x_{ji}$ sean 1 no es posible, debido a que existen en el modelo otras restricciones que imponen la condición de visitar a cada cliente una única vez.
-
-% Al validar el nuevo modelo, donde la restricción (4.5) se sustituyó por la restricción correcta mostrada en la ecuación \ref{eq:rightCons}, el sistema devuelve un resultado satisfactorio. Con esta salida es posible decir que la transformación realizada a la restricción (4.5) parece arreglar el fallo del modelo original.
-
-% Como se aprecia mediante este ejemplo, el sistema implementado no solo funciona para validar un modelo, sino que provee las herramientas necesarias para realizar un análisis del fallo (si hay) y determinar las maneras de corregirlo.
+Al momento de comparar nuestros resultados con los de MuLan \cite{Huang2022MuLanAJ}, MusCALL \cite{Manco2022ContrastiveAL} y Contrastive, Triplet Sentence BERT \cite{Doh2022TowardUT} es muy importante tener en cuenta que la única similitud entre los trabajos es que la tarea es recuperación de música utilizando consultas en lenguaje natural. Ninguna utliza el mismo conjunto de música ni de consultas, tampoco se comparte la estrategia de recuperación ya que ellos tres utilizan modelos de aprendizaje automático (distintos). Además nuestro sistema está utilizando en las consultas vocabulario que no se encuentra en el corpus (debido a que solo se utilizaron 9 modelos dadas las limitaciones de recursos). Si se lograse utilizar TableGPT \cite{Gong2020TableGPTFT} y se incorporan más modelos de clasificación a la extracción de features se debe obtener resultas mejores y posiblementes competitivos con el estado del arte.

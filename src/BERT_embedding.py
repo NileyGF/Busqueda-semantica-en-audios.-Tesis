@@ -1,8 +1,5 @@
 # # Attempt #1
 import numpy as np
-import pandas as pd
-import torch
-# from pytorch_pretrained_bert import BertTokenizer, BertModel
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Attempt #2
