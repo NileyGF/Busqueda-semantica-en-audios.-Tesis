@@ -1,6 +1,6 @@
 \section{Resultados}
 \label{sec:results}
-Para evaluar SRI, tradicionalmente se parte de un conjunto de documentos y un conjunto de consultas con una relación de relevancia establecida entre ambos conjuntos \cite{manning2008introductiontoIR}. De forma que para una consulta se conoce que documentos son relevantes (y en ocasiones el nivel de relevancia). Algunos ejemplos son: \href{https://ir-datasets.com/antique.html}{\textit{antique}}, \href{https://ir-datasets.com/car.html}{\textit{car}}, \href{https://ir-datasets.com/cranfield.html}{\textit{cranfield}}, \href{https://ir-datasets.com/msmarco-passage.html}{\textit{msmarco-passage}}, \href{https://ir-datasets.com/nfcorpus.html}{\textit{nfcorpus}}, \href{https://ir-datasets.com/nyt.html}{\textit{nyt}}.
+Para evaluar SRI, tradicionalmente se parte de un conjunto de documentos y un conjunto de consultas con una relación de relevancia establecida entre ambos conjuntos \cite{manning2008introductiontoIR}. De forma que para una consulta se conoce que documentos son relevantes (y en ocasiones el nivel de relevancia). Algunos ejemplos de datasets para evaluar SRI son: \href{https://ir-datasets.com/antique.html}{\textit{antique}}, \href{https://ir-datasets.com/car.html}{\textit{car}}, \href{https://ir-datasets.com/cranfield.html}{\textit{cranfield}}, \href{https://ir-datasets.com/msmarco-passage.html}{\textit{msmarco-passage}}, \href{https://ir-datasets.com/nfcorpus.html}{\textit{nfcorpus}}, \href{https://ir-datasets.com/nyt.html}{\textit{nyt}}.
 
 Las estrategias de evaluación centradas en el usuario buscan tener en cuenta diferentes factores en la percepción de las cualidades musicales, en particular de la similitud musical. Esto es especialmente importante ya que las nociones de similitud musical están probremente definidas. El acuerdo entre los humanos sobre el parecido entre dos piezas musicales está limitado a alrededor del 80\% según se afirma en la literatura \cite{Schedl2014MusicIR}.
 La mayoría de los SRI evalúan semejanza utilizando la similitud de coseno \cite{Brundha2022VectorMB}.\\
@@ -10,10 +10,11 @@ El hecho de que no existen datasets de recuperación de información de música 
 
 Utilizando la información que fue proveída en el dataset (sec. \ref{sec:dataset}) fueron concebidos dos conjuntos de consultas. El primero con las descripciones creadas por expertos y el segundo con la lista de aspectos (convertida en oraciones de forma similar al tercer corpus). Durante el preprocesamiento se extraen los embeddings (utilizando SBERT, de igual forma que con los corpus) de ambos conjuntos y se guardan en archivos binarios. Dado que es necesario establecer una relación de relevancia entre consultas y clips, fue diseñado un algoritmo que iterando por todos los embeddings de las consultas (para cada conjunto separadamente), calculando una lista que contenga los índices de los clips, para los cuales la similitud entre las descripciones en el dataset sea mayor o igual que 0.95. De esta forma siempre se obtiene el clip al que pertenece la descripción (pues la similitud es 1) y se debe obtener los clips más similares, en cuanto a como son descritos en MusicCaps.
 
-Con 2 conjuntos de consultas y 3 de corpus hay 6 alternativas. Para cada uno se evaluaron el recobrado promedio (\textit{recall@k} con $k=$1, 5, 1, 50) y el mean average precision (mAP) y el mAP@10. \\
+Con 2 conjuntos de consultas y 3 de corpus hay 6 alternativas. Para cada uno se evaluaron el recobrado promedio (\textit{recall@k} con $k=$1, 5, 10, 50) y el mean average precision (mAP) y el mAP@10. \\
 En \cite{Doh2022TowardUT} se realiza uno de los análisis más recientes y abarcadores sobre modelos de recuperación de música utilizando texto. Ellos utilizan un subconjunto fijo de 1000 consultas para evaluar varios modelos; por lo que en este trabajo consideramos mantener ese número para una comparación más consistente.
 
 Para ello se extrae un subconjunto aleatorio de 1000 consultas antes de cada proceso de evaluación. Se utilizó un \textit{seed} para que al ejecutar el proceso de evaluación se obtengan resultados consistentes. En la tabla \ref{tab:results} se puede ver los resultados de las 6 alternativas y 4 resultados de otras investigaciones.
+
 
 \begin{table}[h]
     \footnotesize
@@ -35,14 +36,34 @@ Contrastive\_SBERT \cite{Doh2022TowardUT}& 0.068&  0.254  &  0.384   &        - 
 Triplet\_SBERT \cite{Doh2022TowardUT} &  0.067  &  0.236  &  0.366   &        -        &  0.14           &   -     \\ 
     \hline
     \end{tabular}
-    \caption{Resultados de las 6 combinaciones consultas-corpus	respecto a recall y mean average precision. Comparación con las 
-    investigaciones relativamente similares.}
+    \caption{Resultados de las 6 combinaciones consultas-corpus	respecto a recall y mean average precision. Comparación con las     investigaciones relativamente similares.}
     \label{tab:results}
 \end{table}
 
-Se observa que en general, utilizar el \textit{aspect list} como consultas provee mejores resultados, en particular cuando se utiliza como corpus los tags concatenados. Además la precisión tiene mejores valores que el recobrado, incluso comparándolos con las otras investigaciones.\\
+En la tabla \ref{tab:results} se observa que en general, utilizar el \textit{aspect list} como consultas provee mejores resultados, en particular cuando se utiliza como corpus los tags concatenados. Además la precisión tiene mejores valores que el recobrado, incluso comparándolos con las otras investigaciones.
 En cuanto a las consultas de las descripciones creadas por expertos, los mejores valores se obtienen con el corpus conformado por un texto descriptivo por cada clip. El hecho de que tanto el par de las consultas formadas por tags concatenados y el corpus creado de la misma forma (\textit{aspect-tag\_corpus}), como el par de consultas en forma de descripciones y corpus en forma de descripciones, resultaran en los mejores valores; puede indicar que es mejor que el corpus tenga la forma que más prevalece en las consultas de los usuarios o un acercamiento mixto entre descripciones como texto y tags concatenados.
 
-También se pudo observar que no se obtienen resultados muy distintos entre \textit{corpus} y \textit{ext\_corpus}. Lo que conlleva a concluir que del texto se obtiene aproximadamente la misma información semántica que de las oraciones que lo componen. Dado que procesar un corpus 9 veces (en este caso porque solo se utilizaron 9 modelos) más grande aumentó el tiempo de trabajo con BERT y el de recuperación considerablemente; se debe considerar que no es una buena estrategia. 
+Además, se realizó otro experimento teniendo en cuenta el índice de aciertos hasta un rango $k$, que refleja si en los primeros $k$ resultados hay algún clip relevante a la consulta. De esa forma, por ejemplo, al promediar todos los \textit{hits\_rate$@$k} de un conjunto de consultas se obtiene el índice de consultas donde en los primeros $k$ resultados se recuperan buenos clips. En la tabla \ref{tab:hitsresults} se observa que los resultados para esta métrica son bastante uniformes y los mejores valores se obtienen con el corpus número 1 compuesto por textos conformados por las oraciones que describen los features. Aún así no hay demasiada diversidad en los resultados y aproximadamente un tercio de las consultas tienen un clip relevante entre los primeros 10 (de más de 3800 clips).
+
+\begin{table}[h]
+    \footnotesize
+    \centering
+    \begin{tabular} { | l | c | c | c | c | }
+    \hline
+                       &   hits\_rate@1   &   hits\_rate@5   &  hits\_rate@10   &  hits\_rate@50  \\ 
+    \hline
+    capt-corpus        & 0.052           &  0.193          &  \textbf{0.333} &  \textbf{0.62}  \\
+    capt-ext\_corpus   & 0.05            &  0.182          &  0.314          &  0.614          \\ 
+    capt-tag\_corpus   & 0.027           &  0.142          &  0.248          &  0.575          \\ 
+    aspect-corpus      & \textbf{0.087}  &  \textbf{0.215} &  0.301          &  0.522          \\ 
+    aspect-ext\_corpus & 0.052           &  0.137          &  0.209          &  0.457          \\ 
+    aspect-tag\_corpus & 0.037           &  0.18           &  0.303          &  0.592          \\ 
+    \hline
+    \end{tabular}
+    \caption{Resultados de las 6 combinaciones consultas-corpus	respecto al índice de aciertos.}
+    \label{tab:hitsresults}
+\end{table}
+
+También se pudo observar que, en ambos experimentos, no se obtienen resultados muy distintos entre \textit{corpus} y \textit{ext\_corpus}. Lo que conlleva a concluir que del texto se obtiene aproximadamente la misma información semántica que de las oraciones que lo componen. Dado que procesar un corpus 9 veces (en este caso porque solo se utilizaron 9 modelos) más grande aumentó el tiempo de trabajo con BERT y el de recuperación considerablemente; se debe considerar que no es una buena estrategia. 
 
 Al momento de comparar nuestros resultados con los de MuLan \cite{Huang2022MuLanAJ}, MusCALL \cite{Manco2022ContrastiveAL} y Contrastive, Triplet Sentence BERT \cite{Doh2022TowardUT} es muy importante tener en cuenta que la única similitud entre los trabajos es que la tarea es recuperación de música utilizando consultas en lenguaje natural. Ninguna utliza el mismo conjunto de música ni de consultas, tampoco se comparte la estrategia de recuperación ya que ellos tres utilizan modelos de aprendizaje automático (distintos). Además nuestro sistema está utilizando en las consultas vocabulario que no se encuentra en el corpus (debido a que solo se utilizaron 9 modelos dadas las limitaciones de recursos). Si se lograse utilizar TableGPT \cite{Gong2020TableGPTFT} y se incorporan más modelos de clasificación a la extracción de features se debe obtener resultas mejores y posiblementes competitivos con el estado del arte.

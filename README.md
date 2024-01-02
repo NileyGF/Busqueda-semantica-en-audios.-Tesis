@@ -30,3 +30,5 @@ To test in django-app:
 ## The current results are:
 
 ![Image](evaluations.png)
+
+![Image](hits_evaluations.png)
