@@ -5,15 +5,20 @@
 \label{chapter:introduction}
 %===================================================================================
 El auge de la tecnología digital, en los últimos años, ha llevado a una explosión en la cantidad de contenido multimedia accesible en línea. Incluyendo texto (libros, páginas web, ...), imágenes, videos y música; la red se ha convertido en un repositorio de información con un crecimiento vertiginoso \cite{owidinternet}. La necesidad de buscar en bases de datos cada vez más grandes ha impulsado importantes avances en el campo de la búsqueda y recuperación de información. Existen motores de búsqueda para diversos contenidos como páginas webs, imágenes y videos; sin embargo la música no es accesible de la misma forma \cite{Koepke2021AudioRW}. En este contexto, la presente tesis se propone explorar nuevas técnicas y enfoques para la búsqueda y recuperación de música en grandes bases de datos, con el objetivo de mejorar la accesibilidad de este recurso. \\
+
 \section{Contexto histórico/social} 
+\label{sec:context}
+
 Durante las últimas décadas la tecnología computacional se ha desarrollado al punto de estar presente, de una manera u otra, en casi todos los procesos cotidianos de los seres humanos. La velocidad a la que se generan grandes volúmenes de datos (conocido comunmente como \textit{big data}), en la actualidad, desafía las capacidades de procesamiento computacional \cite{RiseofBigData}.\\
 Una característica fundamental de estos volúmenes de datos es la gran variedad que presentan, siendo alrededor del 80$\%$ de naturaleza no estructurada. Y precisamente, la recuperación de información se define como encontrar resultados de naturaleza no estructurada que satisfaga una necesidad de información dentro de una gran colección de datos \cite{manning2008introductiontoIR}.\\
 Los sistemas de recuperación de información (SRI) consisten en tecnologías y métodos diseñados para la búsqueda, almacenamiento, recuperación y organización de información. Estos sistemas son esenciales en la gestión de grandes cantidades de datos en diversos entornos, como bibliotecas digitales, bases de datos en línea y motores de búsqueda en la web.\\ 
-La recuperación de información utilizando computadoras  se remonta a la década de 1950, y desde entonces se han desarrollado grandes ideas en el campo. Entre estas ideas se encuentran la creación de rankings de documentos, la representación vectorial de documentos y consultas, el agrupamiento de documentos similares, la asociación de términos con similitudes semánticas, la introducción de la frecuencia inversa en documentos y los modelos de semántica latente.\cite{SRIConf1}\\
+La recuperación de información utilizando computadoras  se remonta a la década de 1950, y desde entonces se han desarrollado grandes ideas en el campo. Entre estas ideas se encuentran la creación de rankings de documentos, la representación vectorial de documentos y consultas, el agrupamiento de documentos similares, la asociación de términos con similitudes semánticas, la introducción de la frecuencia inversa en documentos y los modelos de semántica latente \cite{SRIConf1}.\\
 Uno de los avances recientes en la recuperación de información es el uso de redes neuronales. Este es un campo que ha avanzado a pasos agigantados en la última década, en gran parte gracias al aumento del poder computacional introducido con las GPU. Los modelos de lenguaje, como Word2Vec \cite{Mikolov2013EfficientEO}, GloVe \cite{Pennington2014GloVeGV} y los más recientes, basados en transformers, como BERT \cite{Devlin2019BERTPO} y GPT \cite{Radford2018ImprovingLU}, han demostrado una capacidad excepcional para capturar el significado semántico y la relación contextual entre palabras y frases. Estos modelos, operan con representaciones de \textit{embeddings} a partir de diferentes enfoques cada uno.\\
 Los embeddings son representaciones, en un espacio de relativamente baja dimensionalidad, de tokens como frases, párrafos o documentos, a partir de un espacio vectorial de alta dimensionalidad, donde cada dimensión corresponde a una característica o atributo del lenguaje aprendido. Al aplicar estos \textit{embeddings} a la representación de documentos y consultas, se ha logrado una mejora significativa en la precisión y la relevancia de los resultados de recuperación de información \cite{docEmbReview}.\\ 
+
 \section{Motivación}
-%% Breve presentación de la problemática
+\label{sec:motivation}
+
 A pesar de que los SRI se han centrado principalmente en la recuperación de información con forma textual, se ha reconocido la necesidad de adaptar el entorno para manejar todo tipo de datos (como imágenes, videos, audios) \cite{JianMMIR}. La recuperación de información en datos no textuales presenta desafíos únicos, como la necesidad de comprender el contenido visual o auditivo de los datos. En el caso de imágenes, por ejemplo, la búsqueda puede basarse en características visuales como el color, la textura o la forma. En el caso de videos y audios, la búsqueda puede basarse en características como el tono, el ritmo o el contenido verbal. En los últimos años, ha habido avances significativos en la recuperación de información en datos no textuales, impulsados por el desarrollo de algoritmos de \textit{deep learning} y el aumento de la capacidad computacional. %; por ejemplo \cite{}$^n$.% TODO add referencia para justificar cuáles han sido esos avances significativos
 Estos avances han permitido el desarrollo de sistemas más precisos y eficientes para la recuperación de imágenes, videos y audios.\\
 Una herramienta utilizada comúnmente para recuperar información multimedia es representar los datos como texto, empleando metadatos \cite{Doh2022TowardUT}.
@@ -22,15 +27,21 @@ La creación de metadatos suele requerir un enfoque manual, o en su defecto, la 
 Dadas las limitaciones que presenta la recuperación utilizando metadatos, se han estudiado otras alternativas. Un ejemplo es la consulta por tarareo (\textit{query-by-humming}) o la consulta por ejemplo (\textit{query-by-example}), en la que la consulta se representa mediante una grabación de audio y el sistema recupera la canción correcta (la más similar). La recuperación basada en contenido consiste en buscar audio que coincida con una consulta de audio. Dado un audio de ejemplo, se devuelven los audios más similares en la base de datos. Sin embargo, satisfacer los requisitos para introducir un audio puede resultar difícil para los usuarios. Por otro lado, las consultas detalladas en lenguaje natural con forma libre, constituyen una interfaz familiar ampliamente utilizada en los motores de búsqueda actuales, lo que permite solicitar música con información semántica.\\
 Permitir a los usuarios buscar música utilizando oraciones en lenguaje natural introduce una capa adicional de complejidad, ya que requiere el puente entre la semántica del lenguaje y la representación de la música en sí misma.\\
 %% Actualidad, novedad científica e importancia teórica y práctica
-Uno de los desafíos clave, en la integración del lenguaje natural y análisis de audios en los SRI, se encuentra en la representación efectiva de la música en función de las consultas textuales. Hasta donde se ha podido comprobar, este problema no ha sido abordado utilizando las emergentes capacidades semánticas y contextuales de los grandes modelos de lenguajes (LLM por sus siglas en inglés). Tampoco se ha observado una estrategia de caracterización de la música empleando modelos pre-entrenados de inteligencia artificial, como una alternativa a entrenar modelos de \textit{music captioning} que son la forma más directa de representar música como texto. Depender de un único modelo trae desventajas en cuanto a que las características que se pueden extraer, están limitadas a las que aparecen en los datos de entrenamiento; esas desventajas son acentuadas por el conocido problema que hay con la indisponibilidad de \textit{datasets} de tamaño adecuado y con amplio rango de modalidades \cite{Simonetta2019MultimodalMI}. \\ 
+Uno de los desafíos clave, en la integración del lenguaje natural y análisis de audios en los SRI, se encuentra en la representación efectiva de la música en función de las consultas textuales. Hasta donde se ha podido comprobar, este problema no ha sido abordado utilizando las emergentes capacidades semánticas y contextuales de los grandes modelos de lenguajes (LLM por sus siglas en inglés). Tampoco se ha observado una estrategia de caracterización de la música empleando modelos pre-entrenados de inteligencia artificial, como una alternativa a entrenar modelos de \textit{music captioning} que son la forma más directa de representar música como texto. Depender de un único modelo trae desventajas en cuanto a que las características que se pueden extraer, están limitadas a las que aparecen en los datos de entrenamiento; esas desventajas son acentuadas por el conocido problema que hay con la indisponibilidad de \textit{datasets} de tamaño adecuado y con amplio rango de modalidades \cite{Simonetta2019MultimodalMI}. \\
+
 \section{Antecedentes}
+\label{sec:anteced}
+
 Este trabajo es pionero en la investigación de recuperación semántica de música en la Facultad. No se cuentan con investigaciones en esta área. 
+
 \section{Problemática}
+\label{sec:problem}
+
 Durante una exahustiva investigación no se encontró ningún sistema o diseño, que permita organizar y recuperar música de una gran base de datos, utilizando consultas en lenguaje natural y con componentes semánticos; y que además sea escalable respecto a las características(o \textit{features}) que se conocen de la música. \\
-%% - objeto de estudio
-%Supongo que son los sitemas de recuperación de música utilizando ML.
 %% - objetivo general
 \section{Objetivos}
+\label{sec:objective}
+
 El objetivo de esta investigación es el diseño e implementación de un prototipo de una plataforma que permita realizar consultas en lenguaje natural sobre una base de datos de música y obtener resultados con significación semántica.\\
 %% - objetivos específicos para cumplir el objetivo general
 Los objetivos específicos planteados para dar cumplimiento al objetivo general son:
@@ -45,11 +56,12 @@ Los objetivos específicos planteados para dar cumplimiento al objetivo general 
     % \item Crear un software que utilizando grandes modelos de lenguaje convierta los características extraídas, en un texto coherente y sin alucinaciones. 
     % \item Crear un SRI con un modelo similar al modelo vectorial, pero utilizando como vectores los \textit{embeddings} de las consultas y textos (empleando BERT).
 \end{itemize}
-% \section*{Propuesta de solución} % optional, kinda
+% \section{Propuesta de solución} % optional, kinda
 % Para cumplir con los objetivos planteados se propone
-%% - campo de acción
+
 %% - pregunta ciéntifica
 \section{Preguntas ciéntificas}
+\label{sec:questions}
 A través del documento se abordarán las siguientes preguntas con la intención de resolver el problema planteado:
 \begin{itemize}
     \item ¿Un \textit{framework} escalable conformado por modelos de \textit{Music Information Retrieval}(MIR) de clasificación de música es, al menos, igual de efectivo al extraer características de música, que los modelos existentes de \textit{auto-tagging} o \textit{captioning}?
@@ -57,6 +69,9 @@ A través del documento se abordarán las siguientes preguntas con la intención
     % \item ¿Qué problemas puede traer la propensión a alucinar de dichos LLM para esta tarea?
     \item ¿Un SRI utilizando \textit{embeddings} es más efectivo en cuánto a similitud semántica que empleando vectores de bolsa de palabras? % semántica latente no es factible por el enorme costo computacional que tiene, que empeora con el tamaño del corpus, y bueno, queremos analizar grandes bases de datos. 
 \end{itemize}
-\section{Estructura de la tesis}
+
 %% - estructura del trabajo
-A continuación se describe la estructura del documento. El capítulo \hyperref[chap:development]{\textbf{Desarrollo}} se compone de 4 secciones. En la sección \ref{sec:sota} se define el marco teórico del trabajo, que abarcará los modelos de recuperación de información, los acercamientos a recuperación de audios y música, modelos de lenguaje y como sobreponerse al \textit{semantic gap}. En la sección \ref{sec:design} se presenta la modelación de la propuesta para atacar el problema planteado, mientras que en la sección \ref{sec:implementation} se describen los detalles de implementación incluyendo las alternativas que no se pudieron comprobar. Finalmente, en la sección \ref{sec:results}  se muestran las evaluaciones del modelo de recuperación y similares para los pasos intermedios del sistema. Los próximos capítulos son: las \hyperref[chap:conclusions]{\textbf{Conclusiones}} y las \hyperref[chap:recommendations]{\textbf{Recomendaciones}}. El documento finaliza con la \textbf{Bibliografía}.
+\section{Estructura de la tesis}
+\label{sec:structure}
+
+A continuación se describe la estructura del documento.  En el capítulo \ref{chap:sota}, \textbf{Estado del Arte}, se define el marco teórico del trabajo, que abarcará los modelos de recuperación de información, los acercamientos a recuperación de audios y música, modelos de lenguaje y como sobreponerse al \textit{semantic gap}. En el capítulo \ref{chap:design-implem}, \textbf{Diseño e implementación}, se presenta la modelación de la propuesta para atacar el problema planteado y se describen los detalles de implementación incluyendo las alternativas que no se pudieron comprobar. Finalmente, en el capítulo \ref{chap:experiment}, \textbf{Breve Experimentación}, se muestran las evaluaciones del modelo de recuperación. A continuación aparecen las \hyperref[chap:conclusions]{\textbf{Conclusiones}} y las \hyperref[chap:recommendations]{\textbf{Recomendaciones}}. El documento finaliza con la \textbf{Bibliografía}.

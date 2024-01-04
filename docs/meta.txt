@@ -100,3 +100,34 @@ After you have presented your approach, it is time to show why it is so great wi
 \section{Conclusions, Summary and Future Work}
 critically evaluates your approach and evaluation. Most things we
 do in computer science are not perfect: There will be edge cases, limitations, or scenarios where other approaches are better. This section is your opportunity to acknowledge the weaknesses of your thesis and discuss why or why not they matter (and how they could be addressed by someone else extending your approach).\\
+
+This thesis has presented a novel approach to music information retrieval with natural language queries, that leverages the power of music information 
+retrieval classifiers and sentence embeddings. 
+
+Through our exploration, we have shown the potential of using machine learning classifiers to extract nuanced features from music, 
+in an attempt to translate its auditory qualities into a natural language description. This step represents a critical bridge between the abstract 
+nature of music and the linguistic realm of human communication, reducing the semantic gap and paving the way for enhanced music retrieval systems. 
+There lays the importance of continuing this path of investigation and find better ways to perform the transformation from music characteristics 
+to neat human perception texts. Most likely the way to improve on this endeavor is following the great advancements in language models of the last 
+couple of years (whether it is TableGPT or other approach). 
+
+Our results underscore the potential for practical applications within the music industry, suggesting that this approach could revolutionize the 
+way users interact with and discover music. From personalized recommendations to more intuitive search interfaces, the impact of this research 
+extends beyond the realm of academia, resonating profoundly within the domain of music technology.
+
+However, it's important to acknowledge the constraints of our work. While our framework shows promise, there are still challenges to be addressed, 
+such as the interpretability of the natural language descriptions and the scalability of the retrieval process. It is also important to address the 
+fact that there's still no datasets for the text-to-music retrieval task, and the adyacents ones aren't of suitable size. We recognize that the causes 
+of the unavailability of datasets must also be addressed. Among them can be found: the aformentioned copyright problem, the fact that alignment of 
+text and audio is a hard computational task and should be controlled by human supervision, and that there is no largely adopted standard for 
+multimodal music representation. Recent multimodal representation learning approaches have shown breakthough in many domains by taking advantage 
+of enormous data from the web, but not on music domains (at leats not in public researches).
+
+
+The potential for further advancements in music retrieval, recommendation systems, and data-driven musicology is vast, and our work lays the 
+foundation for these future endeavors. This is a first attempt at building a free-form natural language interface for music
+audio and there is plenty of room for improvement.
+
+% Through an extensive set of experiments, we validated the main design choices in our core approach. \cite{Manco2022ContrastiveAL}
+% However, our current dataset is limited to music tags, such as genre, mood, and instrument. A more generalizable music retrieval system needs 
+% to cover other musical attributes, such as the tempo, key, chord progression, melody, artist, etc.

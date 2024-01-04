@@ -9,17 +9,35 @@
 \usepackage{graphics}
 \usepackage{float}
 \usepackage{color}
+
 %\usepackage{breqn}
-\usepackage{listings}%
-\lstset{%
-	language=Lisp,%lenguaje
-	basicstyle=\bfseries\ttfamily,
-	keywordstyle=\color{blue},
-	commentstyle=\color{brown},
-	backgroundcolor=\color{gray!10},
-	showstringspaces=false
+\usepackage{listings}
+\usepackage{xcolor}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
 }
-\input{word-comments.tex}
+ 
+\lstset{style=mystyle}
 
 %\floatstyle{ruled}
 %\restylefloat{table}
@@ -32,7 +50,7 @@
 \advisor{Dr. Yudivian Almeida}
 \degree{Licenciado en Ciencia de la Computación}
 \faculty{Facultad de Matemática y Computación}
-\date{2023}
+\date{2024}
 \logo{Graphics/uhlogo}
 \makenomenclature
 
@@ -52,15 +70,15 @@
 
 \mainmatter
 	
-\include{MainMatter/0-introduction}
-\include{MainMatter/1-preliminaries}
-\include{MainMatter/2-design}
-\include{MainMatter/3-implementation}
-\include{MainMatter/4-results}
-\include{MainMatter/5-conclusions}
+\include{MainMatter/1.introduction}
+\include{MainMatter/2.sota}
+\include{MainMatter/3.design-implementation}
+\include{MainMatter/4.experiments}
+\include{MainMatter/5.conclusions}
 
 \backmatter
 
-\include{BackMatter/Bibliography}
+\bibliographystyle{unsrt}
+\bibliography{Bibliography}
 
 \end{document}

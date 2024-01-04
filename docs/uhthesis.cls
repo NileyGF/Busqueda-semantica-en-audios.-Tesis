@@ -66,6 +66,9 @@
 \setcounter{totalnumber}{4}
 \renewcommand{\textfraction}{0.07}
 
+% Rename bibliography
+% \renewcommand\refname{Referencias bibliográficas}
+
 % Backreferences in the bibliography.
 \backrefspanish
 \renewcommand{\backref}[1]{}
