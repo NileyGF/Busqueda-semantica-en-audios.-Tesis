@@ -401,7 +401,7 @@ def most_similars_to_query(query:list, embeddings_list:list, min_sim=0.95):
     return rel[:i]
 
 def relevance_judgments(caption=True) -> list:
-    """ for every query/caption find the other captions with similarity > 0.9; to set those songs as relevant.
+    """ for every query/caption find the other captions with similarity > 0.95; to set those songs as relevant.
     Returns a list R, where R[i] = List[Tuples[song_idx, similarity]]
     """
     if caption:
