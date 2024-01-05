@@ -16,7 +16,7 @@ Otra estrategia, que ha sido analizada por las escasas investigaciones en el tem
 
 La propuesta de extraer los \textit{features} automáticamente trabaja bajo la premisa de que el campo de MIR se ha desarrollado en tareas de clasificación y auto-tagging lo suficiente para ser competitivo con metadatos hechos a mano, relativo al esfuerzo que conlleva cada uno. % TODO specify a little more on our proposal
 
-Para garantizar que el sistema de recuperación tenga en cuenta la similitud semántica, se propone utilizar un aceramiento con \textit{Sentence BERT} (sec. \ref{sec:semantic_embedd}) para comparar las consultas con las descripciones de la música. Los enfoques tradicionales en SRI para mantener la significación semántica, suelen requerir estructuras complejas y un largo tiempo de preprocesamiento o de ranking (como Latent Semantic Analysis (LSA) \cite{Foltz1996LatentSA}). Con el auge de los modelos de lenguaje (alrededor de los últimos de cinco años) y su capacidad de capturar significado semántico y relación contextual; se ha abierto el camino para combinar la eficiencia del modelo vectorial con bolsa de palabras y el aumento en precisión de los modelos como LSA. 
+Para garantizar que el sistema de recuperación tenga en cuenta la similitud semántica, se propone utilizar un acercamiento con \textit{Sentence BERT} (sec. \ref{sec:semantic_embedd}) para comparar las consultas con las descripciones de la música. Los enfoques tradicionales en SRI para mantener la significación semántica, suelen requerir estructuras complejas y un largo tiempo de preprocesamiento o de ranking (como Latent Semantic Analysis (LSA) \cite{Foltz1996LatentSA}). Con el auge de los modelos de lenguaje (alrededor de los últimos de cinco años) y su capacidad de capturar significado semántico y relación contextual; se ha abierto el camino para combinar la eficiencia del modelo vectorial con bolsa de palabras y el aumento en precisión de los modelos como LSA. 
 % TODO explain the relationship between language models and the combination 
 
 Dado que SBERT captura el \textit{embedding} de un texto, y que el \textit{framework} de extracción de \textit{features} lo que devuelve es una lista de \textit{tags}, es necesario convertirla a texto en lenguaje natural.  
@@ -59,7 +59,7 @@ En el apartado de recuperación de información, el sistema consiste en recopila
 \subsection{Extracción de \textit{features}}
 \label{subsec:essentia}
 La arquitectura del sistema de extracción de \textit{features} fue relativamente sencilla de implementar. Un sistema de clases que heredan de la clase abstracta \textit{FeaturesExtractor}. \\
-Las propiedades incluyen: una lista de las etiquetas de clase posibles de cada modelo; \textit{feature\_description} que retorna una oración en lenguaje natural describiendo una etiqueta de clase; \textit{feature\_tags\_description} retorna un tag/metadato describiendo una etiqueta de clase. Además de la función \textit{extract\_feature}, que recibe un clip de música y retorna el(los) \textit{feature(s)} extraídos con el modelo específico. \\
+Las propiedades incluyen: una lista de las etiquetas de clase posibles de cada modelo; \textit{feature\_description} que retorna una oración en lenguaje natural describiendo una etiqueta de clase; \textit{feature\_tags\_description} retorna un \textit{tag}/metadato describiendo una etiqueta de clase. Además de la función \textit{extract\_feature}, que recibe un clip de música y retorna el(los) \textit{feature(s)} extraídos con el modelo específico. \\
 Los modelos utilizados, para probar y evaluar el diseño son parte de los que provee la biblioteca \textit{essentia} en conjunto con \textit{tensorflow} \cite{alonso2020tensorflow}. Se utilizaron 9 modelos : \href{https://essentia.upf.edu/models.html#genre-discogs400}{Genre Discogs400}, \href{https://essentia.upf.edu/models.html#mtg-jamendo-genre}{MTG-Jamendo genre},  \href{https://essentia.upf.edu/models.html#danceability}{Danceability}, \href{https://essentia.upf.edu/models.html#mood-happy}{Mood Happy}, \href{https://essentia.upf.edu/models.html#mood-relaxed}{Mood Relaxed}, \href{https://essentia.upf.edu/models.html#mood-sad}{Mood Sad}, \href{https://essentia.upf.edu/models.html#mtg-jamendo-mood-and-theme}{MTG-Jamendo mood and theme}, \href{https://essentia.upf.edu/models.html#mtg-jamendo-instrument}{MTG-Jamendo instrument} y \href{https://essentia.upf.edu/models.html#voice-gender}{Voice gender}.
 
 Los modelos de clasificación de \textit{essentia} requiren que el audio sea convertido a \textit{embeddings} para recibirlos como entrada, y fue utilizado para ello el modelo \textit{Discogs-EffNet} \footnote{\href{https://essentia.upf.edu/models.html}{https://essentia.upf.edu/models.html}}.
@@ -93,10 +93,10 @@ En \textit{musiccaps-subset-feat.csv} \footnote{\href{https://github.com/NileyGF
 Como fue mencionado en la sección \ref{sec:design}, la idea era implementar tres alternativas para obtener descripciones a partir de los \textit{features} extraídos anteriormente. \\
 
 \textbf{Utilizar GPT-2 con \textit{prompt engineering}}\\
-Se intentó unas decenas de prompts utilizando el modelo de completamiento de texto de GPT-2. Sin embargo, no se obtuvo resultados aceptables con ningún de ellos. Teniendo en cuenta dichos resultados se probó con GPT-3.5, desde la página de Open-AI; y esta vez si se observaron buenas descripciones, aunque no completamente fieles, como es de esperar de estos modelos. Sin embargo, no es factible realizar casi 4000 peticiones, ya que a diferencia de GTP-2, GPT-3.5 no es tan accesible. Por lo tanto esta alternativa tuvo que ser descartada.\\
+Se intentó unas decenas de prompts utilizando el modelo de completamiento de texto de GPT-2 \cite{radford2019language, HggFaceGPT2}. Sin embargo, no se obtuvo resultados aceptables con ningún de ellos. Teniendo en cuenta dichos resultados se probó con GPT-3.5, desde la página de Open-AI; y esta vez si se observaron buenas descripciones, aunque no completamente fieles, como es de esperar de estos modelos. Sin embargo, no es factible realizar casi 4000 peticiones, ya que a diferencia de GPT-2, GPT-3.5 no es tan accesible. Por lo tanto esta alternativa tuvo que ser descartada.\\
 
 \textbf{Crear una oración con fuerza bruta}\\
-Utilizando la propiedad feature\_description, se generó una oración por cada \textit{feature} extraído, por cada uno de los clips en el dataset. La concatenación de dichas oraciones en un texto constituyó el corpus de descripciones. \\
+Utilizando la propiedad \textit{feature\_description}, se generó una oración por cada \textit{feature} extraído, por cada uno de los clips en el dataset. La concatenación de dichas oraciones en un texto constituyó el corpus de descripciones. \\
 Ejemplos de la metodología para crear las oraciones:
 \begin{itemize}
     \item MTG-Jamendo genre: " The music genre sounds like <\textit{genre classification}>. "
@@ -133,21 +133,20 @@ En \textit{musiccaps-subset-descriptions.csv} \footnote{\href{https://github.com
 \subsection{Extracción de \textit{embeddings} de BERT}
 \label{subsec:bert-embedd-extr}
 
-Cada uno de los 3 corpus de descripciones fueron posteriormente procesados para crear un vector de \textit{embeddings} utilizando el modelo de la biblioteca \textit{transformers} de \textit{HuggingFace}: \textbf{bert-base-uncased}. El proceso consiste en tokenizar (con la función BertTokenizer de 
-\textit{transformers}) el texto: 
+Cada uno de los 3 corpus de descripciones fueron posteriormente procesados para crear un vector de \textit{embeddings} por cada clip utilizando el modelo de la biblioteca \textit{transformers} de \textit{HuggingFace}: \textbf{bert-base-uncased}. El proceso consiste en tokenizar el texto con la función \textbf{BertTokenizer} de \textit{transformers}: \\
 \begin{lstlisting}[language=Python]
 preprocess_tokens = "[CLS]" + text + "[SEP]"
 \end{lstlisting} 
-Luego, utilizando la biblioteca \textit{torch} y el modelo de BERT se transforma el texto tokenizado en \textit{embeddings}. Al finalizar se guarda como un archivo binario la lista de \textit{embeddings}, que no se encuentran en el repositorio, debido a que ocupan relativamente bastante espacio.
+Luego se transforma el texto tokenizado a \textit{embeddings}, utilizando la biblioteca \textit{torch} y el modelo de BERT. Al finalizar se guarda la lista de embeddings como un archivo binario, que no se encuentran en el repositorio debido a que ocupan relativamente bastante espacio.
 
 El primer corpus de \textit{embeddings} tomó en computarse, en una computadora con 24 GB de RAM y procesador Intel Core i7-4710HQ, alrededor de 2 horas. El segundo, que consiste en una extensión del primero con 10 veces la cantidad de \textit{embeddings}, tomó entre 14 y 15 horas de procesamiento. El tercer corpus, constituido por la concatenación de tags tomó entre 1 y 2 horas en terminar.
 
-Como último detalle, en esta parte de la implementación, al finalizar de procesar cada corpus, se creó un diccionario que establece por cada \textit{embedding} a que clip corresponde. Esto es particularmente importante en el caso del segundo, ya que existen 10 \textit{embeddings} por cada clip.
+Como último detalle, en esta parte de la implementación al finalizar de procesar cada corpus se creó un diccionario que establece por cada \textit{embedding} a que clip corresponde. Esto es particularmente importante en el caso del segundo, ya que existen 10 \textit{embeddings} por cada clip.
 
 \subsection{Recuperación de Información. Comparación y ranking}
 \label{subsec:IR-process-query}
 
-El método de obtener la música más cercana, dado una consulta, consiste en obtener un vector de \textit{embeddings}, utilizando el mismo proceso descrito anteriormente en  \ref{subsec:bert-embedd-extr}, luego se compara dicho vector con cada uno de los \textit{embeddings} en el corpus (solo se emplea uno de los tres), utilizando la similitud del coseno entre el ángulo de los vectores. Finalmente se ordenan descendentemente, ya que el coseno es mayor entre vectores más cercanos. Se puede especificar cuantos resultados obtener: todos, o solo los $k$ más similares a la consulta. 
+El método de obtener la música más cercana consiste en obtener un vector de \textit{embeddings} a partir del texto de la consulta, utilizando el mismo proceso descrito anteriormente en  \ref{subsec:bert-embedd-extr}. Luego se compara dicho vector con cada uno de los \textit{embeddings} en el corpus (solo se emplea uno de los tres), utilizando la similitud del coseno entre el ángulo de los vectores. Finalmente se ordenan descendentemente, ya que el coseno es mayor entre vectores más cercanos. Se puede especificar cuantos resultados obtener: todos, o solo los $k$ más similares a la consulta. 
 
 Después de ordenar los \textit{embeddings} se busca la correspondencia entre ellos y los clips, de forma que la relevancia de un clip es la relevancia del primer \textit{embedding} correspondiente a él (o sea, el de mayor valor de coseno). Esto es particularmente importante para el segundo corpus y cualquier otro que se pueda diseñar eventualmente donde a un clip le corresponda más de un vector de \textit{embeddings} (por ejemplo, si la descripción contiene más de 512 \textit{tokens} no puede ser procesada con BERT, y puede solucionarse dividiéndola en varias subdescripciones más cortas).
 

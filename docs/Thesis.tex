@@ -15,22 +15,26 @@
 \usepackage{xcolor}
  
 \definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{deepblue}{rgb}{0,0,0.5}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
- 
+ % Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
+    morekeywords={descripciones, consultas, preprocess_tokens},              % Add keywords here
+    keywordstyle=\color{deepblue},
     stringstyle=\color{codepurple},
     basicstyle=\footnotesize,
     breakatwhitespace=false,         
     breaklines=true,                 
     captionpos=b,                    
     keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
+    %numbers=left,                    
+    %numbersep=5pt,                  
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
@@ -47,8 +51,8 @@
 
 \title{Recuperación semántica de música utilizando embeddings y modelos de clasificación.}
 \author{Niley González Ferrales}
-\advisor{Dr. Yudivian Almeida}
-\degree{Licenciado en Ciencia de la Computación}
+\advisor{Dr. Yudivián Almeida Cruz}
+\degree{Licenciada en Ciencia de la Computación}
 \faculty{Facultad de Matemática y Computación}
 \date{2024}
 \logo{Graphics/uhlogo}

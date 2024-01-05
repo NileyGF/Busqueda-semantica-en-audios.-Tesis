@@ -1,7 +1,0 @@
-https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)#:~:text=The%20success%20of%20an%20IR,in%20response%20to%20a%20query.
-The success of an IR system may be judged by a range of criteria including relevance, speed, user satisfaction, 
-usability, efficiency and reliability.[1] However, the most important factor in determining a system's effectiveness 
-for users is the overall relevance of results retrieved in response to a query
-Evaluation measures may  include methods such as precision and recall, and scores from prepared benchmark test sets.
-
-
