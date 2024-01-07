@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block page_content %}
+<div class="row">
+<div class="col-lg-10 col-md-10 col-sm-10">
+    <form method="post" >
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            </div>   
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <p style="font-size:14px;margin:4px;color:#273746">Filter the number of songs retrieved</p>
+
+                <select class="mx-5 " name="top_k" id="top_k" required>
+                    {% comment %} <option {% if top_k == "all"%} selected {% endif %} value="all"> ALL </option> {% endcomment %}
+                    <option {% if top_k == 1%} selected {% endif %} value="1"> 1 </option>
+                    <option {% if top_k == 5%} selected {% endif %} value="5"> 5 </option>
+                    <option {% if top_k == 10%} selected {% endif %} value="10"> 10 </option>
+                    <option {% if top_k == 50%} selected {% endif %} value="50"> 50 </option>
+                </select>
+            </div>
+            {% comment %} <div class="col-lg-1 col-md-1 col-sm-1">
+            </div>     {% endcomment %}
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <input class="m-2 p-1" name="query" type="text" placeholder="Search Songs" {% if query %}value="{{ query }}" {% endif %}required> 
+                <button name="search_query" type="submit" class="btn btn-dark m-2 p-1">Search</button>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+            </div>    
+        </div>
+    </form>
+    <hr>
+    {% if errors %}
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <span class="text-danger">
+                <p style="font-size:18px"><b>Error: {{ errors }} </b></p>
+                
+            </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+    </div>
+    <hr>
+    {% endif %}
+
+    <div class="row">
+        {% if not results %}
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10">
+                {% for song in all_songs  %}
+                    <p style="font-size:14px;margin:5px;color:{{ color }}"><b> {{ song.index }}) {{ song.df_name }} </b></p>  
+                    {{ song.description }}
+                    <hr>
+                {%endfor%}
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            </div>
+        {% else %} <!-- include audio player--> 
+            <div class="col-lg-1 col-md-1 col-sm-1"></div>
+
+            <div class="col-lg-10 col-md-10 col-sm-10">  
+            <div class="row">      
+            {% for song in all_songs  %}
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <p style="font-size:14px;margin:5px;color:{{ color }}"><b> {{ song.index }}) {{ song.df_name }} </b></p>  
+                    {{ song.description }}
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <audio controls> <source src="{{ song.path }}" type="audio/wav"> 
+                    Your browser does not support the audio element. </audio>
+                </div>
+                <hr>    
+            {% endfor %}
+            </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1"></div>
+
+        {% endif %}
+    </div>
+
+</div>  
+<div class="col-lg-2 col-md-2 col-sm-2">
+    <form method="post" >
+        {% csrf_token %}
+        {% comment %} <div class="row">        
+            <div class="col-lg-3 col-md-3 col-sm-3"> {% endcomment %}
+                <input class="m-2 p-1" name="load_musics" type="text" placeholder="Music Folder" >
+                <button name="load_musics" type="submit" class="btn btn-dark">Reload music files</button>
+            {% comment %} </div>  
+        </div> {% endcomment %}
+    </form>
+</div>  
+</div>  
+{% endblock page_content %}

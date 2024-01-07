@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block page_content %}
+<div class="row"> <p> </p> </div>
+<div class="row">
+    <div class="col-lg-1 col-md-1 col-sm-1"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="upload_switch" name="upload_switch" {% if upload %} checked {% endif %}>
+                {% comment %} <label class="form-check-label" for="upload_switch">Default switch checkbox input</label> {% endcomment %}
+                <button name="switch_btn" type="submit" class="btn btn-outline-dark">
+                    Change Mode
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <form method="post">
+            {% csrf_token %}
+            <button name="process" type="submit" class="btn btn-outline-dark">
+                Process uploaded files
+            </button>
+        </form>
+    </div>
+</div>
+<div class="row"> <p> </p> </div>
+    {% if upload %}
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+            {% comment %} <label for="formFile" class="form-label">Upload Files Here</label> {% endcomment %}
+            {{ form }}
+            </div>
+            <button name="upload_btn" type="submit" class="btn btn-outline-primary ">Submit</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="row">
+        {% for f in uploaded %}
+        
+        <div class="card" style="width: 25rem;">
+            <div class="card-body">
+                <audio controls> <source src="{{ f.file }}" type="audio/mp3"> 
+                    Your browser does not support the audio element. 
+                </audio>
+                <p class="card-text">{{ f.name }} </p>
+                <hr>    
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1"></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+{% comment %} <form method="post" entype="multipart/form-data"> 
+    {% csrf_token %}
+    <input type="file" name="files" multiple />
+    <button name="upload" type="submit" >Upload</button>
+</form> {% endcomment %}
+{% comment %} <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal fade" id="upload_modal" > 
+      <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="color:#969696;">Upload a video and continue to edit it </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <style>
+                .custom-file-upload {
+                border: 1px solid #ccc;
+                display: inline-block;
+                padding: 6px 12px;
+                cursor: pointer;
+              }</style>  
+              <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3"></div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <label for="id_file"class="custom-file-upload" > 
+                  <i class="bi bi-cloud-upload"></i> Choose video
+                </label>
+                <input type="file" name="file" id="id_file" style="display:none;" required>
+                
+                <span class="helptext">{{ form.errors }}</span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3"><p>  </p></div>
+            </div>
+            <div class="row"><p>  </p></div>
+            <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3"></div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <h5 style="color:#969696;">Name the new project</h5>
+                <input type="text" name="transl_name"  value="Unknown" class="form-control" id="id_transl_name" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button name="upload_video" type="submit" class="btn btn_Upgrade"> Continue </button>
+            <button type="button" class="btn btn_Upgrade" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form> {% endcomment %}
+
+
+{% comment %}  
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-10">
+            <form method="post" >
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                    </div>   
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <p style="font-size:14px;margin:4px;color:#273746">Filter the number of songs retrieved</p>
+
+                        <select class="mx-5 " name="top_k" id="top_k" required>
+                            
+                            <option {% if top_k == 1%} selected {% endif %} value="1"> 1 </option>
+                            <option {% if top_k == 5%} selected {% endif %} value="5"> 5 </option>
+                            <option {% if top_k == 10%} selected {% endif %} value="10"> 10 </option>
+                            <option {% if top_k == 50%} selected {% endif %} value="50"> 50 </option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <input class="m-2 p-1" name="query" type="text" placeholder="Search Songs" {% if query %}value="{{ query }}" {% endif %}required> 
+                        <button name="search_query" type="submit" class="btn btn-dark m-2 p-1">Search</button>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                    </div>    
+                </div>
+            </form>
+            <hr>
+            {% if errors %}
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3"></div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <span class="text-danger">
+                        <p style="font-size:18px"><b>Error: {{ errors }} </b></p>
+                        
+                    </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3"></div>
+            </div>
+            <hr>
+            {% endif %}
+
+            <div class="row">
+                {% if not results %}
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-10">
+                        {% for song in all_songs  %}
+                            <p style="font-size:14px;margin:5px;color:{{ color }}"><b> {{ song.index }}) {{ song.df_name }} </b></p>  
+                            {{ song.description }}
+                            <hr>
+                        {%endfor%}
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                    </div>
+                {% else %} <!-- include audio player--> 
+                    <div class="col-lg-1 col-md-1 col-sm-1"></div>
+
+                    <div class="col-lg-10 col-md-10 col-sm-10">  
+                    <div class="row">      
+                    {% for song in all_songs  %}
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <p style="font-size:14px;margin:5px;color:{{ color }}"><b> {{ song.index }}) {{ song.df_name }} </b></p>  
+                            {{ song.description }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <audio controls> <source src="{{ song.path }}" type="audio/wav"> 
+                            Your browser does not support the audio element. </audio>
+                        </div>
+                        <hr>    
+                    {% endfor %}
+                    </div>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1"></div>
+
+                {% endif %}
+            </div>
+
+        </div>  
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <form method="post" >
+                {% csrf_token %}
+                        <input class="m-2 p-1" name="load_musics" type="text" placeholder="Music Folder" >
+                        <button name="load_musics" type="submit" class="btn btn-dark">Reload music files</button>
+            </form>
+        </div>  
+    </div>   
+{% endcomment %}
+{% endblock page_content %}
