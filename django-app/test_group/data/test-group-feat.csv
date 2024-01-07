@@ -1,39 +1,39 @@
 name,Discogs400 genre,MTG Jamendo genre,danceability,happy,sad,relaxed,mood and theme,instruments,voice gender
-Aerosmith - Crazy,,,,,,,,,
-Aerosmith - Rag Doll,,,,,,,,,
-A Whole New World - Regina Belle & Peabo bryson,,,,,,,,,
-Biffy Clyro - Adored,,,,,,,,,
-Biffy Clyro - Sunrise,,,,,,,,,
-BLUE ENCOUNT - DAY×DAY,,,,,,,,,
-Cross Roads Blues   Robert johnson,,,,,,,,,
-David Guetta - Dangerous,,,,,,,,,
-David Guetta Feat Sia - She Wolf (Falling To Pieces),,,,,,,,,
-Drifters - Gospel of the Throttle,,,,,,,,,
-Eminem - My name is,,,,,,,,,
-Eminem - Rap God,,,,,,,,,
-Eminem - Without me,,,,,,,,,
-FLAT   Hamatora - livetune & Yuuki Ozaki,,,,,,,,,
-Franco de Vita - Nada Se Compara A Ti,,,,,,,,,
-Franco de Vita - No Basta,,,,,,,,,
-"Gangsta's Paradise - Coolio, Featuring LV",,,,,,,,,
-Guns N Roses - Rocket queen,,,,,,,,,
-"Harder, Better, Faster, Stronger -  Daft Punk",,,,,,,,,
-HERO - Tenohira,,,,,,,,,
-John Lennon - Imagine,,,,,,,,,
-Kitadani Hiroshi - We are!,,,,,,,,,
-Linked Horizon - Guren no Yumiya,,,,,,,,,
-Louis Amstrong - What A Wonderful World,,,,,,,,,
-Michael Jackson - Thriller,,,,,,,,,
-Nathan Evans - Wellerman (Sea Shanty),,,,,,,,,
-NICO Touches the Walls - Hologram,,,,,,,,,
-O Zone - Dragostea Din Tei,,,,,,,,,
-Skrillex - First Of The Year,,,,,,,,,
-Smoky Mountain Rain - Ronnie Milsap,,,,,,,,,
-Snoop Dogg - Gin & Juice,,,,,,,,,
-Suzuki Konomi - This game,,,,,,,,,
-Toto - Hold the line,,,,,,,,,
-Twenty One Pilots - Car Radio,,,,,,,,,
-Twenty One Pilots - Fall Away,,,,,,,,,
-Twenty One Pilots - Heavy Dirty Soul,,,,,,,,,
-Twenty One Pilots - Migraine,,,,,,,,,
-Zombie - The Cranberries,,,,,,,,,
+FLAT   Hamatora - livetune & Yuuki Ozaki,Pop---K-pop,pop,danceable,happy,non_sad,non_relaxed,"['energetic', 'love', 'happy', 'melodic', 'uplifting']","['synthesizer', 'drums', 'electricguitar']",female
+Aerosmith - Crazy,Rock---Hard Rock,rock,not_danceable,happy,non_sad,non_relaxed,"['love', 'energetic', 'ballad', 'melodic', 'happy']","['bass', 'drums', 'electricguitar']",male
+Aerosmith - Rag Doll,Rock---Hard Rock,rock,not_danceable,happy,non_sad,non_relaxed,"['love', 'energetic', 'melodic', 'happy', 'dark']","['synthesizer', 'guitar', 'electricguitar']",male
+A Whole New World - Regina Belle & Peabo bryson,Funk / Soul---Soul,pop,not_danceable,non_happy,sad,relaxed,"['christmas', 'love', 'melodic', 'relaxing', 'meditative']","['synthesizer', 'piano', 'keyboard']",male
+Biffy Clyro - Adored,Rock---Alternative Rock,pop,not_danceable,non_happy,sad,relaxed,"['ballad', 'love', 'meditative', 'emotional', 'relaxing']","['piano', 'bass', 'drums']",male
+Biffy Clyro - Sunrise,Rock---Hard Rock,rock,danceable,non_happy,non_sad,non_relaxed,"['energetic', 'melodic', 'heavy', 'love', 'dark']","['drums', 'bass', 'electricguitar']",male
+BLUE ENCOUNT - DAY×DAY,Rock---Punk,rock,danceable,happy,non_sad,non_relaxed,"['energetic', 'melodic', 'happy', 'action', 'uplifting']","['drums', 'bass', 'electricguitar']",female
+Cross Roads Blues   Robert johnson,Blues---Delta Blues,pop,not_danceable,happy,non_sad,relaxed,"['love', 'happy', 'energetic', 'melodic', 'upbeat']","['electricguitar', 'drums', 'voice']",female
+David Guetta - Dangerous,Pop---K-pop,pop,danceable,non_happy,non_sad,relaxed,"['energetic', 'love', 'happy', 'film', 'melodic']","['piano', 'synthesizer', 'drums']",female
+David Guetta Feat Sia - She Wolf (Falling To Pieces),Electronic---House,electronic,danceable,non_happy,non_sad,non_relaxed,"['energetic', 'happy', 'love', 'funny', 'summer']","['synthesizer', 'bass', 'drums']",female
+Drifters - Gospel of the Throttle,Rock---Alternative Rock,rock,danceable,happy,non_sad,non_relaxed,"['energetic', 'melodic', 'sport', 'action', 'dark']","['drums', 'electricguitar', 'bass']",male
+Eminem - My name is,Hip Hop---Conscious,hiphop,danceable,happy,non_sad,relaxed,"['energetic', 'love', 'deep', 'happy', 'film']","['bass', 'drums', 'synthesizer']",male
+Eminem - Rap God,Hip Hop---Grime,hiphop,danceable,happy,non_sad,non_relaxed,"['energetic', 'love', 'melodic', 'happy', 'party']","['bass', 'drums', 'synthesizer']",male
+Eminem - Without me,Hip Hop---Gangsta,hiphop,danceable,happy,non_sad,non_relaxed,"['energetic', 'love', 'happy', 'funny', 'upbeat']","['bass', 'synthesizer', 'drums']",male
+Franco de Vita - Nada Se Compara A Ti,Pop---Ballad,pop,not_danceable,non_happy,sad,relaxed,"['love', 'ballad', 'melodic', 'christmas', 'happy']","['synthesizer', 'guitar', 'piano']",male
+Franco de Vita - No Basta,Pop---Ballad,pop,not_danceable,non_happy,sad,relaxed,"['love', 'melodic', 'christmas', 'ballad', 'happy']","['synthesizer', 'acousticguitar', 'piano']",female
+"Gangsta's Paradise - Coolio, Featuring LV",Hip Hop---Gangsta,hiphop,danceable,non_happy,non_sad,non_relaxed,"['love', 'energetic', 'melodic', 'film', 'deep']","['synthesizer', 'keyboard', 'bass']",male
+Guns N Roses - Rocket queen,Rock---Hard Rock,rock,not_danceable,happy,non_sad,non_relaxed,"['melodic', 'love', 'energetic', 'heavy', 'dark']","['electricguitar', 'drums', 'bass']",male
+"Harder, Better, Faster, Stronger -  Daft Punk",Electronic---House,electronic,danceable,happy,non_sad,non_relaxed,"['energetic', 'happy', 'summer', 'deep', 'funny']","['synthesizer', 'bass', 'drums']",female
+HERO - Tenohira,Rock---Punk,rock,danceable,happy,non_sad,non_relaxed,"['energetic', 'melodic', 'love', 'happy', 'uplifting']","['drums', 'electricguitar', 'bass']",male
+John Lennon - Imagine,Funk / Soul---Soul,pop,not_danceable,non_happy,sad,relaxed,"['love', 'ballad', 'romantic', 'relaxing', 'sad']","['piano', 'bass', 'guitar']",female
+Kitadani Hiroshi - We are!,Rock---Pop Rock,pop,not_danceable,happy,non_sad,non_relaxed,"['christmas', 'melodic', 'happy', 'corporate', 'love']","['drums', 'electricguitar', 'piano']",female
+Linked Horizon - Guren no Yumiya,Rock---Symphonic Rock,rock,not_danceable,non_happy,non_sad,non_relaxed,"['epic', 'action', 'energetic', 'film', 'dark']","['drums', 'bass', 'guitar']",male
+Louis Amstrong - What A Wonderful World,Pop---Vocal,classical,not_danceable,non_happy,sad,relaxed,"['christmas', 'film', 'love', 'ballad', 'romantic']","['piano', 'guitar', 'drums']",female
+Michael Jackson - Thriller,Electronic---Disco,electronic,danceable,happy,non_sad,non_relaxed,"['energetic', 'summer', 'deep', 'melodic', 'happy']","['synthesizer', 'bass', 'drums']",female
+Nathan Evans - Wellerman (Sea Shanty),Latin---Reggaeton,pop,not_danceable,happy,non_sad,relaxed,"['love', 'happy', 'ballad', 'upbeat', 'summer']","['guitar', 'bass', 'drums']",male
+NICO Touches the Walls - Hologram,Rock---Indie Rock,rock,danceable,happy,non_sad,non_relaxed,"['energetic', 'love', 'adventure', 'happy', 'uplifting']","['drums', 'bass', 'electricguitar']",male
+O Zone - Dragostea Din Tei,Pop---K-pop,dance,danceable,happy,non_sad,non_relaxed,"['energetic', 'happy', 'sport', 'love', 'party']","['synthesizer', 'drums', 'bass']",male
+Skrillex - First Of The Year,Electronic---Dubstep,electronic,danceable,non_happy,non_sad,non_relaxed,"['energetic', 'sport', 'party', 'space', 'dark']","['synthesizer', 'bass', 'drums']",female
+Smoky Mountain Rain - Ronnie Milsap,Rock---Pop Rock,pop,not_danceable,happy,sad,non_relaxed,"['love', 'melodic', 'ballad', 'happy', 'christmas']","['drums', 'guitar', 'acousticguitar']",male
+Snoop Dogg - Gin & Juice,Hip Hop---Gangsta,hiphop,danceable,happy,non_sad,non_relaxed,"['love', 'energetic', 'melodic', 'happy', 'slow']","['synthesizer', 'bass', 'keyboard']",male
+Suzuki Konomi - This game,Pop---J-pop,pop,not_danceable,non_happy,non_sad,non_relaxed,"['energetic', 'happy', 'uplifting', 'positive', 'love']","['drums', 'bass', 'guitar']",female
+Toto - Hold the line,Rock---Hard Rock,rock,not_danceable,happy,non_sad,non_relaxed,"['energetic', 'melodic', 'love', 'happy', 'ballad']","['electricguitar', 'drums', 'bass']",male
+Twenty One Pilots - Car Radio,Electronic---Electro,electronic,danceable,happy,non_sad,relaxed,"['energetic', 'love', 'melodic', 'dark', 'happy']","['synthesizer', 'bass', 'drums']",male
+Twenty One Pilots - Fall Away,Electronic---House,electronic,danceable,non_happy,non_sad,non_relaxed,"['deep', 'summer', 'happy', 'energetic', 'love']","['bass', 'synthesizer', 'drums']",female
+Twenty One Pilots - Heavy Dirty Soul,Electronic---House,electronic,danceable,happy,non_sad,non_relaxed,"['energetic', 'love', 'happy', 'dark', 'funny']","['synthesizer', 'bass', 'drums']",male
+Twenty One Pilots - Migraine,Pop---K-pop,hiphop,danceable,happy,non_sad,non_relaxed,"['energetic', 'love', 'happy', 'melodic', 'upbeat']","['bass', 'drums', 'synthesizer']",male
+Zombie - The Cranberries,Rock---Alternative Rock,rock,not_danceable,non_happy,non_sad,non_relaxed,"['love', 'melodic', 'ballad', 'epic', 'dark']","['electricguitar', 'bass', 'drums']",male

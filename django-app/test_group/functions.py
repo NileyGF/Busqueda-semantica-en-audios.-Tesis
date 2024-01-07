@@ -22,20 +22,25 @@ def process_test_group():
     upl_files_path_dict = {}
     for file_name in upl_files_list:        
         new = UploadMusic.objects.filter(file__startswith=f'static/test/{file_name}')[0]
-        print(new)
+        # print(new)
         name_only = os.path.splitext(new.name)[0]
         # print(new)
         upl_files_path_dict[name_only] = upl_files_list[file_name]
     df_d = {'name':list(upl_files_path_dict.keys())}
     first_df = pd.DataFrame.from_dict(df_d)
-    first_df.to_csv(os.path.join(data_dir,'test-group-feat.csv'), index=False) 
+    # first_df.to_csv(os.path.join(data_dir,'test-group-feat.csv'), index=False) 
     # print(first_df)  
-    # First part of the pipeline
+    ## First part of the pipeline
     features_df = extract_features(first_df, upl_files_path_dict)
-    # Second part of the pipeline
+    # features_df = pd.read_csv(os.path.join(data_dir,'test-group-feat.csv'))
+    ## Second part of the pipeline
     descriptions_df = get_descriptions_from_feat(features_df)
-    # Third part of the pipeline
-    save_descriptions_embedd(descriptions_df)
+    ## Third part of the pipeline
+    embeddings_list = save_descriptions_embedd(descriptions_df)
+    # with open(relation_path, 'rb') as f:
+    #     embedd_corpus_relation = pickle.load(f)
+    # embedd_descr_dict = dict(embedd_corpus_relation)
+    # print(embedd_descr_dict)
 
 def extract_features(data_frame:pd.DataFrame, songs_dict:dict):
     features_dict = {'name': data_frame['name'].values.tolist()}
@@ -55,7 +60,7 @@ def extract_features(data_frame:pd.DataFrame, songs_dict:dict):
             else:
                 features_dict[f].append(song_feat[f])
     print(features_dict)
-    print("Extract features time", round(time.time()-st,4)," sec")
+    print("Extract features time", round(time.time()-st,4)," sec") # 1079.0769  sec
     features_df = pd.DataFrame.from_dict(features_dict)
 
     inner_merged = pd.merge(data_frame, features_df)
@@ -76,13 +81,16 @@ def get_descriptions_from_feat(feat_df):
         for feat in features_dict:
             extractor= features_dict[feat]
             feature_value = row[feat]
+            # print(feature_value)
+            if isinstance(feature_value, list):
+                feature_value = str(feature_value) # TODO test
             song_description += extractor.feature_description(feature=feature_value)
             song_tag_description += extractor.feature_tags_description(feature=feature_value) + '; '
         song_tag_description = song_tag_description[:-2] + '.'
         description_dict['description'].append(song_description)
         description_dict['tags_description'].append(song_tag_description)
     
-    print("Descriptions time", round(time.time()-st,4)," sec")
+    print("Descriptions time", round(time.time()-st,4)," sec") # 0.009  sec
     descr_df = pd.DataFrame.from_dict(description_dict)
     inner_merged = pd.merge(feat_df, descr_df)
     
@@ -93,16 +101,22 @@ def save_descriptions_embedd(descr_df):
     descriptions_list = descr_df["description"].values.tolist()
     tags_descriptions_list = descr_df["tags_description"].values.tolist()
     st = time.time()
-    main.emb_ret.extract_embeddings_for_docs_list(documents_list=descriptions_list, save=True, save_path=descriptions_embeddings_path)
-    with open(descriptions_embeddings_path, 'rb') as f:
-        docs_embeddings_list = pickle.load(f)
+    descriptions_embedd = main.emb_ret.extract_embeddings_for_docs_list(documents_list=descriptions_list, save=False)
+    tags_descriptions_embedd = main.emb_ret.extract_embeddings_for_docs_list(documents_list=tags_descriptions_list, save=False)
+    with open(descriptions_embeddings_path, 'wb') as f:
+        pickle.dump(descriptions_embedd + tags_descriptions_embedd, f)
 
-    embedd_corpus_relation = [(i,i) for i in range(len(docs_embeddings_list))]
+    embedd_corpus_relation = [(i,i) for i in range(len(descriptions_embedd))]
+    idx = len(embedd_corpus_relation)
+    for i in range(len(tags_descriptions_embedd)):
+        embedd_corpus_relation.append((idx,i))
+        idx +=1
     with open(relation_path, 'wb') as f:
         pickle.dump(embedd_corpus_relation, f)
+    print(embedd_corpus_relation)
 
     print("Embeddings time", round(time.time()-st,4)," sec")
-    return docs_embeddings_list
+    return descriptions_embedd + tags_descriptions_embedd
     
 
 
