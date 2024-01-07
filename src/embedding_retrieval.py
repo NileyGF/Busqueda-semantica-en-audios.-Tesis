@@ -3,12 +3,12 @@ from src.core import directory_path
 import pickle
 import os
 
-def _get_descrip_from_embeddings(doc_likehood:dict, documents_vectors_list:list):
+def _get_descrip_from_embeddings(doc_likehood:dict, documents_vectors_list:list, embedd_corpus_relation_path:str=os.path.join(directory_path,'data','corpus-embeddings_rel.bin')):
     """doc_likehood[k] = np_cosine_similarity(query_vector, documents_vectors_list[k]) for the embedding k.
        doc_likehood is sorted in descending mode of the values
        Returns a dictionary of song_id:cosine insted of embedding_id:cosine. To do that, for a song i 
        the cosine value will be the max of the values corresponding to embeddings related to that song."""
-    embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
+    # embedd_corpus_relation_path = os.path.join(directory_path,'data','corpus-embeddings_rel.bin')
     with open(embedd_corpus_relation_path, 'rb') as f:
         embedd_corpus_relation = pickle.load(f)
     embedd_descr_dict = dict(embedd_corpus_relation)
@@ -20,7 +20,7 @@ def _get_descrip_from_embeddings(doc_likehood:dict, documents_vectors_list:list)
         result[corresp_song] = doc_likehood[k]
     return result
 
-def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
+def evaluate_query(query_vector, documents_vectors_list,  top_k="all", embedd_corpus_relation_path:str=os.path.join(directory_path,'data','corpus-embeddings_rel.bin')):
     """
     Evaluates the query against the corpus 
 
@@ -35,7 +35,7 @@ def evaluate_query(query_vector, documents_vectors_list,  top_k="all"):
         doc_likehood[k] = cosine_sim # TODO k represents the index of the document in the django app
     
     ranked_docs = dict(sorted(doc_likehood.items(), key=lambda item: item[1], reverse=True))
-    ranked_songs = _get_descrip_from_embeddings(ranked_docs, documents_vectors_list)
+    ranked_songs = _get_descrip_from_embeddings(ranked_docs, documents_vectors_list, embedd_corpus_relation_path)
     # Return the top_k docs with non-0-relevance
      
     # i = 0
@@ -89,7 +89,7 @@ def extract_embeddings_for_docs_list(documents_list:list, save=False, save_path=
 
 # extract_embeddings_for_docs_list(["The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services."])
 
-def process_query(query:str, docs_embeddings_list:list=None, documents_list:list=None, top_k="all"):
+def process_query(query:str, docs_embeddings_list:list=None, documents_list:list=None, top_k="all", relation_path:str=os.path.join(directory_path,'data','corpus-embeddings_rel.bin')):
     if docs_embeddings_list == None and documents_list == None:
         raise Exception("To process the query is necessary to have a corpus, either on a text list or an embeddings list.")
     if docs_embeddings_list == None and documents_list != None:
@@ -103,6 +103,6 @@ def process_query(query:str, docs_embeddings_list:list=None, documents_list:list
         raise Exception()
     query_embedding, _ = BERT_embedding.sentential_embeddings(tokenized_text=tokenized_query)
     
-    relevant_docs_idx = evaluate_query(query_vector=query_embedding, documents_vectors_list=docs_embeddings_list, top_k=top_k)
+    relevant_docs_idx = evaluate_query(query_vector=query_embedding, documents_vectors_list=docs_embeddings_list, top_k=top_k, embedd_corpus_relation_path=relation_path)
     return relevant_docs_idx
 
